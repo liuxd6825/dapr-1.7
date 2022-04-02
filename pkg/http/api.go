@@ -16,7 +16,7 @@ package http
 import (
 	"encoding/base64"
 	"fmt"
-	eventSourcing "github.com/dapr/components-contrib/eventsourcing/v1"
+
 	"strconv"
 	"strings"
 	"sync"
@@ -49,6 +49,9 @@ import (
 	"github.com/dapr/dapr/pkg/messaging"
 	invokev1 "github.com/dapr/dapr/pkg/messaging/v1"
 	runtime_pubsub "github.com/dapr/dapr/pkg/runtime/pubsub"
+
+	"github.com/dapr/components-contrib/liuxd/applog"
+	"github.com/dapr/components-contrib/liuxd/eventstorage"
 )
 
 // API returns a list of HTTP endpoints for Dapr.
@@ -75,7 +78,8 @@ type api struct {
 	json                     jsoniter.API
 	actor                    actors.Actors
 	pubsubAdapter            runtime_pubsub.Adapter
-	eventSourcing            eventSourcing.EventSourcing
+	eventStorage             eventstorage.EventStorage
+	appLogger                applog.Logger
 	sendToOutputBindingFn    func(name string, req *bindings.InvokeRequest) (*bindings.InvokeResponse, error)
 	id                       string
 	extendedMetadata         sync.Map
@@ -129,7 +133,8 @@ func NewAPI(
 	secretStores map[string]secretstores.SecretStore,
 	secretsConfiguration map[string]config.SecretsScope,
 	pubsubAdapter runtime_pubsub.Adapter,
-	eventSourcing eventSourcing.EventSourcing,
+	eventStorage eventstorage.EventStorage, // eventSourcing liuxd
+	appLogger applog.Logger, // logger liuxd
 	actor actors.Actors,
 	sendToOutputBindingFn func(name string, req *bindings.InvokeRequest) (*bindings.InvokeResponse, error),
 	tracingSpec config.TracingSpec,
@@ -151,7 +156,8 @@ func NewAPI(
 		json:                     jsoniter.ConfigFastest,
 		actor:                    actor,
 		pubsubAdapter:            pubsubAdapter,
-		eventSourcing:            eventSourcing,
+		eventStorage:             eventStorage,
+		appLogger:                appLogger,
 		sendToOutputBindingFn:    sendToOutputBindingFn,
 		id:                       appID,
 		tracingSpec:              tracingSpec,
@@ -161,8 +167,10 @@ func NewAPI(
 	metadataEndpoints := api.constructMetadataEndpoints()
 	healthEndpoints := api.constructHealthzEndpoints()
 
-	// lxd:注册事件溯源HTTP路由
+	// liuxd:注册事件溯源HTTP路由
 	api.endpoints = append(api.endpoints, api.constructEventSourcingEndpoints()...)
+	api.endpoints = append(api.endpoints, api.constructLoggerEndpoints()...)
+	// ------------------------------
 
 	api.endpoints = append(api.endpoints, api.constructStateEndpoints()...)
 	api.endpoints = append(api.endpoints, api.constructSecretEndpoints()...)

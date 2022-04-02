@@ -3,7 +3,8 @@ package runtime
 import (
 	"github.com/dapr/dapr/pkg/components/bindings"
 	"github.com/dapr/dapr/pkg/components/configuration"
-	es "github.com/dapr/dapr/pkg/components/eventsourcing"
+	"github.com/dapr/dapr/pkg/components/liuxd/applogger"
+	es "github.com/dapr/dapr/pkg/components/liuxd/eventstorage"
 	"github.com/dapr/dapr/pkg/components/middleware/http"
 	"github.com/dapr/dapr/pkg/components/nameresolution"
 	"github.com/dapr/dapr/pkg/components/pubsub"
@@ -14,7 +15,8 @@ import (
 type (
 	// runtimeOpts encapsulates the components to include in the runtime.
 	runtimeOpts struct {
-		eventSourcings  []es.EventSourcing
+		eventStorages   []es.EventStorage
+		appLoggers      []applogger.Logger
 		secretStores    []secretstores.SecretStore
 		states          []state.State
 		configurations  []configuration.Configuration
@@ -31,9 +33,15 @@ type (
 	Option func(o *runtimeOpts)
 )
 
-func WithEventSourcing(eventSourding ...es.EventSourcing) Option {
+func WithEventStorage(eventsourdings ...es.EventStorage) Option {
 	return func(o *runtimeOpts) {
-		o.eventSourcings = append(o.eventSourcings, eventSourding...)
+		o.eventStorages = append(o.eventStorages, eventsourdings...)
+	}
+}
+
+func WithApplog(loggers ...applogger.Logger) Option {
+	return func(o *runtimeOpts) {
+		o.appLoggers = append(o.appLoggers, loggers...)
 	}
 }
 

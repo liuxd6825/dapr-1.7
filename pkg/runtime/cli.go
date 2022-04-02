@@ -78,14 +78,6 @@ func FromFlags() (*DaprRuntime, error) {
 
 	flag.Parse()
 
-	// lxd 定义appID参数
-	s1 := "debug-daprd"
-	appID = &s1
-
-	// lxd 定义componentsPath参数
-	s2 := "/Users/lxd/.dapr/components"
-	componentsPath = &s2
-
 	if *runtimeVersion {
 		fmt.Println(version.Version())
 		os.Exit(0)

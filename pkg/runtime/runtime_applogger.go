@@ -1,15 +1,15 @@
 package runtime
 
 import (
-	eventSourcing "github.com/dapr/components-contrib/eventsourcing/v1"
+	"github.com/dapr/components-contrib/liuxd/common"
 	components_v1alpha1 "github.com/dapr/dapr/pkg/apis/components/v1alpha1"
 	diag "github.com/dapr/dapr/pkg/diagnostics"
 	pubsub_adapter "github.com/dapr/dapr/pkg/runtime/pubsub"
 	"strings"
 )
 
-func (a *DaprRuntime) initEventSourcing(c components_v1alpha1.Component) error {
-	es, err := a.eventSourcingRegistry.Create(c.Spec.Type, c.Spec.Version)
+func (a *DaprRuntime) initAppLogger(c components_v1alpha1.Component) error {
+	logger, err := a.applogRegistry.Create(c.Spec.Type, c.Spec.Version)
 	if err != nil {
 		log.Warnf("error creating pub sub %s (%s/%s): %s", &c.ObjectMeta.Name, c.Spec.Type, c.Spec.Version, err)
 		diag.DefaultMonitoring.ComponentInitFailed(c.Spec.Type, "creation")
@@ -27,11 +27,11 @@ func (a *DaprRuntime) initEventSourcing(c components_v1alpha1.Component) error {
 		return a.getPublishAdapter()
 	}
 
-	err = es.Init(eventSourcing.Metadata{
+	err = logger.Init(common.Metadata{
 		Properties: properties,
 	}, getAdapter)
 
-	a.eventSourcing = es
+	a.appLogger = logger
 
 	if err != nil {
 		log.Warnf("error initializing pub sub %s/%s: %s", c.Spec.Type, c.Spec.Version, err)

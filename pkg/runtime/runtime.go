@@ -18,6 +18,9 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"github.com/dapr/components-contrib/liuxd/applog"
+	applog_loader "github.com/dapr/dapr/pkg/components/liuxd/applogger"
+	es_loader "github.com/dapr/dapr/pkg/components/liuxd/eventstorage"
 	"io"
 	"net"
 	nethttp "net/http"
@@ -86,8 +89,7 @@ import (
 	"github.com/dapr/dapr/pkg/scopes"
 	"github.com/dapr/dapr/utils"
 
-	es "github.com/dapr/components-contrib/eventsourcing/v1"
-	es_loader "github.com/dapr/dapr/pkg/components/eventsourcing"
+	es "github.com/dapr/components-contrib/liuxd/eventstorage"
 )
 
 const (
@@ -108,7 +110,8 @@ const (
 	stateComponent                  ComponentCategory = "state"
 	middlewareComponent             ComponentCategory = "middleware"
 	configurationComponent          ComponentCategory = "configuration"
-	eventsourcingComponent          ComponentCategory = "eventsourcing"
+	eventStorageComponent           ComponentCategory = "eventstorage"
+	appLoggerComponent              ComponentCategory = "applogger"
 	defaultComponentInitTimeout                       = time.Second * 5
 	defaultGracefulShutdownDuration                   = time.Second * 5
 	kubernetesSecretStore                             = "kubernetes"
@@ -121,7 +124,8 @@ var componentCategoriesNeedProcess = []ComponentCategory{
 	stateComponent,
 	middlewareComponent,
 	configurationComponent,
-	eventsourcingComponent, // 事件溯源组件
+	eventStorageComponent, // 事件溯源组件
+	appLoggerComponent,    // 应用日志
 }
 
 var log = logger.NewLogger("dapr.runtime")
@@ -164,8 +168,11 @@ type DaprRuntime struct {
 	pubSubRegistry pubsub_loader.Registry
 	pubSubs        map[string]pubsub.PubSub
 
-	eventSourcingRegistry es_loader.Registry // 事件溯源注册器
-	eventSourcing         es.EventSourcing   // 事件溯源处理
+	eventStorageRegistry es_loader.Registry // 事件溯源注册器
+	eventStorage         es.EventStorage    // 事件溯源处理
+
+	applogRegistry applog_loader.Registry
+	appLogger      applog.Logger
 
 	nameResolver           nr.Resolver
 	json                   jsoniter.API
@@ -248,8 +255,11 @@ func NewDaprRuntime(runtimeConfig *Config, globalConfig *config.Configuration, a
 		nameResolutionRegistry: nr_loader.NewRegistry(),
 		httpMiddlewareRegistry: http_middleware_loader.NewRegistry(),
 
-		eventSourcing:         nil,
-		eventSourcingRegistry: es_loader.NewRegistry(),
+		eventStorage:         nil,
+		eventStorageRegistry: es_loader.NewRegistry(),
+
+		appLogger:      nil,
+		applogRegistry: applog_loader.NewRegistry(),
 
 		scopedSubscriptions: map[string][]string{},
 		scopedPublishings:   map[string][]string{},
@@ -361,7 +371,8 @@ func (a *DaprRuntime) initRuntime(opts *runtimeOpts) error {
 	}
 
 	// lxd 注册事件溯源
-	a.eventSourcingRegistry.Register(opts.eventSourcings...)
+	a.eventStorageRegistry.Register(opts.eventStorages...)
+	a.applogRegistry.Register(opts.appLoggers...)
 
 	a.pubSubRegistry.Register(opts.pubsubs...)
 	a.secretStoresRegistry.Register(opts.secretStores...)
@@ -974,7 +985,7 @@ func (a *DaprRuntime) readFromBinding(name string, binding bindings.InputBinding
 
 func (a *DaprRuntime) startHTTPServer(port int, publicPort *int, profilePort int, allowedOrigins string, pipeline http_middleware.Pipeline) error {
 	a.daprHTTPAPI = http.NewAPI(a.runtimeConfig.ID, a.appChannel, a.directMessaging, a.getComponents, a.stateStores, a.secretStores,
-		a.secretsConfiguration, a.getPublishAdapter(), a.eventSourcing, a.actor, a.sendToOutputBinding, a.globalConfig.Spec.TracingSpec, a.ShutdownWithWait)
+		a.secretsConfiguration, a.getPublishAdapter(), a.eventStorage, a.appLogger, a.actor, a.sendToOutputBinding, a.globalConfig.Spec.TracingSpec, a.ShutdownWithWait)
 	serverConf := http.NewServerConfig(a.runtimeConfig.ID, a.hostAddress, port, a.runtimeConfig.APIListenAddresses, publicPort, profilePort, allowedOrigins, a.runtimeConfig.EnableProfiling, a.runtimeConfig.MaxRequestBodySize, a.runtimeConfig.UnixDomainSocket, a.runtimeConfig.ReadBufferSize, a.runtimeConfig.StreamRequestBody)
 
 	server := http.NewServer(a.daprHTTPAPI, serverConf, a.globalConfig.Spec.TracingSpec, a.globalConfig.Spec.MetricSpec, pipeline, a.globalConfig.Spec.APISpec)
@@ -1849,8 +1860,10 @@ func (a *DaprRuntime) doProcessOneComponent(category ComponentCategory, comp com
 		return a.initState(comp)
 	case configurationComponent:
 		return a.initConfiguration(comp)
-	case eventsourcingComponent:
-		return a.initEventSourcing(comp)
+	case eventStorageComponent:
+		return a.initEventStorage(comp)
+	case appLoggerComponent:
+		return a.initAppLogger(comp)
 	}
 	return nil
 }

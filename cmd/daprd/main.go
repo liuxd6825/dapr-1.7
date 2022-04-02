@@ -14,6 +14,8 @@ limitations under the License.
 package main
 
 import (
+	applog_loader "github.com/dapr/dapr/pkg/components/liuxd/applogger"
+	eventstorage_loader "github.com/dapr/dapr/pkg/components/liuxd/eventstorage"
 	"os"
 	"os/signal"
 	"strings"
@@ -152,9 +154,10 @@ import (
 	"github.com/dapr/components-contrib/configuration"
 	configuration_redis "github.com/dapr/components-contrib/configuration/redis"
 
-	es "github.com/dapr/components-contrib/eventsourcing/v1"
-	es_mongodb "github.com/dapr/components-contrib/eventsourcing/v1/mongodb"
-	es_loader "github.com/dapr/dapr/pkg/components/eventsourcing"
+	applog "github.com/dapr/components-contrib/liuxd/applog"
+	applog_mongo "github.com/dapr/components-contrib/liuxd/applog/mongo"
+	eventstorage "github.com/dapr/components-contrib/liuxd/eventstorage"
+	eventstorage_mongo "github.com/dapr/components-contrib/liuxd/eventstorage/mongo"
 )
 
 var (
@@ -172,10 +175,16 @@ func main() {
 	}
 
 	err = rt.Run(
-		runtime.WithEventSourcing(
+		runtime.WithEventStorage(
 			// lxd 注册mongodb事件溯源组件
-			es_loader.New("mongodb", func() es.EventSourcing {
-				return es_mongodb.NewMongoEventSourcing(logContrib)
+			eventstorage_loader.New("mongodb", func() eventstorage.EventStorage {
+				return eventstorage_mongo.NewMongoEventSourcing(logContrib)
+			}),
+		),
+		runtime.WithApplog(
+			// lxd 注册mongodb事件溯源组件
+			applog_loader.New("mongodb", func() applog.Logger {
+				return applog_mongo.NewLogger(logContrib)
 			}),
 		),
 		runtime.WithSecretStores(
