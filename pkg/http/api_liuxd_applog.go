@@ -15,14 +15,14 @@ func (a *api) constructLoggerEndpoints() []Endpoint {
 			Handler: a.writeEventLog,
 		},
 		{
-			Methods: []string{fasthttp.MethodPut},
+			Methods: []string{fasthttp.MethodPost},
 			Route:   "logger/event-log/update",
 			Version: apiVersionV1,
 			Handler: a.updateEventLog,
 		},
 		{
 			Methods: []string{fasthttp.MethodGet},
-			Route:   "logger/event-log/{commandId}",
+			Route:   "logger/event-log/tenant-id/{tenantId}/app-id/{appId}/command-id/{commandId}",
 			Version: apiVersionV1,
 			Handler: a.getEventLogByCommandId,
 		},
@@ -30,19 +30,19 @@ func (a *api) constructLoggerEndpoints() []Endpoint {
 			Methods: []string{fasthttp.MethodPost},
 			Route:   "logger/app-log/create",
 			Version: apiVersionV1,
-			Handler: a.writeEventLog,
+			Handler: a.writeAppLog,
 		},
 		{
-			Methods: []string{fasthttp.MethodPut},
+			Methods: []string{fasthttp.MethodPost},
 			Route:   "logger/app-log/update",
 			Version: apiVersionV1,
-			Handler: a.updateEventLog,
+			Handler: a.updateAppLog,
 		},
 		{
 			Methods: []string{fasthttp.MethodGet},
-			Route:   "logger/app-log/{id}",
+			Route:   "logger/event-log/tenant-id/{tenantId}/id/{id}",
 			Version: apiVersionV1,
-			Handler: a.getEventLogByCommandId,
+			Handler: a.getAppLogById,
 		},
 	}
 }
@@ -71,13 +71,11 @@ func (a *api) updateEventLog(ctx *fasthttp.RequestCtx) {
 
 func (a *api) getEventLogByCommandId(ctx *fasthttp.RequestCtx) {
 	tenantId := ctx.UserValue("tenantId").(string)
-	pubAppId := ctx.UserValue("pubAppId").(string)
-	subAppId := ctx.UserValue("subAppId").(string)
+	appId := ctx.UserValue("appId").(string)
 	commandId := ctx.UserValue("commandId").(string)
 	req := &applog.GetEventLogByCommandIdRequest{
 		TenantId:  tenantId,
-		PubAppId:  pubAppId,
-		SubAppId:  subAppId,
+		AppId:     appId,
 		CommandId: commandId,
 	}
 	respData, err := a.appLogger.GetEventLogByCommandId(ctx, req)
@@ -108,15 +106,11 @@ func (a *api) updateAppLog(ctx *fasthttp.RequestCtx) {
 
 func (a *api) getAppLogById(ctx *fasthttp.RequestCtx) {
 	tenantId := ctx.UserValue("tenantId").(string)
-	pubAppId := ctx.UserValue("pubAppId").(string)
-	subAppId := ctx.UserValue("subAppId").(string)
-	commandId := ctx.UserValue("commandId").(string)
-	req := &applog.GetEventLogByCommandIdRequest{
-		TenantId:  tenantId,
-		PubAppId:  pubAppId,
-		SubAppId:  subAppId,
-		CommandId: commandId,
+	id := ctx.UserValue("id").(string)
+	req := &applog.GetAppLogByIdRequest{
+		TenantId: tenantId,
+		Id:       id,
 	}
-	respData, err := a.appLogger.GetEventLogByCommandId(ctx, req)
+	respData, err := a.appLogger.GetAppLogById(ctx, req)
 	setResponseData(ctx, respData, err)
 }
