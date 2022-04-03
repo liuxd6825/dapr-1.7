@@ -2,7 +2,9 @@ package http
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/dapr/components-contrib/liuxd/applog"
+	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
 )
 
@@ -40,7 +42,7 @@ func (a *api) constructLoggerEndpoints() []Endpoint {
 		},
 		{
 			Methods: []string{fasthttp.MethodGet},
-			Route:   "logger/event-log/tenant-id/{tenantId}/id/{id}",
+			Route:   "logger/app-log/tenant-id/{tenantId}/id/{id}",
 			Version: apiVersionV1,
 			Handler: a.getAppLogById,
 		},
@@ -70,9 +72,21 @@ func (a *api) updateEventLog(ctx *fasthttp.RequestCtx) {
 }
 
 func (a *api) getEventLogByCommandId(ctx *fasthttp.RequestCtx) {
-	tenantId := ctx.UserValue("tenantId").(string)
-	appId := ctx.UserValue("appId").(string)
-	commandId := ctx.UserValue("commandId").(string)
+	tenantId, err := a.getQueryParameter(ctx, "tenantId")
+	if err != nil {
+		return
+	}
+
+	appId, err := a.getQueryParameter(ctx, "appId")
+	if err != nil {
+		return
+	}
+
+	commandId, err := a.getQueryParameter(ctx, "commandId")
+	if err != nil {
+		return
+	}
+
 	req := &applog.GetEventLogByCommandIdRequest{
 		TenantId:  tenantId,
 		AppId:     appId,
@@ -83,34 +97,52 @@ func (a *api) getEventLogByCommandId(ctx *fasthttp.RequestCtx) {
 }
 
 func (a *api) writeAppLog(ctx *fasthttp.RequestCtx) {
-	data := &applog.WriteEventLogRequest{}
+	data := &applog.WriteAppLogRequest{}
 	err := json.Unmarshal(ctx.PostBody(), &data)
 	if err != nil {
 		setResponseData(ctx, nil, err)
 		return
 	}
-	respData, err := a.appLogger.WriteEventLog(ctx, data)
+	respData, err := a.appLogger.WriteAppLog(ctx, data)
 	setResponseData(ctx, respData, err)
 }
 
 func (a *api) updateAppLog(ctx *fasthttp.RequestCtx) {
-	data := &applog.UpdateEventLogRequest{}
+	data := &applog.UpdateAppLogRequest{}
 	err := json.Unmarshal(ctx.PostBody(), &data)
 	if err != nil {
 		setResponseData(ctx, nil, err)
 		return
 	}
-	respData, err := a.appLogger.UpdateEventLog(ctx, data)
+	respData, err := a.appLogger.UpdateAppLog(ctx, data)
 	setResponseData(ctx, respData, err)
 }
 
 func (a *api) getAppLogById(ctx *fasthttp.RequestCtx) {
-	tenantId := ctx.UserValue("tenantId").(string)
-	id := ctx.UserValue("id").(string)
+	tenantId, err := a.getQueryParameter(ctx, "tenantId")
+	if err != nil {
+		return
+	}
+
+	id, err := a.getQueryParameter(ctx, "id")
+	if err != nil {
+		return
+	}
+
 	req := &applog.GetAppLogByIdRequest{
 		TenantId: tenantId,
 		Id:       id,
 	}
 	respData, err := a.appLogger.GetAppLogById(ctx, req)
 	setResponseData(ctx, respData, err)
+}
+
+func (a *api) getQueryParameter(ctx *fasthttp.RequestCtx, name string) (string, error) {
+	value := ctx.UserValue(name)
+	if value == nil {
+		err := errors.New(fmt.Sprintf("parameter %s is null", name))
+		setResponseData(ctx, nil, err)
+		return "", err
+	}
+	return value.(string), nil
 }
