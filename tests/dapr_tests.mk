@@ -41,6 +41,8 @@ runtime \
 runtime_init \
 middleware \
 job-publisher \
+resiliencyapp \
+resiliencyapp_grpc \
 
 # PERFORMANCE test app list
 PERF_TEST_APPS=actorfeatures actorjava tester service_invocation_http
@@ -57,8 +59,6 @@ PERF_TESTS=actor_timer actor_reminder actor_activation service_invocation_http
 KUBECTL=kubectl
 
 DAPR_CONTAINER_LOG_PATH?=./dist/container_logs
-
-DAPR_TEST_SECONDARY_NAMESPACE=dapr-tests-2
 
 ifeq ($(DAPR_TEST_STATE_STORE),)
 DAPR_TEST_STATE_STORE=redis
@@ -155,11 +155,9 @@ endef
 
 create-test-namespace:
 	kubectl create namespace $(DAPR_TEST_NAMESPACE)
-	kubectl create namespace $(DAPR_TEST_SECONDARY_NAMESPACE)
 
 delete-test-namespace:
 	kubectl delete namespace $(DAPR_TEST_NAMESPACE)
-	kubectl delete namespace $(DAPR_TEST_SECONDARY_NAMESPACE)
 
 setup-3rd-party: setup-helm-init setup-test-env-redis setup-test-env-kafka setup-test-env-mongodb
 
@@ -219,8 +217,13 @@ test-e2e-all: check-e2e-env test-deps
 	# have to be sure and run them after the main test suite, so as not to alter the state of a running
 	# test
 	# Note2: use env variable DAPR_E2E_TEST to pick one e2e test to run.
+     ifeq ($(DAPR_E2E_TEST),)
 	DAPR_CONTAINER_LOG_PATH=$(DAPR_CONTAINER_LOG_PATH) GOOS=$(TARGET_OS_LOCAL) DAPR_TEST_NAMESPACE=$(DAPR_TEST_NAMESPACE) DAPR_TEST_TAG=$(DAPR_TEST_TAG) DAPR_TEST_REGISTRY=$(DAPR_TEST_REGISTRY) DAPR_TEST_MINIKUBE_IP=$(MINIKUBE_NODE_IP) gotestsum --jsonfile $(TEST_OUTPUT_FILE_PREFIX)_e2e.json --junitfile $(TEST_OUTPUT_FILE_PREFIX)_e2e.xml --format standard-quiet -- -p 2 -count=1 -v -tags=e2e ./tests/e2e/$(DAPR_E2E_TEST)/...
-
+     else
+	for app in $(DAPR_E2E_TEST); do \
+		DAPR_CONTAINER_LOG_PATH=$(DAPR_CONTAINER_LOG_PATH) GOOS=$(TARGET_OS_LOCAL) DAPR_TEST_NAMESPACE=$(DAPR_TEST_NAMESPACE) DAPR_TEST_TAG=$(DAPR_TEST_TAG) DAPR_TEST_REGISTRY=$(DAPR_TEST_REGISTRY) DAPR_TEST_MINIKUBE_IP=$(MINIKUBE_NODE_IP) gotestsum --jsonfile $(TEST_OUTPUT_FILE_PREFIX)_e2e.json --junitfile $(TEST_OUTPUT_FILE_PREFIX)_e2e.xml --format standard-quiet -- -p 2 -count=1 -v -tags=e2e ./tests/e2e/$$app/...; \
+	done
+     endif
 
 define genPerfTestRun
 .PHONY: test-perf-$(1)
@@ -248,7 +251,7 @@ setup-helm-init:
 
 # install redis to the cluster without password
 setup-test-env-redis:
-	$(HELM) install dapr-redis stable/redis --wait --timeout 5m0s --namespace $(DAPR_TEST_NAMESPACE) -f ./tests/config/redis_override.yaml
+	$(HELM) install dapr-redis bitnami/redis --wait --timeout 5m0s --namespace $(DAPR_TEST_NAMESPACE) -f ./tests/config/redis_override.yaml
 
 delete-test-env-redis:
 	${HELM} del dapr-redis --namespace ${DAPR_TEST_NAMESPACE}
@@ -304,6 +307,7 @@ setup-test-components: setup-app-configurations
 	$(KUBECTL) apply -f ./tests/config/app_topic_subscription_pubsub_grpc.yaml --namespace $(DAPR_TEST_NAMESPACE)
 	$(KUBECTL) apply -f ./tests/config/kubernetes_allowlists_config.yaml --namespace $(DAPR_TEST_NAMESPACE)
 	$(KUBECTL) apply -f ./tests/config/kubernetes_allowlists_grpc_config.yaml --namespace $(DAPR_TEST_NAMESPACE)
+	$(KUBECTL) apply -f ./tests/config/dapr_redis_state_query.yaml --namespace $(DAPR_TEST_NAMESPACE)
 	$(KUBECTL) apply -f ./tests/config/dapr_redis_state_badhost.yaml --namespace $(DAPR_TEST_NAMESPACE)
 	$(KUBECTL) apply -f ./tests/config/dapr_redis_state_badpass.yaml --namespace $(DAPR_TEST_NAMESPACE)
 	$(KUBECTL) apply -f ./tests/config/uppercase.yaml --namespace $(DAPR_TEST_NAMESPACE)
@@ -313,18 +317,17 @@ setup-test-components: setup-app-configurations
 	$(KUBECTL) apply -f ./tests/config/app_topic_subscription_routing.yaml --namespace $(DAPR_TEST_NAMESPACE)
 	$(KUBECTL) apply -f ./tests/config/app_topic_subscription_routing_grpc.yaml --namespace $(DAPR_TEST_NAMESPACE)
 	$(KUBECTL) apply -f ./tests/config/app_pubsub_routing.yaml --namespace $(DAPR_TEST_NAMESPACE)
-	$(KUBECTL) apply -f ./tests/config/kubernetes_grpc_proxy_config.yaml --namespace $(DAPR_TEST_NAMESPACE)
+	$(KUBECTL) apply -f ./tests/config/app_resiliency.yaml --namespace $(DAPR_TEST_NAMESPACE)
+	$(KUBECTL) apply -f ./tests/config/resiliency.yaml --namespace $(DAPR_TEST_NAMESPACE)
+	$(KUBECTL) apply -f ./tests/config/resiliency_kafka_bindings.yaml --namespace $(DAPR_TEST_NAMESPACE)
+	$(KUBECTL) apply -f ./tests/config/resiliency_kafka_bindings_grpc.yaml --namespace $(DAPR_TEST_NAMESPACE)
+	$(KUBECTL) apply -f ./tests/config/resiliency_$(DAPR_TEST_PUBSUB)_pubsub.yaml --namespace $(DAPR_TEST_NAMESPACE)
 
 	# Show the installed components
 	$(KUBECTL) get components --namespace $(DAPR_TEST_NAMESPACE)
 
 	# Show the installed configurations
 	$(KUBECTL) get configurations --namespace $(DAPR_TEST_NAMESPACE)
-
-# Clean up test environment
-clean-test-env:
-	./tests/test-infra/clean_up.sh $(DAPR_TEST_NAMESPACE)
-	./tests/test-infra/clean_up.sh $(DAPR_TEST_NAMESPACE)-2
 
 # Setup kind
 setup-kind:

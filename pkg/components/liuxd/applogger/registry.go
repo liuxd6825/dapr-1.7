@@ -43,15 +43,15 @@ func (p *applogRegistry) Register(components ...Logger) {
 	}
 }
 
-// Create instantiates a pub/sub based on `name`.
+// Create instantiates a applogger on `name`.
 func (p *applogRegistry) Create(name, version string) (applog.Logger, error) {
-	if method, ok := p.getEventSourcing(name, version); ok {
+	if method, ok := p.getAppLoggerSourcing(name, version); ok {
 		return method(), nil
 	}
-	return nil, errors.Errorf("couldn't find message bus %s/%s", name, version)
+	return nil, errors.Errorf("couldn't find applogger %s/%s", name, version)
 }
 
-func (p *applogRegistry) getEventSourcing(name, version string) (func() applog.Logger, bool) {
+func (p *applogRegistry) getAppLoggerSourcing(name, version string) (func() applog.Logger, bool) {
 	nameLower := strings.ToLower(name)
 	versionLower := strings.ToLower(version)
 	pubSubFn, ok := p.messageBuses[nameLower+"/"+versionLower]

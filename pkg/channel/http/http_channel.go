@@ -18,6 +18,7 @@ import (
 	"crypto/tls"
 	"fmt"
 	"strconv"
+	"strings"
 	"time"
 
 	nethttp "net/http"
@@ -72,6 +73,7 @@ func CreateLocalChannel(port, maxConcurrency int, spec config.TracingSpec, sslEn
 			MaxIdemponentCallAttempts: 0,
 			MaxResponseBodySize:       maxRequestBodySize * 1024 * 1024,
 			ReadBufferSize:            readBufferSize * 1024,
+			DisablePathNormalizing:    true,
 		},
 		baseAddress:         fmt.Sprintf("%s://%s:%d", scheme, channel.DefaultChannelAddress, port),
 		tracingSpec:         spec,
@@ -116,9 +118,23 @@ func (h *Channel) GetAppConfig() (*config.ApplicationConfig, error) {
 		return &config, nil
 	}
 
-	_, body := resp.RawData()
-	if err = h.json.Unmarshal(body, &config); err != nil {
-		return nil, err
+	// Get versioning info, currently only v1 is supported.
+	headers := resp.Headers()
+	var version string
+	if val, ok := headers["dapr-app-config-version"]; ok {
+		if len(val.Values) == 1 {
+			version = val.Values[0]
+		}
+	}
+
+	switch version {
+	case "v1":
+		fallthrough
+	default:
+		_, body := resp.RawData()
+		if err = h.json.Unmarshal(body, &config); err != nil {
+			return nil, err
+		}
 	}
 
 	return &config, nil
@@ -163,6 +179,7 @@ func (h *Channel) invokeMethodV1(ctx context.Context, req *invokev1.InvokeMethod
 
 	// Send request to user application
 	resp := fasthttp.AcquireResponse()
+
 	err := h.client.Do(channelReq, resp)
 	defer func() {
 		fasthttp.ReleaseRequest(channelReq)
@@ -190,8 +207,15 @@ func (h *Channel) constructRequest(ctx context.Context, req *invokev1.InvokeMeth
 	channelReq := fasthttp.AcquireRequest()
 
 	// Construct app channel URI: VERB http://localhost:3000/method?query1=value1
-	uri := fmt.Sprintf("%s/%s", h.baseAddress, req.Message().GetMethod())
-	channelReq.SetRequestURI(uri)
+	var uri string
+	method := req.Message().GetMethod()
+	if strings.HasPrefix(method, "/") {
+		uri = fmt.Sprintf("%s%s", h.baseAddress, method)
+	} else {
+		uri = fmt.Sprintf("%s/%s", h.baseAddress, method)
+	}
+	channelReq.URI().Update(uri)
+	channelReq.URI().DisablePathNormalizing = true
 	channelReq.URI().SetQueryString(req.EncodeHTTPQueryString())
 	channelReq.Header.SetMethod(req.Message().HttpExtension.Verb.String())
 
@@ -225,6 +249,11 @@ func (h *Channel) parseChannelResponse(req *invokev1.InvokeMethodRequest, resp *
 	var body []byte
 
 	statusCode = resp.StatusCode()
+
+	// TODO: Remove entire block when feature is finalized
+	if config.GetNoDefaultContentType() {
+		resp.Header.SetNoDefaultContentType(true)
+	}
 	contentType = (string)(resp.Header.ContentType())
 	body = resp.Body()
 

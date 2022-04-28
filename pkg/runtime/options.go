@@ -33,18 +33,6 @@ type (
 	Option func(o *runtimeOpts)
 )
 
-func WithEventStorage(eventsourdings ...es.EventStorage) Option {
-	return func(o *runtimeOpts) {
-		o.eventStorages = append(o.eventStorages, eventsourdings...)
-	}
-}
-
-func WithApplog(loggers ...applogger.Logger) Option {
-	return func(o *runtimeOpts) {
-		o.appLoggers = append(o.appLoggers, loggers...)
-	}
-}
-
 // WithSecretStores adds secret store components to the runtime.
 func WithSecretStores(secretStores ...secretstores.SecretStore) Option {
 	return func(o *runtimeOpts) {

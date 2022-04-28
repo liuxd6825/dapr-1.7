@@ -14,8 +14,8 @@ limitations under the License.
 package main
 
 import (
+	"github.com/dapr/components-contrib/liuxd/applog"
 	applog_loader "github.com/dapr/dapr/pkg/components/liuxd/applogger"
-	eventstorage_loader "github.com/dapr/dapr/pkg/components/liuxd/eventstorage"
 	"os"
 	"os/signal"
 	"strings"
@@ -37,7 +37,7 @@ import (
 	"github.com/dapr/components-contrib/secretstores/azure/keyvault"
 	gcp_secretmanager "github.com/dapr/components-contrib/secretstores/gcp/secretmanager"
 	"github.com/dapr/components-contrib/secretstores/hashicorp/vault"
-	sercetstores_kubernetes "github.com/dapr/components-contrib/secretstores/kubernetes"
+	secretstore_kubernetes "github.com/dapr/components-contrib/secretstores/kubernetes"
 	secretstore_env "github.com/dapr/components-contrib/secretstores/local/env"
 	secretstore_file "github.com/dapr/components-contrib/secretstores/local/file"
 
@@ -51,14 +51,17 @@ import (
 	state_cosmosdb "github.com/dapr/components-contrib/state/azure/cosmosdb"
 	state_azure_tablestorage "github.com/dapr/components-contrib/state/azure/tablestorage"
 	"github.com/dapr/components-contrib/state/cassandra"
+	"github.com/dapr/components-contrib/state/cockroachdb"
 	"github.com/dapr/components-contrib/state/couchbase"
 	"github.com/dapr/components-contrib/state/gcp/firestore"
 	"github.com/dapr/components-contrib/state/hashicorp/consul"
 	"github.com/dapr/components-contrib/state/hazelcast"
+	state_jetstream "github.com/dapr/components-contrib/state/jetstream"
 	"github.com/dapr/components-contrib/state/memcached"
 	"github.com/dapr/components-contrib/state/mongodb"
 	state_mysql "github.com/dapr/components-contrib/state/mysql"
 	state_oci_objectstorage "github.com/dapr/components-contrib/state/oci/objectstorage"
+	state_oracledatabase "github.com/dapr/components-contrib/state/oracledatabase"
 	"github.com/dapr/components-contrib/state/postgresql"
 	state_redis "github.com/dapr/components-contrib/state/redis"
 	"github.com/dapr/components-contrib/state/rethinkdb"
@@ -154,10 +157,10 @@ import (
 	"github.com/dapr/components-contrib/configuration"
 	configuration_redis "github.com/dapr/components-contrib/configuration/redis"
 
-	applog "github.com/dapr/components-contrib/liuxd/applog"
 	applog_mongo "github.com/dapr/components-contrib/liuxd/applog/mongo"
 	eventstorage "github.com/dapr/components-contrib/liuxd/eventstorage"
 	eventstorage_mongo "github.com/dapr/components-contrib/liuxd/eventstorage/mongo"
+	eventstorage_loader "github.com/dapr/dapr/pkg/components/liuxd/eventstorage"
 )
 
 var (
@@ -189,7 +192,7 @@ func main() {
 		),
 		runtime.WithSecretStores(
 			secretstores_loader.New("kubernetes", func() secretstores.SecretStore {
-				return sercetstores_kubernetes.NewKubernetesSecretStore(logContrib)
+				return secretstore_kubernetes.NewKubernetesSecretStore(logContrib)
 			}),
 			secretstores_loader.New("azure.keyvault", func() secretstores.SecretStore {
 				return keyvault.NewAzureKeyvaultSecretStore(logContrib)
@@ -271,6 +274,15 @@ func main() {
 			}),
 			state_loader.New("oci.objectstorage", func() state.Store {
 				return state_oci_objectstorage.NewOCIObjectStorageStore(logContrib)
+			}),
+			state_loader.New("jetstream", func() state.Store {
+				return state_jetstream.NewJetstreamStateStore(logContrib)
+			}),
+			state_loader.New("oracledatabase", func() state.Store {
+				return state_oracledatabase.NewOracleDatabaseStateStore(logContrib)
+			}),
+			state_loader.New("cockroachdb", func() state.Store {
+				return cockroachdb.New(logContrib)
 			}),
 		),
 		runtime.WithConfigurations(
