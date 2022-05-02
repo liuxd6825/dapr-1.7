@@ -3,6 +3,7 @@ package http
 import (
 	"encoding/json"
 	"github.com/dapr/components-contrib/liuxd/eventstorage"
+	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
 	"net/http"
 )
@@ -43,18 +44,23 @@ func (a *api) constructEventSourcingEndpoints() []Endpoint {
 }
 
 func (a *api) getAggregateById(ctx *fasthttp.RequestCtx) {
+	if !a.check(ctx) {
+		return
+	}
 	tenantId := ctx.UserValue("tenantId").(string)
 	id := ctx.UserValue("id").(string)
 	req := &eventstorage.ExistAggregateRequest{
 		TenantId:    tenantId,
 		AggregateId: id,
 	}
-
 	respData, err := a.eventStorage.ExistAggregate(ctx, req)
 	setResponseData(ctx, respData, err)
 }
 
 func (a *api) saveSnapshot(ctx *fasthttp.RequestCtx) {
+	if !a.check(ctx) {
+		return
+	}
 	data := eventstorage.SaveSnapshotRequest{}
 	err := json.Unmarshal(ctx.PostBody(), &data)
 	if err != nil {
@@ -66,6 +72,9 @@ func (a *api) saveSnapshot(ctx *fasthttp.RequestCtx) {
 }
 
 func (a *api) getEventById(ctx *fasthttp.RequestCtx) {
+	if !a.check(ctx) {
+		return
+	}
 	tenantId := ctx.UserValue("tenantId").(string)
 	id := ctx.UserValue("id").(string)
 	data := eventstorage.LoadEventRequest{
@@ -78,6 +87,9 @@ func (a *api) getEventById(ctx *fasthttp.RequestCtx) {
 }
 
 func (a *api) applyEvent(ctx *fasthttp.RequestCtx) {
+	if !a.check(ctx) {
+		return
+	}
 	data := eventstorage.ApplyEventRequest{}
 	err := json.Unmarshal(ctx.PostBody(), &data)
 	if err != nil {
@@ -87,6 +99,14 @@ func (a *api) applyEvent(ctx *fasthttp.RequestCtx) {
 
 	respData, err := a.eventStorage.ApplyEvent(ctx, &data)
 	setResponseData(ctx, respData, err)
+}
+
+func (a *api) check(ctx *fasthttp.RequestCtx) bool {
+	if a.eventStorage == nil {
+		setResponseData(ctx, nil, errors.New("error: api.eventStorage is nil, please check event storage component file. "))
+		return false
+	}
+	return true
 }
 
 func setResponseData(ctx *fasthttp.RequestCtx, data interface{}, err error) {

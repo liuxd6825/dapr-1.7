@@ -182,6 +182,9 @@ func (s *server) StartNonBlocking() error {
 		}
 	}
 
+/*	go func() {
+		testServer()
+	}()*/
 	return nil
 }
 
