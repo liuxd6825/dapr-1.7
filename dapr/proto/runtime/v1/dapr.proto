@@ -19,6 +19,8 @@ import "google/protobuf/any.proto";
 import "google/protobuf/empty.proto";
 import "dapr/proto/common/v1/common.proto";
 
+import "dapr/proto/runtime/v1/dapr_liuxd.proto";
+
 option csharp_namespace = "Dapr.Client.Autogen.Grpc.v1";
 option java_outer_classname = "DaprProtos";
 option java_package = "io.dapr.v1";
@@ -103,7 +105,38 @@ service Dapr {
 
   // Shutdown the sidecar
   rpc Shutdown (google.protobuf.Empty) returns (google.protobuf.Empty) {}
+
+  // LoadEvents  加载事件
+  rpc LoadEvents(LoadEventRequest)returns(LoadEventResponse){}
+
+  // SaveSnapshot 保存事件快照
+  rpc SaveSnapshot(SaveSnapshotRequest) returns(SaveSnapshotResponse) {}
+
+  //ExistAggregate 检查聚合根是否存在
+  rpc ExistAggregate(ExistAggregateRequest) returns(ExistAggregateResponse){}
+
+  // ApplyEvent 应用事件到聚合根上
+  rpc ApplyEvent(ApplyEventRequest)returns(ApplyEventResponse){}
+
+  // WriteEventLog 写事件日志
+  rpc WriteEventLog(WriteEventLogRequest)returns(WriteEventLogResponse){}
+
+  // UpdateEventLog 更新事件日志
+  rpc UpdateEventLog(UpdateEventLogRequest)returns(UpdateEventLogResponse){}
+
+  // GetEventLogByCommandId 按命令id获取事件日志
+  rpc GetEventLogByCommandId(GetEventLogByCommandIdRequest)returns(GetEventLogByCommandIdResponse){}
+
+  // WriteAppLog 写应用日志
+  rpc WriteAppLog(WriteAppLogRequest)returns(WriteAppLogResponse){}
+
+  // UpdateAppLog 更新应用日志
+  rpc UpdateAppLog(UpdateAppLogRequest)returns(UpdateAppLogResponse){}
+
+  // GetAppLogById 按id获取应用日志
+  rpc GetAppLogById(GetAppLogByIdRequest)returns(GetAppLogByIdResponse){}
 }
+
 
 // InvokeServiceRequest represents the request message for Service invocation.
 message InvokeServiceRequest {
@@ -535,4 +568,3 @@ message UnsubscribeConfigurationResponse {
   bool ok = 1;
   string message = 2;
 }
-

@@ -140,8 +140,10 @@ func NewAPI(
 	secretStores map[string]secretstores.SecretStore,
 	secretsConfiguration map[string]config.SecretsScope,
 	pubsubAdapter runtime_pubsub.Adapter,
+
 	eventStorage eventstorage.EventStorage, // eventSourcing liuxd
-	appLogger applog.Logger,                // logger liuxd
+	appLogger applog.Logger, // logger liuxd
+
 	actor actors.Actors,
 	sendToOutputBindingFn func(name string, req *bindings.InvokeRequest) (*bindings.InvokeResponse, error),
 	tracingSpec config.TracingSpec,

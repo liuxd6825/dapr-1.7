@@ -17,6 +17,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/dapr/components-contrib/liuxd/applog"
 	"sort"
 	"strconv"
 	"sync"
@@ -57,6 +58,8 @@ import (
 	"github.com/dapr/dapr/pkg/resiliency"
 	"github.com/dapr/dapr/pkg/resiliency/breaker"
 	runtime_pubsub "github.com/dapr/dapr/pkg/runtime/pubsub"
+
+	"github.com/dapr/components-contrib/liuxd/eventstorage"
 )
 
 const (
@@ -102,6 +105,21 @@ type API interface {
 	SetMetadata(ctx context.Context, in *runtimev1pb.SetMetadataRequest) (*emptypb.Empty, error)
 	// Shutdown the sidecar
 	Shutdown(ctx context.Context, in *emptypb.Empty) (*emptypb.Empty, error)
+
+	// liuxd: DDD event storage get aggregate root by id
+	LoadEvents(context.Context, *runtimev1pb.LoadEventRequest) (*runtimev1pb.LoadEventResponse, error)
+	// liuxd: DDD event storage save event snapshot
+	SaveSnapshot(context.Context, *runtimev1pb.SaveSnapshotRequest) (*runtimev1pb.SaveSnapshotResponse, error)
+	// liuxd: DDD event storage get ExistAggregate
+	ExistAggregate(context.Context, *runtimev1pb.ExistAggregateRequest) (*runtimev1pb.ExistAggregateResponse, error)
+	// liuxd: DDD event storage apply event
+	ApplyEvent(context.Context, *runtimev1pb.ApplyEventRequest) (*runtimev1pb.ApplyEventResponse, error)
+	WriteEventLog(context.Context, *runtimev1pb.WriteEventLogRequest) (*runtimev1pb.WriteEventLogResponse, error)
+	UpdateEventLog(context.Context, *runtimev1pb.UpdateEventLogRequest) (*runtimev1pb.UpdateEventLogResponse, error)
+	GetEventLogByCommandId(context.Context, *runtimev1pb.GetEventLogByCommandIdRequest) (*runtimev1pb.GetEventLogByCommandIdResponse, error)
+	WriteAppLog(context.Context, *runtimev1pb.WriteAppLogRequest) (*runtimev1pb.WriteAppLogResponse, error)
+	UpdateAppLog(context.Context, *runtimev1pb.UpdateAppLogRequest) (*runtimev1pb.UpdateAppLogResponse, error)
+	GetAppLogById(context.Context, *runtimev1pb.GetAppLogByIdRequest) (*runtimev1pb.GetAppLogByIdResponse, error)
 }
 
 type api struct {
@@ -117,14 +135,18 @@ type api struct {
 	configurationSubscribe     map[string]chan struct{} // store map[storeName||key1,key2] -> stopChan
 	configurationSubscribeLock sync.Mutex
 	pubsubAdapter              runtime_pubsub.Adapter
-	id                         string
-	sendToOutputBindingFn      func(name string, req *bindings.InvokeRequest) (*bindings.InvokeResponse, error)
-	tracingSpec                config.TracingSpec
-	accessControlList          *config.AccessControlList
-	appProtocol                string
-	extendedMetadata           sync.Map
-	components                 []components_v1alpha.Component
-	shutdown                   func()
+
+	eventStorage eventstorage.EventStorage
+	appLogger    applog.Logger
+
+	id                    string
+	sendToOutputBindingFn func(name string, req *bindings.InvokeRequest) (*bindings.InvokeResponse, error)
+	tracingSpec           config.TracingSpec
+	accessControlList     *config.AccessControlList
+	appProtocol           string
+	extendedMetadata      sync.Map
+	components            []components_v1alpha.Component
+	shutdown              func()
 }
 
 // NewAPI returns a new gRPC API.
@@ -136,6 +158,10 @@ func NewAPI(
 	secretsConfiguration map[string]config.SecretsScope,
 	configurationStores map[string]configuration.Store,
 	pubsubAdapter runtime_pubsub.Adapter,
+
+	eventStorage eventstorage.EventStorage, // eventSourcing liuxd
+	appLogger applog.Logger, // logger liuxd
+
 	directMessaging messaging.DirectMessaging,
 	actor actors.Actors,
 	sendToOutputBindingFn func(name string, req *bindings.InvokeRequest) (*bindings.InvokeResponse, error),
@@ -152,12 +178,16 @@ func NewAPI(
 	}
 
 	return &api{
-		directMessaging:          directMessaging,
-		actor:                    actor,
-		id:                       appID,
-		resiliency:               resiliency,
-		appChannel:               appChannel,
-		pubsubAdapter:            pubsubAdapter,
+		directMessaging: directMessaging,
+		actor:           actor,
+		id:              appID,
+		resiliency:      resiliency,
+		appChannel:      appChannel,
+		pubsubAdapter:   pubsubAdapter,
+
+		eventStorage: eventStorage,
+		appLogger:    appLogger,
+
 		stateStores:              stateStores,
 		transactionalStateStores: transactionalStateStores,
 		secretStores:             secretStores,
