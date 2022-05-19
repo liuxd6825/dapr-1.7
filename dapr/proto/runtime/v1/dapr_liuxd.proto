@@ -33,8 +33,8 @@ message LoadEventResponse{
     // json format
     string aggregate_data=1;
     string aggregate_revision=2;
-    uint64  sequence_number=3;
-    map<string,string> metadata=4;
+    uint64 sequence_number=3;
+    string metadata=4;
   }
 
   message EventDto {
@@ -61,7 +61,7 @@ message SaveSnapshotRequest{
   string aggregate_data=4;
   string aggregate_revision=5;
   uint64 sequence_number=6;
-  map<string,string> metadata=7;
+  string metadata=7;
 }
 
 message SaveSnapshotResponse{
@@ -80,7 +80,7 @@ message ExistAggregateResponse{
 message ApplyEventRequest{
   string tenant_id=1;
   // json format
-  map<string,string> metadata=2;
+  string metadata=2;
   string command_id=3;
   string event_id=4;
   // json format

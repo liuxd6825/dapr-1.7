@@ -7,7 +7,15 @@ import (
 	"k8s.io/apimachinery/pkg/util/json"
 )
 
-// LoadEvent 是否存在聚合根
+//
+// LoadEvents
+// @Description:
+// @receiver a
+// @param ctx
+// @param request
+// @return *runtimev1pb.LoadEventResponse
+// @return error
+//
 func (a *api) LoadEvents(ctx context.Context, request *runtimev1pb.LoadEventRequest) (*runtimev1pb.LoadEventResponse, error) {
 	in := &eventstorage.LoadEventRequest{
 		TenantId:    request.GetTenantId(),
@@ -62,9 +70,23 @@ func (a *api) LoadEvents(ctx context.Context, request *runtimev1pb.LoadEventRequ
 	return &resp, nil
 }
 
+//
+// SaveSnapshot
+// @Description:
+// @receiver a
+// @param ctx
+// @param request
+// @return *runtimev1pb.SaveSnapshotResponse
+// @return error
+//
 func (a *api) SaveSnapshot(ctx context.Context, request *runtimev1pb.SaveSnapshotRequest) (*runtimev1pb.SaveSnapshotResponse, error) {
 
-	aggregateData, err := newMap(request.AggregateData)
+	aggregateData, err := newMapInterface(request.AggregateData)
+	if err != nil {
+		return nil, err
+	}
+
+	metadata, err := newMapString(request.Metadata)
 	if err != nil {
 		return nil, err
 	}
@@ -73,10 +95,10 @@ func (a *api) SaveSnapshot(ctx context.Context, request *runtimev1pb.SaveSnapsho
 		TenantId:          request.GetTenantId(),
 		AggregateId:       request.GetAggregateId(),
 		AggregateType:     request.GetAggregateType(),
-		AggregateData:     aggregateData,
+		AggregateData:     *aggregateData,
 		AggregateRevision: request.GetAggregateRevision(),
 		SequenceNumber:    request.GetSequenceNumber(),
-		Metadata:          request.GetMetadata(),
+		Metadata:          *metadata,
 	}
 	_, err = a.eventStorage.SaveSnapshot(ctx, in)
 	if err != nil {
@@ -86,6 +108,15 @@ func (a *api) SaveSnapshot(ctx context.Context, request *runtimev1pb.SaveSnapsho
 	return &resp, nil
 }
 
+//
+// ExistAggregate
+// @Description:
+// @receiver a
+// @param ctx
+// @param request
+// @return *runtimev1pb.ExistAggregateResponse
+// @return error
+//
 func (a *api) ExistAggregate(ctx context.Context, request *runtimev1pb.ExistAggregateRequest) (*runtimev1pb.ExistAggregateResponse, error) {
 	in := &eventstorage.ExistAggregateRequest{
 		TenantId:    request.TenantId,
@@ -101,20 +132,33 @@ func (a *api) ExistAggregate(ctx context.Context, request *runtimev1pb.ExistAggr
 	return &resp, nil
 }
 
+//
+// ApplyEvent
+// @Description: 应用领域事件
+// @receiver a
+// @param ctx
+// @param request
+// @return *runtimev1pb.ApplyEventResponse
+// @return error
+//
 func (a *api) ApplyEvent(ctx context.Context, request *runtimev1pb.ApplyEventRequest) (*runtimev1pb.ApplyEventResponse, error) {
-	eventData, err := newMap(request.EventData)
+	eventData, err := newMapInterface(request.EventData)
+	if err != nil {
+		return nil, err
+	}
+	metadata, err := newMapString(request.Metadata)
 	if err != nil {
 		return nil, err
 	}
 
 	in := &eventstorage.ApplyEventRequest{
 		TenantId:      request.TenantId,
-		Metadata:      request.Metadata,
+		Metadata:      *metadata,
 		CommandId:     request.CommandId,
 		EventType:     request.EventType,
 		EventId:       request.EventId,
 		EventRevision: request.EventRevision,
-		EventData:     eventData,
+		EventData:     *eventData,
 		AggregateId:   request.AggregateId,
 		AggregateType: request.AggregateType,
 		PubsubName:    request.PubsubName,
@@ -128,12 +172,20 @@ func (a *api) ApplyEvent(ctx context.Context, request *runtimev1pb.ApplyEventReq
 	return resp, nil
 }
 
-func newMap(jsonStr string) (map[string]interface{}, error) {
-	mapData := make(map[string]interface{})
-	if err := json.Unmarshal([]byte(jsonStr), mapData); err != nil {
+func newMapInterface(jsonStr string) (*map[string]interface{}, error) {
+	mapData := map[string]interface{}{}
+	if err := json.Unmarshal([]byte(jsonStr), &mapData); err != nil {
 		return nil, err
 	}
-	return mapData, nil
+	return &mapData, nil
+}
+
+func newMapString(jsonStr string) (*map[string]string, error) {
+	mapData := map[string]string{}
+	if err := json.Unmarshal([]byte(jsonStr), &mapData); err != nil {
+		return nil, err
+	}
+	return &mapData, nil
 }
 
 func mapAsStr(data map[string]interface{}) (*string, error) {
