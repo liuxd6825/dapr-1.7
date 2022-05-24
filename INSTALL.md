@@ -23,8 +23,14 @@
 
 
 - 编译二进制文件 \
-  $ make build-linux GOOS=linux GOARCH=arm64
+  linux-arm64 \
+  $ make build-linux GOOS=linux GOARCH=arm64 \
+  
+  windows-amd64 \
+  $ make build GOOS=windows GOARCH=amd64 \
 
+  mac-arm64 \
+  $ make build GOOS=darwin GOARCH=arm64 \
 
 - 修改docker/docker.rm文件， 增加参数 --load
   
