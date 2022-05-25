@@ -15,6 +15,11 @@ package main
 
 import (
 	"context"
+	"github.com/dapr/dapr/cmd/placement/config"
+	"github.com/dapr/dapr/pkg/placement"
+	"github.com/dapr/dapr/pkg/placement/hashing"
+	"github.com/dapr/dapr/pkg/placement/monitoring"
+	"github.com/dapr/dapr/pkg/placement/raft"
 	"os"
 	"os/signal"
 	"strconv"
@@ -26,10 +31,6 @@ import (
 	"github.com/dapr/dapr/pkg/credentials"
 	"github.com/dapr/dapr/pkg/fswatcher"
 	"github.com/dapr/dapr/pkg/health"
-	"github.com/dapr/dapr/pkg/placement"
-	"github.com/dapr/dapr/pkg/placement/hashing"
-	"github.com/dapr/dapr/pkg/placement/monitoring"
-	"github.com/dapr/dapr/pkg/placement/raft"
 	"github.com/dapr/dapr/pkg/version"
 )
 
@@ -40,16 +41,17 @@ const gracefulTimeout = 10 * time.Second
 func main() {
 	log.Infof("starting Dapr Placement Service -- version %s -- commit %s", version.Version(), version.Commit())
 
-	cfg := newConfig()
+	cfg := config.NewConfig()
+	println(cfg)
 
 	// Apply options to all loggers.
-	if err := logger.ApplyOptionsToLoggers(&cfg.loggerOptions); err != nil {
+	if err := logger.ApplyOptionsToLoggers(&cfg.LoggerOptions); err != nil {
 		log.Fatal(err)
 	}
-	log.Infof("log level set to: %s", cfg.loggerOptions.OutputLevel)
+	log.Infof("log level set to: %s", cfg.LoggerOptions.OutputLevel)
 
 	// Initialize dapr metrics for placement.
-	if err := cfg.metricsExporter.Init(); err != nil {
+	if err := cfg.MetricsExporter.Init(); err != nil {
 		log.Fatal(err)
 	}
 
@@ -58,7 +60,7 @@ func main() {
 	}
 
 	// Start Raft cluster.
-	raftServer := raft.New(cfg.raftID, cfg.raftInMemEnabled, cfg.raftPeers, cfg.raftLogStorePath)
+	raftServer := raft.New(cfg.RaftID, cfg.RaftInMemEnabled, cfg.RaftPeers, cfg.RaftLogStorePath)
 	if raftServer == nil {
 		log.Fatal("failed to create raft server.")
 	}
@@ -68,19 +70,19 @@ func main() {
 	}
 
 	// Start Placement gRPC server.
-	hashing.SetReplicationFactor(cfg.replicationFactor)
+	hashing.SetReplicationFactor(cfg.ReplicationFactor)
 	apiServer := placement.NewPlacementService(raftServer)
 	var certChain *credentials.CertChain
-	if cfg.tlsEnabled {
-		certChain = loadCertChains(cfg.certChainPath)
+	if cfg.TlsEnabled {
+		certChain = loadCertChains(cfg.CertChainPath)
 	}
 
 	go apiServer.MonitorLeadership()
-	go apiServer.Run(strconv.Itoa(cfg.placementPort), certChain)
-	log.Infof("placement service started on port %d", cfg.placementPort)
+	go apiServer.Run(strconv.Itoa(cfg.PlacementPort), certChain)
+	log.Infof("placement service started on port %d", cfg.PlacementPort)
 
 	// Start Healthz endpoint.
-	go startHealthzServer(cfg.healthzPort)
+	go startHealthzServer(cfg.HealthzPort)
 
 	// Relay incoming process signal to exit placement gracefully
 	signalCh := make(chan os.Signal, 10)
