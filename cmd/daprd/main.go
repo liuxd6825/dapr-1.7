@@ -159,7 +159,7 @@ import (
 
 	applog_mongo "github.com/dapr/components-contrib/liuxd/applog/mongo"
 	eventstorage "github.com/dapr/components-contrib/liuxd/eventstorage"
-	eventstorage_mongo "github.com/dapr/components-contrib/liuxd/eventstorage/mongo"
+	eventstorage_mongo "github.com/dapr/components-contrib/liuxd/eventstorage/es_mongo"
 	eventstorage_loader "github.com/dapr/dapr/pkg/components/liuxd/eventstorage"
 )
 

@@ -80,8 +80,10 @@ type DaprClient interface {
 	LoadEvents(ctx context.Context, in *LoadEventRequest, opts ...grpc.CallOption) (*LoadEventResponse, error)
 	// SaveSnapshot 保存事件快照
 	SaveSnapshot(ctx context.Context, in *SaveSnapshotRequest, opts ...grpc.CallOption) (*SaveSnapshotResponse, error)
-	//ExistAggregate 检查聚合根是否存在
-	ExistAggregate(ctx context.Context, in *ExistAggregateRequest, opts ...grpc.CallOption) (*ExistAggregateResponse, error)
+	// CreateEvent 创建聚合根事件
+	CreateEvent(ctx context.Context, in *CreateEventRequest, opts ...grpc.CallOption) (*CreateEventResponse, error)
+	// DeleteEvent 删除聚合根事件
+	DeleteEvent(ctx context.Context, in *DeleteEventRequest, opts ...grpc.CallOption) (*DeleteEventResponse, error)
 	// ApplyEvent 应用事件到聚合根上
 	ApplyEvent(ctx context.Context, in *ApplyEventRequest, opts ...grpc.CallOption) (*ApplyEventResponse, error)
 	// WriteEventLog 写事件日志
@@ -381,9 +383,18 @@ func (c *daprClient) SaveSnapshot(ctx context.Context, in *SaveSnapshotRequest, 
 	return out, nil
 }
 
-func (c *daprClient) ExistAggregate(ctx context.Context, in *ExistAggregateRequest, opts ...grpc.CallOption) (*ExistAggregateResponse, error) {
-	out := new(ExistAggregateResponse)
-	err := c.cc.Invoke(ctx, "/dapr.proto.runtime.v1.Dapr/ExistAggregate", in, out, opts...)
+func (c *daprClient) CreateEvent(ctx context.Context, in *CreateEventRequest, opts ...grpc.CallOption) (*CreateEventResponse, error) {
+	out := new(CreateEventResponse)
+	err := c.cc.Invoke(ctx, "/dapr.proto.runtime.v1.Dapr/CreateEvent", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *daprClient) DeleteEvent(ctx context.Context, in *DeleteEventRequest, opts ...grpc.CallOption) (*DeleteEventResponse, error) {
+	out := new(DeleteEventResponse)
+	err := c.cc.Invoke(ctx, "/dapr.proto.runtime.v1.Dapr/DeleteEvent", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -513,8 +524,10 @@ type DaprServer interface {
 	LoadEvents(context.Context, *LoadEventRequest) (*LoadEventResponse, error)
 	// SaveSnapshot 保存事件快照
 	SaveSnapshot(context.Context, *SaveSnapshotRequest) (*SaveSnapshotResponse, error)
-	//ExistAggregate 检查聚合根是否存在
-	ExistAggregate(context.Context, *ExistAggregateRequest) (*ExistAggregateResponse, error)
+	// CreateEvent 创建聚合根事件
+	CreateEvent(context.Context, *CreateEventRequest) (*CreateEventResponse, error)
+	// DeleteEvent 删除聚合根事件
+	DeleteEvent(context.Context, *DeleteEventRequest) (*DeleteEventResponse, error)
 	// ApplyEvent 应用事件到聚合根上
 	ApplyEvent(context.Context, *ApplyEventRequest) (*ApplyEventResponse, error)
 	// WriteEventLog 写事件日志
@@ -529,7 +542,6 @@ type DaprServer interface {
 	UpdateAppLog(context.Context, *UpdateAppLogRequest) (*UpdateAppLogResponse, error)
 	// GetAppLogById 按id获取应用日志
 	GetAppLogById(context.Context, *GetAppLogByIdRequest) (*GetAppLogByIdResponse, error)
-	//mustEmbedUnimplementedDaprServer()
 }
 
 // UnimplementedDaprServer must be embedded to have forward compatible implementations.
@@ -620,8 +632,11 @@ func (UnimplementedDaprServer) LoadEvents(context.Context, *LoadEventRequest) (*
 func (UnimplementedDaprServer) SaveSnapshot(context.Context, *SaveSnapshotRequest) (*SaveSnapshotResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SaveSnapshot not implemented")
 }
-func (UnimplementedDaprServer) ExistAggregate(context.Context, *ExistAggregateRequest) (*ExistAggregateResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ExistAggregate not implemented")
+func (UnimplementedDaprServer) CreateEvent(context.Context, *CreateEventRequest) (*CreateEventResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateEvent not implemented")
+}
+func (UnimplementedDaprServer) DeleteEvent(context.Context, *DeleteEventRequest) (*DeleteEventResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteEvent not implemented")
 }
 func (UnimplementedDaprServer) ApplyEvent(context.Context, *ApplyEventRequest) (*ApplyEventResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ApplyEvent not implemented")
@@ -1164,20 +1179,38 @@ func _Dapr_SaveSnapshot_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Dapr_ExistAggregate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ExistAggregateRequest)
+func _Dapr_CreateEvent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateEventRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DaprServer).ExistAggregate(ctx, in)
+		return srv.(DaprServer).CreateEvent(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/dapr.proto.runtime.v1.Dapr/ExistAggregate",
+		FullMethod: "/dapr.proto.runtime.v1.Dapr/CreateEvent",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DaprServer).ExistAggregate(ctx, req.(*ExistAggregateRequest))
+		return srv.(DaprServer).CreateEvent(ctx, req.(*CreateEventRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Dapr_DeleteEvent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteEventRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DaprServer).DeleteEvent(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/dapr.proto.runtime.v1.Dapr/DeleteEvent",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DaprServer).DeleteEvent(ctx, req.(*DeleteEventRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1424,8 +1457,12 @@ var Dapr_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Dapr_SaveSnapshot_Handler,
 		},
 		{
-			MethodName: "ExistAggregate",
-			Handler:    _Dapr_ExistAggregate_Handler,
+			MethodName: "CreateEvent",
+			Handler:    _Dapr_CreateEvent_Handler,
+		},
+		{
+			MethodName: "DeleteEvent",
+			Handler:    _Dapr_DeleteEvent_Handler,
 		},
 		{
 			MethodName: "ApplyEvent",

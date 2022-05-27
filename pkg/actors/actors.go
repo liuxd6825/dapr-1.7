@@ -406,7 +406,13 @@ func (a *actorsRuntime) callLocalActor(ctx context.Context, req *invokev1.Invoke
 
 	// Replace method to actors method.
 	originalMethod := req.Message().Method
-	req.Message().Method = fmt.Sprintf("actors/%s/%s/method/%s", actorTypeID.GetActorType(), actorTypeID.GetActorId(), req.Message().Method)
+
+	// req.Message().Method = fmt.Sprintf("actors/%s/%s/method/%s", actorTypeID.GetActorType(), actorTypeID.GetActorId(), req.Message().Method)
+	// liuxd
+	reqMessage := req.Message()
+	if reqMessage != nil {
+		reqMessage.Method = fmt.Sprintf("actors/%s/%s/method/%s", actorTypeID.GetActorType(), actorTypeID.GetActorId(), req.Message().Method)
+	}
 
 	// Reset the method so we can perform retries.
 	defer func() { req.Message().Method = originalMethod }()
@@ -1378,7 +1384,7 @@ func (a *actorsRuntime) migrateRemindersForActorType(actorType string, actorMeta
 		actorRemindersPartitions[partitionID-1] = append(actorRemindersPartitions[partitionID-1], reminderRef.reminder)
 	}
 
-	// Save to database.
+	// Create to database.
 	for i := 0; i < actorMetadata.RemindersMetadata.PartitionCount; i++ {
 		partitionID := i + 1
 		stateKey := actorMetadata.calculateRemindersStateKey(actorType, uint32(partitionID))
@@ -1389,7 +1395,7 @@ func (a *actorsRuntime) migrateRemindersForActorType(actorType string, actorMeta
 		}
 	}
 
-	// Save new metadata so the new "metadataID" becomes the new de factor referenced list for reminders.
+	// Create new metadata so the new "metadataID" becomes the new de factor referenced list for reminders.
 	err = a.saveActorTypeMetadata(actorType, actorMetadata)
 	if err != nil {
 		return err

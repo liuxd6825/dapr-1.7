@@ -179,7 +179,7 @@ func TestExecuteActorStateTransaction(t *testing.T) {
 		assert.Equal(t, codes.Internal, status.Code(err))
 	})
 
-	t.Run("Save actor state - Upsert and Delete OK", func(t *testing.T) {
+	t.Run("Create actor state - Upsert and Delete OK", func(t *testing.T) {
 		data := []byte("{ \"data\": 123 }")
 		mockActors := new(actors.MockActors)
 		mockActors.On("TransactionalStateOperation", &actors.TransactionalRequest{

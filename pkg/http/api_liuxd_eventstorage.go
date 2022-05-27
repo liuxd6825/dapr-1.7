@@ -24,16 +24,22 @@ func (a *api) constructEventSourcingEndpoints() []Endpoint {
 		},
 		{
 			Methods: []string{fasthttp.MethodPost},
-			Route:   "event-storage/events/apply",
+			Route:   "event-storage/events/apply-events",
 			Version: apiVersionV1,
-			Handler: a.applyEvent,
+			Handler: a.applyEvents,
 		},
 		{
-			Methods: []string{fasthttp.MethodGet},
-			Route:   "event-storage/aggregates/{tenantId}/{id}",
+			Methods: []string{fasthttp.MethodPost},
+			Route:   "event-storage/events/create-aggregate",
 			Version: apiVersionV1,
-			Handler: a.getAggregateById,
+			Handler: a.createEvent,
 		},
+		/*		{
+				Methods: []string{fasthttp.MethodGet},
+				Route:   "event-storage/aggregates/{tenantId}/{id}",
+				Version: apiVersionV1,
+				Handler: a.getAggregateById,
+			},*/
 		{
 			Methods: []string{fasthttp.MethodPost},
 			Route:   "event-storage/snapshot/save",
@@ -43,7 +49,7 @@ func (a *api) constructEventSourcingEndpoints() []Endpoint {
 	}
 }
 
-func (a *api) getAggregateById(ctx *fasthttp.RequestCtx) {
+/*func (a *api) getAggregateById(ctx *fasthttp.RequestCtx) {
 	if !a.check(ctx) {
 		return
 	}
@@ -55,7 +61,7 @@ func (a *api) getAggregateById(ctx *fasthttp.RequestCtx) {
 	}
 	respData, err := a.eventStorage.ExistAggregate(ctx, req)
 	setResponseData(ctx, respData, err)
-}
+}*/
 
 func (a *api) saveSnapshot(ctx *fasthttp.RequestCtx) {
 	if !a.check(ctx) {
@@ -82,15 +88,15 @@ func (a *api) getEventById(ctx *fasthttp.RequestCtx) {
 		AggregateId: id,
 	}
 
-	respData, err := a.eventStorage.LoadEvents(ctx, &data)
+	respData, err := a.eventStorage.LoadEvent(ctx, &data)
 	setResponseData(ctx, respData, err)
 }
 
-func (a *api) applyEvent(ctx *fasthttp.RequestCtx) {
+func (a *api) applyEvents(ctx *fasthttp.RequestCtx) {
 	if !a.check(ctx) {
 		return
 	}
-	data := eventstorage.ApplyEventRequest{}
+	data := eventstorage.ApplyEventsRequest{}
 	err := json.Unmarshal(ctx.PostBody(), &data)
 	if err != nil {
 		setResponseData(ctx, nil, err)
@@ -98,6 +104,21 @@ func (a *api) applyEvent(ctx *fasthttp.RequestCtx) {
 	}
 
 	respData, err := a.eventStorage.ApplyEvent(ctx, &data)
+	setResponseData(ctx, respData, err)
+}
+
+func (a *api) createEvent(ctx *fasthttp.RequestCtx) {
+	if !a.check(ctx) {
+		return
+	}
+	data := eventstorage.CreateEventRequest{}
+	err := json.Unmarshal(ctx.PostBody(), &data)
+	if err != nil {
+		setResponseData(ctx, nil, err)
+		return
+	}
+
+	respData, err := a.eventStorage.CreateEvent(ctx, &data)
 	setResponseData(ctx, respData, err)
 }
 

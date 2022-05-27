@@ -110,10 +110,13 @@ type API interface {
 	LoadEvents(context.Context, *runtimev1pb.LoadEventRequest) (*runtimev1pb.LoadEventResponse, error)
 	// liuxd: DDD event storage save event snapshot
 	SaveSnapshot(context.Context, *runtimev1pb.SaveSnapshotRequest) (*runtimev1pb.SaveSnapshotResponse, error)
-	// liuxd: DDD event storage get ExistAggregate
-	ExistAggregate(context.Context, *runtimev1pb.ExistAggregateRequest) (*runtimev1pb.ExistAggregateResponse, error)
 	// liuxd: DDD event storage apply event
 	ApplyEvent(context.Context, *runtimev1pb.ApplyEventRequest) (*runtimev1pb.ApplyEventResponse, error)
+	// liuxd: DDD event storage apply event
+	CreateEvent(context.Context, *runtimev1pb.CreateEventRequest) (*runtimev1pb.CreateEventResponse, error)
+	// liuxd: DDD event storage apply event
+	DeleteEvent(context.Context, *runtimev1pb.DeleteEventRequest) (*runtimev1pb.DeleteEventResponse, error)
+
 	WriteEventLog(context.Context, *runtimev1pb.WriteEventLogRequest) (*runtimev1pb.WriteEventLogResponse, error)
 	UpdateEventLog(context.Context, *runtimev1pb.UpdateEventLogRequest) (*runtimev1pb.UpdateEventLogResponse, error)
 	GetEventLogByCommandId(context.Context, *runtimev1pb.GetEventLogByCommandIdRequest) (*runtimev1pb.GetEventLogByCommandIdResponse, error)

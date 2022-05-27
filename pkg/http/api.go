@@ -1020,7 +1020,7 @@ func (a *api) onDirectMessage(reqCtx *fasthttp.RequestCtx) {
 	// Construct internal invoke method request
 	req := invokev1.NewInvokeMethodRequest(invokeMethodName).WithHTTPExtension(verb, reqCtx.QueryArgs().String())
 	req.WithRawData(reqCtx.Request.Body(), string(reqCtx.Request.Header.ContentType()))
-	// Save headers to internal metadata
+	// Create headers to internal metadata
 	req.WithFastHTTPHeaders(&reqCtx.Request.Header)
 
 	policy := a.resiliency.EndpointPolicy(reqCtx, targetID, fmt.Sprintf("%s:%s", targetID, invokeMethodName))
@@ -1368,7 +1368,7 @@ func (a *api) onDirectActorMessage(reqCtx *fasthttp.RequestCtx) {
 	req.WithHTTPExtension(verb, reqCtx.QueryArgs().String())
 	req.WithRawData(body, string(reqCtx.Request.Header.ContentType()))
 
-	// Save headers to metadata.
+	// Create headers to metadata.
 	metadata := map[string][]string{}
 	reqCtx.Request.Header.VisitAll(func(key []byte, value []byte) {
 		metadata[string(key)] = []string{string(value)}

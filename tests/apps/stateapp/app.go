@@ -127,7 +127,7 @@ func load(data []byte, statestore string, meta map[string]string) (int, error) {
 	}
 	defer res.Body.Close()
 
-	// Save must return 204
+	// Create must return 204
 	if res.StatusCode != http.StatusNoContent {
 		err = fmt.Errorf("expected status code 204, got %d", res.StatusCode)
 	}

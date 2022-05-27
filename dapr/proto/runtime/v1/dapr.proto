@@ -112,8 +112,11 @@ service Dapr {
   // SaveSnapshot 保存事件快照
   rpc SaveSnapshot(SaveSnapshotRequest) returns(SaveSnapshotResponse) {}
 
-  //ExistAggregate 检查聚合根是否存在
-  rpc ExistAggregate(ExistAggregateRequest) returns(ExistAggregateResponse){}
+  // CreateEvent 创建聚合根事件
+  rpc CreateEvent(CreateEventRequest)returns(CreateEventResponse){}
+
+  // DeleteEvent 删除聚合根事件
+  rpc DeleteEvent(DeleteEventRequest)returns(DeleteEventResponse){}
 
   // ApplyEvent 应用事件到聚合根上
   rpc ApplyEvent(ApplyEventRequest)returns(ApplyEventResponse){}

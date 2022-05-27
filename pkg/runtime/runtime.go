@@ -174,8 +174,8 @@ type DaprRuntime struct {
 	pubSubRegistry         pubsub_loader.Registry
 	pubSubs                map[string]pubsub.PubSub
 
-	eventStorageRegistry es_loader.Registry // 事件溯源注册器
-	eventStorage         es.EventStorage    // 事件溯源处理
+	eventStorageRegistry es_loader.Registry // 事件存储注册器
+	eventStorage         es.EventStorage    // 事件存储处理
 
 	applogRegistry applog_loader.Registry
 	appLogger      applog.Logger

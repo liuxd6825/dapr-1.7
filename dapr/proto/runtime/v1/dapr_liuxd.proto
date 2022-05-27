@@ -30,20 +30,18 @@ message LoadEventRequest {
 
 message LoadEventResponse{
   message SnapshotDto {
-    // json format
-    string aggregate_data=1;
+    string aggregate_data=1;     // json format
     string aggregate_revision=2;
     uint64 sequence_number=3;
     string metadata=4;
   }
 
   message EventDto {
-    string  event_id=1;
-    // json format
-    string event_data=2;
+    string event_id=1;
+    string event_data=2;  // json format
     string event_type=3;
-    string event_revision=4;
-    uint64  sequence_number=5;
+    string event_version=4;
+    uint64 sequence_number=5;
   }
 
   string tenant_id=1;
@@ -57,9 +55,8 @@ message SaveSnapshotRequest{
   string tenant_id=1;
   string aggregate_id=2;
   string aggregate_type=3;
-  // json format
-  string aggregate_data=4;
-  string aggregate_revision=5;
+  string aggregate_data=4; // json format
+  string aggregate_version=5;
   uint64 sequence_number=6;
   string metadata=7;
 }
@@ -68,32 +65,50 @@ message SaveSnapshotResponse{
 
 }
 
-message ExistAggregateRequest{
-  string tenant_id=1;
-  string aggregate_id=2;
-}
-
-message ExistAggregateResponse{
-  bool is_exist=1;
-}
 
 message ApplyEventRequest{
   string tenant_id=1;
-  // json format
-  string metadata=2;
-  string command_id=3;
-  string event_id=4;
-  // json format
-  string event_data=5;
-  string event_type=6;
-  string event_revision=7;
-  string aggregate_id=8;
-  string aggregate_type=9;
-  string pubsub_name=10;
-  string topic=11;
+  string aggregate_id=2;
+  string aggregate_type=3;
+  repeated EventDto events=4;
 }
 
 message ApplyEventResponse{
+
+}
+
+message CreateEventRequest{
+  string tenant_id=1;
+  string aggregate_id=2;
+  string aggregate_type=3;
+  repeated EventDto events=4;
+}
+
+message CreateEventResponse{
+
+}
+
+message DeleteEventRequest{
+  string tenant_id=1;
+  string aggregate_id=2;
+  string aggregate_type=3;
+  EventDto event=4;
+}
+
+message DeleteEventResponse{
+
+}
+
+
+message EventDto {
+  string event_id=1;
+  string command_id=2;
+  string event_data=3;   // json format
+  string event_type=4;
+  string event_version=5;
+  string pubsub_name=6;
+  string topic=7;
+  string metadata=8;  // json format
 }
 
 message WriteEventLogRequest{
@@ -214,7 +229,3 @@ message GetAppLogByIdResponse {
   string  message =9;
 }
 
-enum Status{
-  ERROR=0;
-  SUCCESS=1;
-}
