@@ -19,7 +19,7 @@ import (
 
 	"github.com/cenkalti/backoff/v4"
 
-	"github.com/dapr/dapr/pkg/resiliency/breaker"
+	"github.com/liuxd6825/dapr/pkg/resiliency/breaker"
 	"github.com/dapr/kit/logger"
 	"github.com/dapr/kit/retry"
 )

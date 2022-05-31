@@ -11,7 +11,7 @@ import (
 	k8s "k8s.io/client-go/kubernetes"
 	kauth "k8s.io/client-go/kubernetes/typed/authentication/v1"
 
-	"github.com/dapr/dapr/pkg/sentry/identity"
+	"github.com/liuxd6825/dapr/pkg/sentry/identity"
 )
 
 const (

@@ -14,7 +14,7 @@ import (
 	meta_v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 
-	dapr_testing "github.com/dapr/dapr/pkg/testing"
+	dapr_testing "github.com/liuxd6825/dapr/pkg/testing"
 )
 
 func TestNewDaprHandler(t *testing.T) {

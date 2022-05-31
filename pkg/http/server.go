@@ -29,12 +29,12 @@ import (
 	"github.com/valyala/fasthttp"
 	"github.com/valyala/fasthttp/pprofhandler"
 
-	"github.com/dapr/dapr/pkg/config"
-	cors_dapr "github.com/dapr/dapr/pkg/cors"
-	diag "github.com/dapr/dapr/pkg/diagnostics"
-	diag_utils "github.com/dapr/dapr/pkg/diagnostics/utils"
-	http_middleware "github.com/dapr/dapr/pkg/middleware/http"
-	auth "github.com/dapr/dapr/pkg/runtime/security"
+	"github.com/liuxd6825/dapr/pkg/config"
+	cors_dapr "github.com/liuxd6825/dapr/pkg/cors"
+	diag "github.com/liuxd6825/dapr/pkg/diagnostics"
+	diag_utils "github.com/liuxd6825/dapr/pkg/diagnostics/utils"
+	http_middleware "github.com/liuxd6825/dapr/pkg/middleware/http"
+	auth "github.com/liuxd6825/dapr/pkg/runtime/security"
 	"github.com/dapr/kit/logger"
 )
 

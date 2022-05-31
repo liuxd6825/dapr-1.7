@@ -16,9 +16,9 @@ package runtime
 import (
 	"time"
 
-	config "github.com/dapr/dapr/pkg/config/modes"
-	"github.com/dapr/dapr/pkg/credentials"
-	"github.com/dapr/dapr/pkg/modes"
+	config "github.com/liuxd6825/dapr/pkg/config/modes"
+	"github.com/liuxd6825/dapr/pkg/credentials"
+	"github.com/liuxd6825/dapr/pkg/modes"
 )
 
 // Protocol is a communications protocol.

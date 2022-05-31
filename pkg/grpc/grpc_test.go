@@ -22,8 +22,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc/connectivity"
 
-	"github.com/dapr/dapr/pkg/modes"
-	"github.com/dapr/dapr/pkg/runtime/security"
+	"github.com/liuxd6825/dapr/pkg/modes"
+	"github.com/liuxd6825/dapr/pkg/runtime/security"
 )
 
 type authenticatorMock struct{}

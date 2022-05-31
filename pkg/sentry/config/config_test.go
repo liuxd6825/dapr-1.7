@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	dapr_config "github.com/dapr/dapr/pkg/config"
+	dapr_config "github.com/liuxd6825/dapr/pkg/config"
 )
 
 func TestConfig(t *testing.T) {

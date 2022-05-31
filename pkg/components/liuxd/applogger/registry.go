@@ -1,8 +1,8 @@
 package applogger
 
 import (
-	"github.com/dapr/components-contrib/liuxd/applog"
-	"github.com/dapr/dapr/pkg/components"
+	"github.com/liuxd6825/components-contrib/liuxd/applog"
+	"github.com/liuxd6825/dapr/pkg/components"
 	"github.com/pkg/errors"
 	"strings"
 )

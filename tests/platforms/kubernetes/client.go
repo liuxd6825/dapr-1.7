@@ -25,8 +25,8 @@ import (
 	"k8s.io/client-go/util/homedir"
 	metrics "k8s.io/metrics/pkg/client/clientset/versioned"
 
-	daprclient "github.com/dapr/dapr/pkg/client/clientset/versioned"
-	componentsv1alpha1 "github.com/dapr/dapr/pkg/client/clientset/versioned/typed/components/v1alpha1"
+	daprclient "github.com/liuxd6825/dapr/pkg/client/clientset/versioned"
+	componentsv1alpha1 "github.com/liuxd6825/dapr/pkg/client/clientset/versioned/typed/components/v1alpha1"
 )
 
 // KubeClient holds instances of Kubernetes clientset

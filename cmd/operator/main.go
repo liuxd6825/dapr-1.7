@@ -21,11 +21,11 @@ import (
 
 	"github.com/dapr/kit/logger"
 
-	"github.com/dapr/dapr/pkg/metrics"
-	"github.com/dapr/dapr/pkg/operator"
-	"github.com/dapr/dapr/pkg/operator/monitoring"
-	"github.com/dapr/dapr/pkg/signals"
-	"github.com/dapr/dapr/pkg/version"
+	"github.com/liuxd6825/dapr/pkg/metrics"
+	"github.com/liuxd6825/dapr/pkg/operator"
+	"github.com/liuxd6825/dapr/pkg/operator/monitoring"
+	"github.com/liuxd6825/dapr/pkg/signals"
+	"github.com/liuxd6825/dapr/pkg/version"
 )
 
 var (

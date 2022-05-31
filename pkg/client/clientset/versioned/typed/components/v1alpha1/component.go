@@ -27,8 +27,8 @@ import (
 	watch "k8s.io/apimachinery/pkg/watch"
 	rest "k8s.io/client-go/rest"
 
-	v1alpha1 "github.com/dapr/dapr/pkg/apis/components/v1alpha1"
-	scheme "github.com/dapr/dapr/pkg/client/clientset/versioned/scheme"
+	v1alpha1 "github.com/liuxd6825/dapr/pkg/apis/components/v1alpha1"
+	scheme "github.com/liuxd6825/dapr/pkg/client/clientset/versioned/scheme"
 )
 
 // ComponentsGetter has a method to return a ComponentInterface.

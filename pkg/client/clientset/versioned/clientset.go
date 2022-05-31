@@ -25,8 +25,8 @@ import (
 	rest "k8s.io/client-go/rest"
 	flowcontrol "k8s.io/client-go/util/flowcontrol"
 
-	componentsv1alpha1 "github.com/dapr/dapr/pkg/client/clientset/versioned/typed/components/v1alpha1"
-	configurationv1alpha1 "github.com/dapr/dapr/pkg/client/clientset/versioned/typed/configuration/v1alpha1"
+	componentsv1alpha1 "github.com/liuxd6825/dapr/pkg/client/clientset/versioned/typed/components/v1alpha1"
+	configurationv1alpha1 "github.com/liuxd6825/dapr/pkg/client/clientset/versioned/typed/configuration/v1alpha1"
 )
 
 type Interface interface {

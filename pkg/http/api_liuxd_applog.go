@@ -3,7 +3,7 @@ package http
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/dapr/components-contrib/liuxd/applog"
+	"github.com/liuxd6825/components-contrib/liuxd/applog"
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
 )

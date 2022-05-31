@@ -21,9 +21,9 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
 
-	"github.com/dapr/dapr/pkg/config"
-	"github.com/dapr/dapr/pkg/diagnostics"
-	"github.com/dapr/dapr/pkg/resiliency"
+	"github.com/liuxd6825/dapr/pkg/config"
+	"github.com/liuxd6825/dapr/pkg/diagnostics"
+	"github.com/liuxd6825/dapr/pkg/resiliency"
 )
 
 type sslEnabledConnection struct {

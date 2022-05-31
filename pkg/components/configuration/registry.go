@@ -18,8 +18,8 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/dapr/components-contrib/configuration"
-	"github.com/dapr/dapr/pkg/components"
+	"github.com/liuxd6825/components-contrib/configuration"
+	"github.com/liuxd6825/dapr/pkg/components"
 )
 
 type Configuration struct {

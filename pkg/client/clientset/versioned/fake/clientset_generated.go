@@ -25,11 +25,11 @@ import (
 	fakediscovery "k8s.io/client-go/discovery/fake"
 	"k8s.io/client-go/testing"
 
-	clientset "github.com/dapr/dapr/pkg/client/clientset/versioned"
-	componentsv1alpha1 "github.com/dapr/dapr/pkg/client/clientset/versioned/typed/components/v1alpha1"
-	fakecomponentsv1alpha1 "github.com/dapr/dapr/pkg/client/clientset/versioned/typed/components/v1alpha1/fake"
-	configurationv1alpha1 "github.com/dapr/dapr/pkg/client/clientset/versioned/typed/configuration/v1alpha1"
-	fakeconfigurationv1alpha1 "github.com/dapr/dapr/pkg/client/clientset/versioned/typed/configuration/v1alpha1/fake"
+	clientset "github.com/liuxd6825/dapr/pkg/client/clientset/versioned"
+	componentsv1alpha1 "github.com/liuxd6825/dapr/pkg/client/clientset/versioned/typed/components/v1alpha1"
+	fakecomponentsv1alpha1 "github.com/liuxd6825/dapr/pkg/client/clientset/versioned/typed/components/v1alpha1/fake"
+	configurationv1alpha1 "github.com/liuxd6825/dapr/pkg/client/clientset/versioned/typed/configuration/v1alpha1"
+	fakeconfigurationv1alpha1 "github.com/liuxd6825/dapr/pkg/client/clientset/versioned/typed/configuration/v1alpha1/fake"
 )
 
 // NewSimpleClientset returns a clientset that will respond with the provided objects.

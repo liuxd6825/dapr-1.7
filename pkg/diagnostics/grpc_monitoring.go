@@ -24,7 +24,7 @@ import (
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/proto"
 
-	diag_utils "github.com/dapr/dapr/pkg/diagnostics/utils"
+	diag_utils "github.com/liuxd6825/dapr/pkg/diagnostics/utils"
 )
 
 // This implementation is inspired by

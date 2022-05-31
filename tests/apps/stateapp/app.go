@@ -32,9 +32,9 @@ import (
 	jsoniter "github.com/json-iterator/go"
 	"google.golang.org/grpc"
 
-	daprhttp "github.com/dapr/dapr/pkg/http"
-	commonv1pb "github.com/dapr/dapr/pkg/proto/common/v1"
-	runtimev1pb "github.com/dapr/dapr/pkg/proto/runtime/v1"
+	daprhttp "github.com/liuxd6825/dapr/pkg/http"
+	commonv1pb "github.com/liuxd6825/dapr/pkg/proto/common/v1"
+	runtimev1pb "github.com/liuxd6825/dapr/pkg/proto/runtime/v1"
 )
 
 const (

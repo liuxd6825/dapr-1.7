@@ -19,8 +19,8 @@ import (
 
 	"github.com/dapr/kit/logger"
 
-	"github.com/dapr/dapr/pkg/metrics"
-	"github.com/dapr/dapr/pkg/placement/raft"
+	"github.com/liuxd6825/dapr/pkg/metrics"
+	"github.com/liuxd6825/dapr/pkg/placement/raft"
 )
 
 const (

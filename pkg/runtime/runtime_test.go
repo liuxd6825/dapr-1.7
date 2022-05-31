@@ -49,38 +49,38 @@ import (
 	v1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	meta_v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
-	"github.com/dapr/components-contrib/bindings"
-	"github.com/dapr/components-contrib/contenttype"
-	"github.com/dapr/components-contrib/nameresolution"
-	"github.com/dapr/components-contrib/pubsub"
-	"github.com/dapr/components-contrib/secretstores"
-	"github.com/dapr/components-contrib/state"
+	"github.com/liuxd6825/components-contrib/bindings"
+	"github.com/liuxd6825/components-contrib/contenttype"
+	"github.com/liuxd6825/components-contrib/nameresolution"
+	"github.com/liuxd6825/components-contrib/pubsub"
+	"github.com/liuxd6825/components-contrib/secretstores"
+	"github.com/liuxd6825/components-contrib/state"
 	"github.com/dapr/kit/logger"
 
-	components_v1alpha1 "github.com/dapr/dapr/pkg/apis/components/v1alpha1"
-	"github.com/dapr/dapr/pkg/apis/resiliency/v1alpha1"
-	subscriptionsapi "github.com/dapr/dapr/pkg/apis/subscriptions/v1alpha1"
-	channelt "github.com/dapr/dapr/pkg/channel/testing"
-	bindings_loader "github.com/dapr/dapr/pkg/components/bindings"
-	nr_loader "github.com/dapr/dapr/pkg/components/nameresolution"
-	pubsub_loader "github.com/dapr/dapr/pkg/components/pubsub"
-	secretstores_loader "github.com/dapr/dapr/pkg/components/secretstores"
-	state_loader "github.com/dapr/dapr/pkg/components/state"
-	"github.com/dapr/dapr/pkg/config"
-	"github.com/dapr/dapr/pkg/cors"
-	diag_utils "github.com/dapr/dapr/pkg/diagnostics/utils"
-	"github.com/dapr/dapr/pkg/encryption"
-	"github.com/dapr/dapr/pkg/expr"
-	invokev1 "github.com/dapr/dapr/pkg/messaging/v1"
-	"github.com/dapr/dapr/pkg/modes"
-	operatorv1pb "github.com/dapr/dapr/pkg/proto/operator/v1"
-	runtimev1pb "github.com/dapr/dapr/pkg/proto/runtime/v1"
-	"github.com/dapr/dapr/pkg/resiliency"
-	runtime_pubsub "github.com/dapr/dapr/pkg/runtime/pubsub"
-	"github.com/dapr/dapr/pkg/runtime/security"
-	"github.com/dapr/dapr/pkg/scopes"
-	"github.com/dapr/dapr/pkg/sentry/certs"
-	daprt "github.com/dapr/dapr/pkg/testing"
+	components_v1alpha1 "github.com/liuxd6825/dapr/pkg/apis/components/v1alpha1"
+	"github.com/liuxd6825/dapr/pkg/apis/resiliency/v1alpha1"
+	subscriptionsapi "github.com/liuxd6825/dapr/pkg/apis/subscriptions/v1alpha1"
+	channelt "github.com/liuxd6825/dapr/pkg/channel/testing"
+	bindings_loader "github.com/liuxd6825/dapr/pkg/components/bindings"
+	nr_loader "github.com/liuxd6825/dapr/pkg/components/nameresolution"
+	pubsub_loader "github.com/liuxd6825/dapr/pkg/components/pubsub"
+	secretstores_loader "github.com/liuxd6825/dapr/pkg/components/secretstores"
+	state_loader "github.com/liuxd6825/dapr/pkg/components/state"
+	"github.com/liuxd6825/dapr/pkg/config"
+	"github.com/liuxd6825/dapr/pkg/cors"
+	diag_utils "github.com/liuxd6825/dapr/pkg/diagnostics/utils"
+	"github.com/liuxd6825/dapr/pkg/encryption"
+	"github.com/liuxd6825/dapr/pkg/expr"
+	invokev1 "github.com/liuxd6825/dapr/pkg/messaging/v1"
+	"github.com/liuxd6825/dapr/pkg/modes"
+	operatorv1pb "github.com/liuxd6825/dapr/pkg/proto/operator/v1"
+	runtimev1pb "github.com/liuxd6825/dapr/pkg/proto/runtime/v1"
+	"github.com/liuxd6825/dapr/pkg/resiliency"
+	runtime_pubsub "github.com/liuxd6825/dapr/pkg/runtime/pubsub"
+	"github.com/liuxd6825/dapr/pkg/runtime/security"
+	"github.com/liuxd6825/dapr/pkg/scopes"
+	"github.com/liuxd6825/dapr/pkg/sentry/certs"
+	daprt "github.com/liuxd6825/dapr/pkg/testing"
 )
 
 const (
@@ -1132,7 +1132,7 @@ func TestInitPubSub(t *testing.T) {
 		fakeResp := invokev1.NewInvokeMethodResponse(200, "OK", nil)
 		subs := getSubscriptionsJSONString(
 			[]string{"topic0", "topic1"}, // first pubsub
-			[]string{"topic0"})           // second pubsub
+			[]string{"topic0"}) // second pubsub
 		fakeResp.WithRawData([]byte(subs), "application/json")
 
 		mockAppChannel.On("InvokeMethod", mock.AnythingOfType("*context.emptyCtx"), fakeReq).Return(fakeResp, nil)

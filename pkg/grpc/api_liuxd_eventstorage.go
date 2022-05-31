@@ -2,8 +2,8 @@ package grpc
 
 import (
 	"context"
-	"github.com/dapr/components-contrib/liuxd/eventstorage"
-	runtimev1pb "github.com/dapr/dapr/pkg/proto/runtime/v1"
+	"github.com/liuxd6825/components-contrib/liuxd/eventstorage"
+	runtimev1pb "github.com/liuxd6825/dapr/pkg/proto/runtime/v1"
 	"k8s.io/apimachinery/pkg/util/json"
 )
 

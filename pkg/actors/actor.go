@@ -21,7 +21,7 @@ import (
 
 	"github.com/pkg/errors"
 
-	diag "github.com/dapr/dapr/pkg/diagnostics"
+	diag "github.com/liuxd6825/dapr/pkg/diagnostics"
 )
 
 // ErrActorDisposed is the error when runtime tries to hold the lock of the disposed actor.

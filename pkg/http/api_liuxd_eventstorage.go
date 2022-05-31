@@ -2,7 +2,7 @@ package http
 
 import (
 	"encoding/json"
-	"github.com/dapr/components-contrib/liuxd/eventstorage"
+	"github.com/liuxd6825/components-contrib/liuxd/eventstorage"
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
 	"net/http"

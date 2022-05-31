@@ -20,9 +20,9 @@ import (
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/dapr/dapr/pkg/components/configuration"
+	"github.com/liuxd6825/dapr/pkg/components/configuration"
 
-	c "github.com/dapr/components-contrib/configuration"
+	c "github.com/liuxd6825/components-contrib/configuration"
 )
 
 type mockState struct {

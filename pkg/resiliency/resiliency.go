@@ -27,10 +27,10 @@ import (
 	lru "github.com/hashicorp/golang-lru"
 	"gopkg.in/yaml.v2"
 
-	resiliency_v1alpha "github.com/dapr/dapr/pkg/apis/resiliency/v1alpha1"
-	operatorv1pb "github.com/dapr/dapr/pkg/proto/operator/v1"
+	resiliency_v1alpha "github.com/liuxd6825/dapr/pkg/apis/resiliency/v1alpha1"
+	operatorv1pb "github.com/liuxd6825/dapr/pkg/proto/operator/v1"
 
-	"github.com/dapr/dapr/pkg/resiliency/breaker"
+	"github.com/liuxd6825/dapr/pkg/resiliency/breaker"
 	"github.com/dapr/kit/config"
 	"github.com/dapr/kit/logger"
 	"github.com/dapr/kit/retry"

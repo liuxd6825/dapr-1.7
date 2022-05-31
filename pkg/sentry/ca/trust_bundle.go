@@ -4,7 +4,7 @@ import (
 	"crypto/x509"
 	"time"
 
-	"github.com/dapr/dapr/pkg/sentry/certs"
+	"github.com/liuxd6825/dapr/pkg/sentry/certs"
 )
 
 // TrustRootBundle represents the root certificate, issuer certificate and their

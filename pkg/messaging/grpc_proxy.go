@@ -22,14 +22,14 @@ import (
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 
-	grpc_proxy "github.com/dapr/dapr/pkg/grpc/proxy"
-	codec "github.com/dapr/dapr/pkg/grpc/proxy/codec"
-	"github.com/dapr/dapr/pkg/resiliency"
+	grpc_proxy "github.com/liuxd6825/dapr/pkg/grpc/proxy"
+	codec "github.com/liuxd6825/dapr/pkg/grpc/proxy/codec"
+	"github.com/liuxd6825/dapr/pkg/resiliency"
 
-	"github.com/dapr/dapr/pkg/acl"
-	"github.com/dapr/dapr/pkg/config"
-	"github.com/dapr/dapr/pkg/diagnostics"
-	"github.com/dapr/dapr/pkg/proto/common/v1"
+	"github.com/liuxd6825/dapr/pkg/acl"
+	"github.com/liuxd6825/dapr/pkg/config"
+	"github.com/liuxd6825/dapr/pkg/diagnostics"
+	"github.com/liuxd6825/dapr/pkg/proto/common/v1"
 )
 
 // Proxy is the interface for a gRPC transparent proxy.

@@ -18,10 +18,10 @@ import (
 
 	"github.com/pkg/errors"
 
-	middleware "github.com/dapr/components-contrib/middleware"
+	middleware "github.com/liuxd6825/components-contrib/middleware"
 
-	"github.com/dapr/dapr/pkg/components"
-	http_middleware "github.com/dapr/dapr/pkg/middleware/http"
+	"github.com/liuxd6825/dapr/pkg/components"
+	http_middleware "github.com/liuxd6825/dapr/pkg/middleware/http"
 )
 
 type (

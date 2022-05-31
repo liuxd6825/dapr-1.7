@@ -3,7 +3,7 @@ package testing
 import (
 	mock "github.com/stretchr/testify/mock"
 
-	"github.com/dapr/components-contrib/bindings"
+	"github.com/liuxd6825/components-contrib/bindings"
 )
 
 // MockBinding is a mock input/output component object.

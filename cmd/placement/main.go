@@ -15,11 +15,11 @@ package main
 
 import (
 	"context"
-	"github.com/dapr/dapr/cmd/placement/config"
-	"github.com/dapr/dapr/pkg/placement"
-	"github.com/dapr/dapr/pkg/placement/hashing"
-	"github.com/dapr/dapr/pkg/placement/monitoring"
-	"github.com/dapr/dapr/pkg/placement/raft"
+	"github.com/liuxd6825/dapr/cmd/placement/config"
+	"github.com/liuxd6825/dapr/pkg/placement"
+	"github.com/liuxd6825/dapr/pkg/placement/hashing"
+	"github.com/liuxd6825/dapr/pkg/placement/monitoring"
+	"github.com/liuxd6825/dapr/pkg/placement/raft"
 	"os"
 	"os/signal"
 	"strconv"
@@ -28,10 +28,10 @@ import (
 
 	"github.com/dapr/kit/logger"
 
-	"github.com/dapr/dapr/pkg/credentials"
-	"github.com/dapr/dapr/pkg/fswatcher"
-	"github.com/dapr/dapr/pkg/health"
-	"github.com/dapr/dapr/pkg/version"
+	"github.com/liuxd6825/dapr/pkg/credentials"
+	"github.com/liuxd6825/dapr/pkg/fswatcher"
+	"github.com/liuxd6825/dapr/pkg/health"
+	"github.com/liuxd6825/dapr/pkg/version"
 )
 
 var log = logger.NewLogger("dapr.placement")

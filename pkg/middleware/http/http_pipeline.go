@@ -16,7 +16,7 @@ package http
 import (
 	"github.com/valyala/fasthttp"
 
-	"github.com/dapr/dapr/pkg/config"
+	"github.com/liuxd6825/dapr/pkg/config"
 )
 
 type Middleware func(h fasthttp.RequestHandler) fasthttp.RequestHandler

@@ -25,10 +25,10 @@ import (
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc"
 
-	channelt "github.com/dapr/dapr/pkg/channel/testing"
-	invokev1 "github.com/dapr/dapr/pkg/messaging/v1"
-	runtimev1pb "github.com/dapr/dapr/pkg/proto/runtime/v1"
-	auth "github.com/dapr/dapr/pkg/runtime/security"
+	channelt "github.com/liuxd6825/dapr/pkg/channel/testing"
+	invokev1 "github.com/liuxd6825/dapr/pkg/messaging/v1"
+	runtimev1pb "github.com/liuxd6825/dapr/pkg/proto/runtime/v1"
+	auth "github.com/liuxd6825/dapr/pkg/runtime/security"
 )
 
 // TODO: Add APIVersion testing

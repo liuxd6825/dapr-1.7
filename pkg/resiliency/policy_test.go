@@ -21,8 +21,8 @@ import (
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/dapr/dapr/pkg/resiliency"
-	"github.com/dapr/dapr/pkg/resiliency/breaker"
+	"github.com/liuxd6825/dapr/pkg/resiliency"
+	"github.com/liuxd6825/dapr/pkg/resiliency/breaker"
 	"github.com/dapr/kit/logger"
 	"github.com/dapr/kit/retry"
 )

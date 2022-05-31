@@ -12,11 +12,11 @@ import (
 
 	"github.com/dapr/kit/logger"
 
-	"github.com/dapr/dapr/pkg/credentials"
-	"github.com/dapr/dapr/pkg/sentry/certs"
-	"github.com/dapr/dapr/pkg/sentry/config"
-	"github.com/dapr/dapr/pkg/sentry/csr"
-	"github.com/dapr/dapr/pkg/sentry/identity"
+	"github.com/liuxd6825/dapr/pkg/credentials"
+	"github.com/liuxd6825/dapr/pkg/sentry/certs"
+	"github.com/liuxd6825/dapr/pkg/sentry/config"
+	"github.com/liuxd6825/dapr/pkg/sentry/csr"
+	"github.com/liuxd6825/dapr/pkg/sentry/identity"
 )
 
 const (

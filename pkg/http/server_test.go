@@ -26,10 +26,10 @@ import (
 	"github.com/stretchr/testify/require"
 	"github.com/valyala/fasthttp"
 
-	"github.com/dapr/dapr/pkg/config"
-	"github.com/dapr/dapr/pkg/cors"
-	http_middleware "github.com/dapr/dapr/pkg/middleware/http"
-	dapr_testing "github.com/dapr/dapr/pkg/testing"
+	"github.com/liuxd6825/dapr/pkg/config"
+	"github.com/liuxd6825/dapr/pkg/cors"
+	http_middleware "github.com/liuxd6825/dapr/pkg/middleware/http"
+	dapr_testing "github.com/liuxd6825/dapr/pkg/testing"
 )
 
 type mockHost struct {

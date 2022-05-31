@@ -1,15 +1,15 @@
 package runtime
 
 import (
-	"github.com/dapr/dapr/pkg/components/bindings"
-	"github.com/dapr/dapr/pkg/components/configuration"
-	"github.com/dapr/dapr/pkg/components/liuxd/applogger"
-	es "github.com/dapr/dapr/pkg/components/liuxd/eventstorage"
-	"github.com/dapr/dapr/pkg/components/middleware/http"
-	"github.com/dapr/dapr/pkg/components/nameresolution"
-	"github.com/dapr/dapr/pkg/components/pubsub"
-	"github.com/dapr/dapr/pkg/components/secretstores"
-	"github.com/dapr/dapr/pkg/components/state"
+	"github.com/liuxd6825/dapr/pkg/components/bindings"
+	"github.com/liuxd6825/dapr/pkg/components/configuration"
+	"github.com/liuxd6825/dapr/pkg/components/liuxd/applogger"
+	es "github.com/liuxd6825/dapr/pkg/components/liuxd/eventstorage"
+	"github.com/liuxd6825/dapr/pkg/components/middleware/http"
+	"github.com/liuxd6825/dapr/pkg/components/nameresolution"
+	"github.com/liuxd6825/dapr/pkg/components/pubsub"
+	"github.com/liuxd6825/dapr/pkg/components/secretstores"
+	"github.com/liuxd6825/dapr/pkg/components/state"
 )
 
 type (

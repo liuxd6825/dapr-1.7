@@ -19,8 +19,8 @@ import (
 
 	"github.com/dapr/kit/logger"
 
-	"github.com/dapr/dapr/pkg/operator/monitoring"
-	"github.com/dapr/dapr/pkg/validation"
+	"github.com/liuxd6825/dapr/pkg/operator/monitoring"
+	"github.com/liuxd6825/dapr/pkg/validation"
 )
 
 const (

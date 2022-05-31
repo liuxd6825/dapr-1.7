@@ -19,7 +19,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/valyala/fasthttp"
 
-	invokev1 "github.com/dapr/dapr/pkg/messaging/v1"
+	invokev1 "github.com/liuxd6825/dapr/pkg/messaging/v1"
 )
 
 func newDirectMessaging() *directMessaging {

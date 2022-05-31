@@ -19,8 +19,8 @@ import (
 
 	"google.golang.org/grpc"
 
-	"github.com/dapr/dapr/pkg/config"
-	v1 "github.com/dapr/dapr/pkg/messaging/v1"
+	"github.com/liuxd6825/dapr/pkg/config"
+	v1 "github.com/liuxd6825/dapr/pkg/messaging/v1"
 )
 
 var endpoints = map[string][]string{

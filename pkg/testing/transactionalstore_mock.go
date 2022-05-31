@@ -14,7 +14,7 @@ limitations under the License.
 package testing
 
 import (
-	"github.com/dapr/components-contrib/state"
+	"github.com/liuxd6825/components-contrib/state"
 )
 
 type TransactionalStoreMock struct {

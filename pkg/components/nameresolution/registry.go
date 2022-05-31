@@ -18,9 +18,9 @@ import (
 
 	"github.com/pkg/errors"
 
-	nr "github.com/dapr/components-contrib/nameresolution"
+	nr "github.com/liuxd6825/components-contrib/nameresolution"
 
-	"github.com/dapr/dapr/pkg/components"
+	"github.com/liuxd6825/dapr/pkg/components"
 )
 
 type (

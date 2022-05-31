@@ -18,7 +18,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/dapr/dapr/pkg/components"
+	"github.com/liuxd6825/dapr/pkg/components"
 )
 
 func TestIsInitialVersion(t *testing.T) {

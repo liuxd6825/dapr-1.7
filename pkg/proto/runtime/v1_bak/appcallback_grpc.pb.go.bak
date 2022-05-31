@@ -4,7 +4,7 @@ package runtime
 
 import (
 	context "context"
-	v1 "github.com/dapr/dapr/pkg/proto/common/v1"
+	v1 "github.com/liuxd6825/dapr/pkg/proto/common/v1"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"

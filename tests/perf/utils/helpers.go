@@ -29,9 +29,9 @@ import (
 
 	guuid "github.com/google/uuid"
 
-	"github.com/dapr/components-contrib/bindings"
-	"github.com/dapr/components-contrib/bindings/azure/blobstorage"
-	"github.com/dapr/dapr/tests/perf"
+	"github.com/liuxd6825/components-contrib/bindings"
+	"github.com/liuxd6825/components-contrib/bindings/azure/blobstorage"
+	"github.com/liuxd6825/dapr/tests/perf"
 	"github.com/dapr/kit/logger"
 )
 

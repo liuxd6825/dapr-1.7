@@ -16,7 +16,7 @@ package actors
 import (
 	"time"
 
-	app_config "github.com/dapr/dapr/pkg/config"
+	app_config "github.com/liuxd6825/dapr/pkg/config"
 )
 
 // Config is the actor runtime configuration.

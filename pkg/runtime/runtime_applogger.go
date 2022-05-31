@@ -1,11 +1,11 @@
 package runtime
 
 import (
-	"github.com/dapr/components-contrib/liuxd/common"
-	components_v1alpha1 "github.com/dapr/dapr/pkg/apis/components/v1alpha1"
-	"github.com/dapr/dapr/pkg/components/liuxd/applogger"
-	diag "github.com/dapr/dapr/pkg/diagnostics"
-	pubsub_adapter "github.com/dapr/dapr/pkg/runtime/pubsub"
+	"github.com/liuxd6825/components-contrib/liuxd/common"
+	components_v1alpha1 "github.com/liuxd6825/dapr/pkg/apis/components/v1alpha1"
+	"github.com/liuxd6825/dapr/pkg/components/liuxd/applogger"
+	diag "github.com/liuxd6825/dapr/pkg/diagnostics"
+	pubsub_adapter "github.com/liuxd6825/dapr/pkg/runtime/pubsub"
 	"strings"
 )
 

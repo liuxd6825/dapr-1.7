@@ -8,7 +8,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	config "github.com/dapr/dapr/pkg/config/modes"
+	config "github.com/liuxd6825/dapr/pkg/config/modes"
 )
 
 const configPrefix = "."

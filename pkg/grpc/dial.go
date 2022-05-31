@@ -3,7 +3,7 @@ package grpc
 import (
 	"runtime"
 
-	"github.com/dapr/dapr/pkg/modes"
+	"github.com/liuxd6825/dapr/pkg/modes"
 )
 
 // GetDialAddressPrefix returns a dial prefix for a gRPC client connections

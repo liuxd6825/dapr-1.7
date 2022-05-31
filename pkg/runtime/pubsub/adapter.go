@@ -14,7 +14,7 @@ limitations under the License.
 package pubsub
 
 import (
-	contrib_pubsub "github.com/dapr/components-contrib/pubsub"
+	contrib_pubsub "github.com/liuxd6825/components-contrib/pubsub"
 )
 
 // Adapter is the interface for message buses.

@@ -14,12 +14,12 @@ import (
 
 	"github.com/dapr/kit/logger"
 
-	sentryv1pb "github.com/dapr/dapr/pkg/proto/sentry/v1"
-	"github.com/dapr/dapr/pkg/sentry/ca"
-	"github.com/dapr/dapr/pkg/sentry/certs"
-	"github.com/dapr/dapr/pkg/sentry/csr"
-	"github.com/dapr/dapr/pkg/sentry/identity"
-	"github.com/dapr/dapr/pkg/sentry/monitoring"
+	sentryv1pb "github.com/liuxd6825/dapr/pkg/proto/sentry/v1"
+	"github.com/liuxd6825/dapr/pkg/sentry/ca"
+	"github.com/liuxd6825/dapr/pkg/sentry/certs"
+	"github.com/liuxd6825/dapr/pkg/sentry/csr"
+	"github.com/liuxd6825/dapr/pkg/sentry/identity"
+	"github.com/liuxd6825/dapr/pkg/sentry/monitoring"
 )
 
 const (

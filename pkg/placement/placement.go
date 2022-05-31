@@ -28,9 +28,9 @@ import (
 
 	"github.com/dapr/kit/logger"
 
-	dapr_credentials "github.com/dapr/dapr/pkg/credentials"
-	"github.com/dapr/dapr/pkg/placement/raft"
-	placementv1pb "github.com/dapr/dapr/pkg/proto/placement/v1"
+	dapr_credentials "github.com/liuxd6825/dapr/pkg/credentials"
+	"github.com/liuxd6825/dapr/pkg/placement/raft"
+	placementv1pb "github.com/liuxd6825/dapr/pkg/proto/placement/v1"
 )
 
 var log = logger.NewLogger("dapr.placement")

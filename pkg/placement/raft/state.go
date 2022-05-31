@@ -20,7 +20,7 @@ import (
 	"github.com/google/go-cmp/cmp"
 	"github.com/hashicorp/go-msgpack/codec"
 
-	"github.com/dapr/dapr/pkg/placement/hashing"
+	"github.com/liuxd6825/dapr/pkg/placement/hashing"
 )
 
 // DaprHostMember represents Dapr runtime actor host member which serve actor types.

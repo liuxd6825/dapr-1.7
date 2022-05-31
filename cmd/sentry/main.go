@@ -23,15 +23,15 @@ import (
 
 	"github.com/dapr/kit/logger"
 
-	"github.com/dapr/dapr/pkg/credentials"
-	"github.com/dapr/dapr/pkg/fswatcher"
-	"github.com/dapr/dapr/pkg/health"
-	"github.com/dapr/dapr/pkg/metrics"
-	"github.com/dapr/dapr/pkg/sentry"
-	"github.com/dapr/dapr/pkg/sentry/config"
-	"github.com/dapr/dapr/pkg/sentry/monitoring"
-	"github.com/dapr/dapr/pkg/signals"
-	"github.com/dapr/dapr/pkg/version"
+	"github.com/liuxd6825/dapr/pkg/credentials"
+	"github.com/liuxd6825/dapr/pkg/fswatcher"
+	"github.com/liuxd6825/dapr/pkg/health"
+	"github.com/liuxd6825/dapr/pkg/metrics"
+	"github.com/liuxd6825/dapr/pkg/sentry"
+	"github.com/liuxd6825/dapr/pkg/sentry/config"
+	"github.com/liuxd6825/dapr/pkg/sentry/monitoring"
+	"github.com/liuxd6825/dapr/pkg/signals"
+	"github.com/liuxd6825/dapr/pkg/version"
 )
 
 var log = logger.NewLogger("dapr.sentry")

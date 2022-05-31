@@ -27,11 +27,11 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
 
-	"github.com/dapr/dapr/pkg/config"
-	diag_utils "github.com/dapr/dapr/pkg/diagnostics/utils"
-	commonv1pb "github.com/dapr/dapr/pkg/proto/common/v1"
-	internalv1pb "github.com/dapr/dapr/pkg/proto/internals/v1"
-	runtimev1pb "github.com/dapr/dapr/pkg/proto/runtime/v1"
+	"github.com/liuxd6825/dapr/pkg/config"
+	diag_utils "github.com/liuxd6825/dapr/pkg/diagnostics/utils"
+	commonv1pb "github.com/liuxd6825/dapr/pkg/proto/common/v1"
+	internalv1pb "github.com/liuxd6825/dapr/pkg/proto/internals/v1"
+	runtimev1pb "github.com/liuxd6825/dapr/pkg/proto/runtime/v1"
 )
 
 func TestSpanAttributesMapFromGRPC(t *testing.T) {

@@ -20,8 +20,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 
-	configurationv1alpha1 "github.com/dapr/dapr/pkg/apis/configuration/v1alpha1"
-	kube "github.com/dapr/dapr/tests/platforms/kubernetes"
+	configurationv1alpha1 "github.com/liuxd6825/dapr/pkg/apis/configuration/v1alpha1"
+	kube "github.com/liuxd6825/dapr/tests/platforms/kubernetes"
 )
 
 type fakeTestingM struct{}

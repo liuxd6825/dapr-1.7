@@ -27,11 +27,11 @@ import (
 
 	"github.com/dapr/kit/logger"
 
-	dapr_credentials "github.com/dapr/dapr/pkg/credentials"
-	diag "github.com/dapr/dapr/pkg/diagnostics"
-	"github.com/dapr/dapr/pkg/placement/hashing"
-	v1pb "github.com/dapr/dapr/pkg/proto/placement/v1"
-	"github.com/dapr/dapr/pkg/runtime/security"
+	dapr_credentials "github.com/liuxd6825/dapr/pkg/credentials"
+	diag "github.com/liuxd6825/dapr/pkg/diagnostics"
+	"github.com/liuxd6825/dapr/pkg/placement/hashing"
+	v1pb "github.com/liuxd6825/dapr/pkg/proto/placement/v1"
+	"github.com/liuxd6825/dapr/pkg/runtime/security"
 )
 
 var log = logger.NewLogger("dapr.runtime.actor.internal.placement")

@@ -23,8 +23,8 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/dapr/components-contrib/secretstores"
-	"github.com/dapr/dapr/pkg/apis/components/v1alpha1"
+	"github.com/liuxd6825/components-contrib/secretstores"
+	"github.com/liuxd6825/dapr/pkg/apis/components/v1alpha1"
 )
 
 type Algorithm string

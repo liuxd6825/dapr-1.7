@@ -16,7 +16,7 @@ package injector
 import (
 	"github.com/kelseyhightower/envconfig"
 
-	"github.com/dapr/dapr/utils"
+	"github.com/liuxd6825/dapr/utils"
 )
 
 // Config represents configuration options for the Dapr Sidecar Injector webhook server.

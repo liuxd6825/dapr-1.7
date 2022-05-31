@@ -22,8 +22,8 @@ import (
 	"go.opencensus.io/trace"
 	"go.opencensus.io/trace/tracestate"
 
-	"github.com/dapr/dapr/pkg/config"
-	diag_utils "github.com/dapr/dapr/pkg/diagnostics/utils"
+	"github.com/liuxd6825/dapr/pkg/config"
+	diag_utils "github.com/liuxd6825/dapr/pkg/diagnostics/utils"
 
 	// We currently don't depend on the Otel SDK since it has not GAed.
 	// This package, however, only contains the conventions from the Otel Spec,

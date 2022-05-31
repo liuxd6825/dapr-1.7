@@ -1,6 +1,6 @@
 package selfhosted
 
-import "github.com/dapr/dapr/pkg/sentry/identity"
+import "github.com/liuxd6825/dapr/pkg/sentry/identity"
 
 func NewValidator() identity.Validator {
 	return &validator{}

@@ -13,9 +13,9 @@ import (
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 
-	"github.com/dapr/dapr/pkg/diagnostics"
-	"github.com/dapr/dapr/pkg/grpc/proxy/codec"
-	"github.com/dapr/dapr/pkg/resiliency"
+	"github.com/liuxd6825/dapr/pkg/diagnostics"
+	"github.com/liuxd6825/dapr/pkg/grpc/proxy/codec"
+	"github.com/liuxd6825/dapr/pkg/resiliency"
 )
 
 var clientStreamDescForProxying = &grpc.StreamDesc{

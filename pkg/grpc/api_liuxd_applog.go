@@ -2,7 +2,7 @@ package grpc
 
 import (
 	"context"
-	runtimev1pb "github.com/dapr/dapr/pkg/proto/runtime/v1"
+	runtimev1pb "github.com/liuxd6825/dapr/pkg/proto/runtime/v1"
 )
 
 func (a *api) WriteEventLog(ctx context.Context, request *runtimev1pb.WriteEventLogRequest) (*runtimev1pb.WriteEventLogResponse, error) {

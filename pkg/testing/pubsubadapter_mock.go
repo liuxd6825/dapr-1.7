@@ -16,7 +16,7 @@ limitations under the License.
 package testing
 
 import (
-	"github.com/dapr/components-contrib/pubsub"
+	"github.com/liuxd6825/components-contrib/pubsub"
 )
 
 // MockPubSubAdapter is mock for PubSubAdapter

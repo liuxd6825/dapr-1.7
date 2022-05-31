@@ -16,8 +16,8 @@ package channel
 import (
 	"context"
 
-	"github.com/dapr/dapr/pkg/config"
-	invokev1 "github.com/dapr/dapr/pkg/messaging/v1"
+	"github.com/liuxd6825/dapr/pkg/config"
+	invokev1 "github.com/liuxd6825/dapr/pkg/messaging/v1"
 )
 
 const (

@@ -17,7 +17,7 @@ import (
 	"testing"
 	"time"
 
-	app_config "github.com/dapr/dapr/pkg/config"
+	app_config "github.com/liuxd6825/dapr/pkg/config"
 
 	"github.com/stretchr/testify/assert"
 )

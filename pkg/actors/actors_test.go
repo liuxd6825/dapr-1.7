@@ -31,15 +31,15 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"github.com/dapr/components-contrib/state"
-	"github.com/dapr/dapr/pkg/apis/resiliency/v1alpha1"
-	"github.com/dapr/dapr/pkg/channel"
-	"github.com/dapr/dapr/pkg/config"
-	"github.com/dapr/dapr/pkg/health"
-	invokev1 "github.com/dapr/dapr/pkg/messaging/v1"
-	"github.com/dapr/dapr/pkg/modes"
-	"github.com/dapr/dapr/pkg/resiliency"
-	daprt "github.com/dapr/dapr/pkg/testing"
+	"github.com/liuxd6825/components-contrib/state"
+	"github.com/liuxd6825/dapr/pkg/apis/resiliency/v1alpha1"
+	"github.com/liuxd6825/dapr/pkg/channel"
+	"github.com/liuxd6825/dapr/pkg/config"
+	"github.com/liuxd6825/dapr/pkg/health"
+	invokev1 "github.com/liuxd6825/dapr/pkg/messaging/v1"
+	"github.com/liuxd6825/dapr/pkg/modes"
+	"github.com/liuxd6825/dapr/pkg/resiliency"
+	daprt "github.com/liuxd6825/dapr/pkg/testing"
 )
 
 const (

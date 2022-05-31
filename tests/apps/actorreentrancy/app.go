@@ -27,7 +27,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/valyala/fasthttp"
 
-	"github.com/dapr/dapr/pkg/config"
+	"github.com/liuxd6825/dapr/pkg/config"
 )
 
 const (

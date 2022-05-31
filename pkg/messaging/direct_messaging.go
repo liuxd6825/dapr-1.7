@@ -25,19 +25,19 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	nr "github.com/dapr/components-contrib/nameresolution"
+	nr "github.com/liuxd6825/components-contrib/nameresolution"
 	"github.com/dapr/kit/logger"
 
-	"github.com/dapr/dapr/pkg/channel"
-	"github.com/dapr/dapr/pkg/config"
-	diag "github.com/dapr/dapr/pkg/diagnostics"
-	diag_utils "github.com/dapr/dapr/pkg/diagnostics/utils"
-	"github.com/dapr/dapr/pkg/modes"
-	"github.com/dapr/dapr/pkg/retry"
-	"github.com/dapr/dapr/utils"
+	"github.com/liuxd6825/dapr/pkg/channel"
+	"github.com/liuxd6825/dapr/pkg/config"
+	diag "github.com/liuxd6825/dapr/pkg/diagnostics"
+	diag_utils "github.com/liuxd6825/dapr/pkg/diagnostics/utils"
+	"github.com/liuxd6825/dapr/pkg/modes"
+	"github.com/liuxd6825/dapr/pkg/retry"
+	"github.com/liuxd6825/dapr/utils"
 
-	invokev1 "github.com/dapr/dapr/pkg/messaging/v1"
-	internalv1pb "github.com/dapr/dapr/pkg/proto/internals/v1"
+	invokev1 "github.com/liuxd6825/dapr/pkg/messaging/v1"
+	internalv1pb "github.com/liuxd6825/dapr/pkg/proto/internals/v1"
 )
 
 var log = logger.NewLogger("dapr.runtime.direct_messaging")

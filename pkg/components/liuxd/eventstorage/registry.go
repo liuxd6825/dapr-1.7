@@ -3,8 +3,8 @@ package eventstorage
 import (
 	"strings"
 
-	es "github.com/dapr/components-contrib/liuxd/eventstorage"
-	"github.com/dapr/dapr/pkg/components"
+	es "github.com/liuxd6825/components-contrib/liuxd/eventstorage"
+	"github.com/liuxd6825/dapr/pkg/components"
 	"github.com/pkg/errors"
 )
 

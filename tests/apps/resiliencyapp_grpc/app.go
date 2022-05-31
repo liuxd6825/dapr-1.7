@@ -24,8 +24,8 @@ import (
 
 	"github.com/golang/protobuf/ptypes/empty"
 
-	commonv1pb "github.com/dapr/dapr/pkg/proto/common/v1"
-	runtimev1pb "github.com/dapr/dapr/pkg/proto/runtime/v1"
+	commonv1pb "github.com/liuxd6825/dapr/pkg/proto/common/v1"
+	runtimev1pb "github.com/liuxd6825/dapr/pkg/proto/runtime/v1"
 
 	"google.golang.org/grpc"
 	pb "google.golang.org/grpc/examples/helloworld/helloworld"

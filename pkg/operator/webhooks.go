@@ -16,8 +16,8 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 
-	subscriptionsapi_v1alpha1 "github.com/dapr/dapr/pkg/apis/subscriptions/v1alpha1"
-	subscriptionsapi_v2alpha1 "github.com/dapr/dapr/pkg/apis/subscriptions/v2alpha1"
+	subscriptionsapi_v1alpha1 "github.com/liuxd6825/dapr/pkg/apis/subscriptions/v1alpha1"
+	subscriptionsapi_v2alpha1 "github.com/liuxd6825/dapr/pkg/apis/subscriptions/v2alpha1"
 )
 
 const webhookCAName = "dapr-webhook-ca"

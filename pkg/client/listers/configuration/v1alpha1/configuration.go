@@ -23,7 +23,7 @@ import (
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/client-go/tools/cache"
 
-	v1alpha1 "github.com/dapr/dapr/pkg/apis/configuration/v1alpha1"
+	v1alpha1 "github.com/liuxd6825/dapr/pkg/apis/configuration/v1alpha1"
 )
 
 // ConfigurationLister helps list Configurations.

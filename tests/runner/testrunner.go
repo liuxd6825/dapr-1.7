@@ -18,8 +18,8 @@ import (
 	"log"
 	"os"
 
-	configurationv1alpha1 "github.com/dapr/dapr/pkg/apis/configuration/v1alpha1"
-	kube "github.com/dapr/dapr/tests/platforms/kubernetes"
+	configurationv1alpha1 "github.com/liuxd6825/dapr/pkg/apis/configuration/v1alpha1"
+	kube "github.com/liuxd6825/dapr/tests/platforms/kubernetes"
 )
 
 // runnerFailExitCode is the exit code when test runner setup is failed.

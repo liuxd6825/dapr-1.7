@@ -18,9 +18,9 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/dapr/components-contrib/pubsub"
+	"github.com/liuxd6825/components-contrib/pubsub"
 
-	"github.com/dapr/dapr/pkg/components"
+	"github.com/liuxd6825/dapr/pkg/components"
 )
 
 type (

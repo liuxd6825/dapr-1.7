@@ -22,10 +22,10 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/valyala/fasthttp"
 
-	h "github.com/dapr/components-contrib/middleware"
+	h "github.com/liuxd6825/components-contrib/middleware"
 
-	"github.com/dapr/dapr/pkg/components/middleware/http"
-	http_middleware "github.com/dapr/dapr/pkg/middleware/http"
+	"github.com/liuxd6825/dapr/pkg/components/middleware/http"
+	http_middleware "github.com/liuxd6825/dapr/pkg/middleware/http"
 )
 
 func TestRegistry(t *testing.T) {

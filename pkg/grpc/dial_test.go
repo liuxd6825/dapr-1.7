@@ -6,7 +6,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/dapr/dapr/pkg/modes"
+	"github.com/liuxd6825/dapr/pkg/modes"
 )
 
 func TestGetDialAddress(t *testing.T) {

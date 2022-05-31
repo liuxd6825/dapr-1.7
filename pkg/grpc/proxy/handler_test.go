@@ -34,8 +34,8 @@ import (
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 
-	codec "github.com/dapr/dapr/pkg/grpc/proxy/codec"
-	"github.com/dapr/dapr/pkg/resiliency"
+	codec "github.com/liuxd6825/dapr/pkg/grpc/proxy/codec"
+	"github.com/liuxd6825/dapr/pkg/resiliency"
 )
 
 const (

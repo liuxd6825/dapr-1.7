@@ -12,8 +12,8 @@ import (
 
 	"github.com/dapr/kit/logger"
 
-	"github.com/dapr/dapr/pkg/config"
-	dapr_testing "github.com/dapr/dapr/pkg/testing"
+	"github.com/liuxd6825/dapr/pkg/config"
+	dapr_testing "github.com/liuxd6825/dapr/pkg/testing"
 )
 
 func TestCertRenewal(t *testing.T) {

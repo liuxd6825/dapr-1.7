@@ -17,7 +17,7 @@ import (
 	"context"
 	"encoding/base64"
 	"fmt"
-	"github.com/dapr/components-contrib/liuxd/applog"
+	"github.com/liuxd6825/components-contrib/liuxd/applog"
 	"strconv"
 	"strings"
 	"sync"
@@ -32,29 +32,29 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"github.com/dapr/components-contrib/bindings"
-	contrib_metadata "github.com/dapr/components-contrib/metadata"
-	"github.com/dapr/components-contrib/pubsub"
-	"github.com/dapr/components-contrib/secretstores"
-	"github.com/dapr/components-contrib/state"
-	"github.com/dapr/dapr/pkg/actors"
-	components_v1alpha1 "github.com/dapr/dapr/pkg/apis/components/v1alpha1"
-	"github.com/dapr/dapr/pkg/channel"
-	"github.com/dapr/dapr/pkg/channel/http"
-	state_loader "github.com/dapr/dapr/pkg/components/state"
-	"github.com/dapr/dapr/pkg/concurrency"
-	"github.com/dapr/dapr/pkg/config"
-	diag "github.com/dapr/dapr/pkg/diagnostics"
-	diag_utils "github.com/dapr/dapr/pkg/diagnostics/utils"
-	"github.com/dapr/dapr/pkg/encryption"
-	"github.com/dapr/dapr/pkg/messages"
-	"github.com/dapr/dapr/pkg/messaging"
-	invokev1 "github.com/dapr/dapr/pkg/messaging/v1"
-	"github.com/dapr/dapr/pkg/resiliency"
-	"github.com/dapr/dapr/pkg/resiliency/breaker"
-	runtime_pubsub "github.com/dapr/dapr/pkg/runtime/pubsub"
+	"github.com/liuxd6825/components-contrib/bindings"
+	contrib_metadata "github.com/liuxd6825/components-contrib/metadata"
+	"github.com/liuxd6825/components-contrib/pubsub"
+	"github.com/liuxd6825/components-contrib/secretstores"
+	"github.com/liuxd6825/components-contrib/state"
+	"github.com/liuxd6825/dapr/pkg/actors"
+	components_v1alpha1 "github.com/liuxd6825/dapr/pkg/apis/components/v1alpha1"
+	"github.com/liuxd6825/dapr/pkg/channel"
+	"github.com/liuxd6825/dapr/pkg/channel/http"
+	state_loader "github.com/liuxd6825/dapr/pkg/components/state"
+	"github.com/liuxd6825/dapr/pkg/concurrency"
+	"github.com/liuxd6825/dapr/pkg/config"
+	diag "github.com/liuxd6825/dapr/pkg/diagnostics"
+	diag_utils "github.com/liuxd6825/dapr/pkg/diagnostics/utils"
+	"github.com/liuxd6825/dapr/pkg/encryption"
+	"github.com/liuxd6825/dapr/pkg/messages"
+	"github.com/liuxd6825/dapr/pkg/messaging"
+	invokev1 "github.com/liuxd6825/dapr/pkg/messaging/v1"
+	"github.com/liuxd6825/dapr/pkg/resiliency"
+	"github.com/liuxd6825/dapr/pkg/resiliency/breaker"
+	runtime_pubsub "github.com/liuxd6825/dapr/pkg/runtime/pubsub"
 
-	"github.com/dapr/components-contrib/liuxd/eventstorage"
+	"github.com/liuxd6825/components-contrib/liuxd/eventstorage"
 )
 
 // API returns a list of HTTP endpoints for Dapr.
@@ -142,7 +142,7 @@ func NewAPI(
 	pubsubAdapter runtime_pubsub.Adapter,
 
 	eventStorage eventstorage.EventStorage, // eventSourcing liuxd
-	appLogger applog.Logger, // logger liuxd
+	appLogger applog.Logger,                // logger liuxd
 
 	actor actors.Actors,
 	sendToOutputBindingFn func(name string, req *bindings.InvokeRequest) (*bindings.InvokeResponse, error),

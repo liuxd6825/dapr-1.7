@@ -29,14 +29,14 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"github.com/dapr/dapr/pkg/channel"
-	"github.com/dapr/dapr/pkg/config"
-	diag "github.com/dapr/dapr/pkg/diagnostics"
-	diag_utils "github.com/dapr/dapr/pkg/diagnostics/utils"
-	invokev1 "github.com/dapr/dapr/pkg/messaging/v1"
-	commonv1pb "github.com/dapr/dapr/pkg/proto/common/v1"
-	internalv1pb "github.com/dapr/dapr/pkg/proto/internals/v1"
-	auth "github.com/dapr/dapr/pkg/runtime/security"
+	"github.com/liuxd6825/dapr/pkg/channel"
+	"github.com/liuxd6825/dapr/pkg/config"
+	diag "github.com/liuxd6825/dapr/pkg/diagnostics"
+	diag_utils "github.com/liuxd6825/dapr/pkg/diagnostics/utils"
+	invokev1 "github.com/liuxd6825/dapr/pkg/messaging/v1"
+	commonv1pb "github.com/liuxd6825/dapr/pkg/proto/common/v1"
+	internalv1pb "github.com/liuxd6825/dapr/pkg/proto/internals/v1"
+	auth "github.com/liuxd6825/dapr/pkg/runtime/security"
 )
 
 const (

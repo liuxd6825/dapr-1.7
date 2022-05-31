@@ -22,7 +22,7 @@ import (
 	rest "k8s.io/client-go/rest"
 	testing "k8s.io/client-go/testing"
 
-	v1alpha1 "github.com/dapr/dapr/pkg/client/clientset/versioned/typed/configuration/v1alpha1"
+	v1alpha1 "github.com/liuxd6825/dapr/pkg/client/clientset/versioned/typed/configuration/v1alpha1"
 )
 
 type FakeConfigurationV1alpha1 struct {

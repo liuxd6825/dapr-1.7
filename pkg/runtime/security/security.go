@@ -11,9 +11,9 @@ import (
 
 	"github.com/dapr/kit/logger"
 
-	"github.com/dapr/dapr/pkg/credentials"
-	diag "github.com/dapr/dapr/pkg/diagnostics"
-	"github.com/dapr/dapr/pkg/sentry/certs"
+	"github.com/liuxd6825/dapr/pkg/credentials"
+	diag "github.com/liuxd6825/dapr/pkg/diagnostics"
+	"github.com/liuxd6825/dapr/pkg/sentry/certs"
 )
 
 const (

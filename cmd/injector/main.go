@@ -19,14 +19,14 @@ import (
 
 	"github.com/dapr/kit/logger"
 
-	scheme "github.com/dapr/dapr/pkg/client/clientset/versioned"
-	"github.com/dapr/dapr/pkg/health"
-	"github.com/dapr/dapr/pkg/injector"
-	"github.com/dapr/dapr/pkg/injector/monitoring"
-	"github.com/dapr/dapr/pkg/metrics"
-	"github.com/dapr/dapr/pkg/signals"
-	"github.com/dapr/dapr/pkg/version"
-	"github.com/dapr/dapr/utils"
+	scheme "github.com/liuxd6825/dapr/pkg/client/clientset/versioned"
+	"github.com/liuxd6825/dapr/pkg/health"
+	"github.com/liuxd6825/dapr/pkg/injector"
+	"github.com/liuxd6825/dapr/pkg/injector/monitoring"
+	"github.com/liuxd6825/dapr/pkg/metrics"
+	"github.com/liuxd6825/dapr/pkg/signals"
+	"github.com/liuxd6825/dapr/pkg/version"
+	"github.com/liuxd6825/dapr/utils"
 )
 
 var (

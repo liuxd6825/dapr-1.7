@@ -26,10 +26,10 @@ import (
 	watch "k8s.io/apimachinery/pkg/watch"
 	cache "k8s.io/client-go/tools/cache"
 
-	componentsv1alpha1 "github.com/dapr/dapr/pkg/apis/components/v1alpha1"
-	versioned "github.com/dapr/dapr/pkg/client/clientset/versioned"
-	internalinterfaces "github.com/dapr/dapr/pkg/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "github.com/dapr/dapr/pkg/client/listers/components/v1alpha1"
+	componentsv1alpha1 "github.com/liuxd6825/dapr/pkg/apis/components/v1alpha1"
+	versioned "github.com/liuxd6825/dapr/pkg/client/clientset/versioned"
+	internalinterfaces "github.com/liuxd6825/dapr/pkg/client/informers/externalversions/internalinterfaces"
+	v1alpha1 "github.com/liuxd6825/dapr/pkg/client/listers/components/v1alpha1"
 )
 
 // ComponentInformer provides access to a shared informer and lister for

@@ -8,14 +8,14 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/dapr/dapr/pkg/sentry/ca"
-	"github.com/dapr/dapr/pkg/sentry/config"
-	"github.com/dapr/dapr/pkg/sentry/identity"
-	"github.com/dapr/dapr/pkg/sentry/identity/kubernetes"
-	"github.com/dapr/dapr/pkg/sentry/identity/selfhosted"
-	k8s "github.com/dapr/dapr/pkg/sentry/kubernetes"
-	"github.com/dapr/dapr/pkg/sentry/monitoring"
-	"github.com/dapr/dapr/pkg/sentry/server"
+	"github.com/liuxd6825/dapr/pkg/sentry/ca"
+	"github.com/liuxd6825/dapr/pkg/sentry/config"
+	"github.com/liuxd6825/dapr/pkg/sentry/identity"
+	"github.com/liuxd6825/dapr/pkg/sentry/identity/kubernetes"
+	"github.com/liuxd6825/dapr/pkg/sentry/identity/selfhosted"
+	k8s "github.com/liuxd6825/dapr/pkg/sentry/kubernetes"
+	"github.com/liuxd6825/dapr/pkg/sentry/monitoring"
+	"github.com/liuxd6825/dapr/pkg/sentry/server"
 	"github.com/dapr/kit/logger"
 )
 

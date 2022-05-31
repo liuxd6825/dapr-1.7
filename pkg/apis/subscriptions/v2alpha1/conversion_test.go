@@ -6,8 +6,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/dapr/dapr/pkg/apis/subscriptions/v1alpha1"
-	"github.com/dapr/dapr/pkg/apis/subscriptions/v2alpha1"
+	"github.com/liuxd6825/dapr/pkg/apis/subscriptions/v1alpha1"
+	"github.com/liuxd6825/dapr/pkg/apis/subscriptions/v2alpha1"
 )
 
 func TestConversion(t *testing.T) {

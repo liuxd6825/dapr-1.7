@@ -23,10 +23,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/dapr/dapr/tests/perf"
-	"github.com/dapr/dapr/tests/perf/utils"
-	kube "github.com/dapr/dapr/tests/platforms/kubernetes"
-	"github.com/dapr/dapr/tests/runner"
+	"github.com/liuxd6825/dapr/tests/perf"
+	"github.com/liuxd6825/dapr/tests/perf/utils"
+	kube "github.com/liuxd6825/dapr/tests/platforms/kubernetes"
+	"github.com/liuxd6825/dapr/tests/runner"
 	"github.com/stretchr/testify/require"
 )
 

@@ -19,13 +19,13 @@ import (
 
 	"github.com/dapr/kit/retry"
 
-	subscriptionsapi_v1alpha1 "github.com/dapr/dapr/pkg/apis/subscriptions/v1alpha1"
-	subscriptionsapi_v2alpha1 "github.com/dapr/dapr/pkg/apis/subscriptions/v2alpha1"
-	"github.com/dapr/dapr/pkg/channel"
-	"github.com/dapr/dapr/pkg/expr"
-	invokev1 "github.com/dapr/dapr/pkg/messaging/v1"
-	operatorv1pb "github.com/dapr/dapr/pkg/proto/operator/v1"
-	runtimev1pb "github.com/dapr/dapr/pkg/proto/runtime/v1"
+	subscriptionsapi_v1alpha1 "github.com/liuxd6825/dapr/pkg/apis/subscriptions/v1alpha1"
+	subscriptionsapi_v2alpha1 "github.com/liuxd6825/dapr/pkg/apis/subscriptions/v2alpha1"
+	"github.com/liuxd6825/dapr/pkg/channel"
+	"github.com/liuxd6825/dapr/pkg/expr"
+	invokev1 "github.com/liuxd6825/dapr/pkg/messaging/v1"
+	operatorv1pb "github.com/liuxd6825/dapr/pkg/proto/operator/v1"
+	runtimev1pb "github.com/liuxd6825/dapr/pkg/proto/runtime/v1"
 	"github.com/dapr/kit/logger"
 )
 

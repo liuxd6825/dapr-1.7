@@ -21,8 +21,8 @@ package v1alpha1
 import (
 	rest "k8s.io/client-go/rest"
 
-	v1alpha1 "github.com/dapr/dapr/pkg/apis/components/v1alpha1"
-	"github.com/dapr/dapr/pkg/client/clientset/versioned/scheme"
+	v1alpha1 "github.com/liuxd6825/dapr/pkg/apis/components/v1alpha1"
+	"github.com/liuxd6825/dapr/pkg/client/clientset/versioned/scheme"
 )
 
 type ComponentsV1alpha1Interface interface {

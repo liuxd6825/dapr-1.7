@@ -28,10 +28,10 @@ import (
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	cache "k8s.io/client-go/tools/cache"
 
-	versioned "github.com/dapr/dapr/pkg/client/clientset/versioned"
-	components "github.com/dapr/dapr/pkg/client/informers/externalversions/components"
-	configuration "github.com/dapr/dapr/pkg/client/informers/externalversions/configuration"
-	internalinterfaces "github.com/dapr/dapr/pkg/client/informers/externalversions/internalinterfaces"
+	versioned "github.com/liuxd6825/dapr/pkg/client/clientset/versioned"
+	components "github.com/liuxd6825/dapr/pkg/client/informers/externalversions/components"
+	configuration "github.com/liuxd6825/dapr/pkg/client/informers/externalversions/configuration"
+	internalinterfaces "github.com/liuxd6825/dapr/pkg/client/informers/externalversions/internalinterfaces"
 )
 
 // SharedInformerOption defines the functional option type for SharedInformerFactory.

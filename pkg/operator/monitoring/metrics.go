@@ -20,7 +20,7 @@ import (
 	"go.opencensus.io/stats/view"
 	"go.opencensus.io/tag"
 
-	diag_utils "github.com/dapr/dapr/pkg/diagnostics/utils"
+	diag_utils "github.com/liuxd6825/dapr/pkg/diagnostics/utils"
 )
 
 const (

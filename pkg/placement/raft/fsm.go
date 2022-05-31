@@ -21,8 +21,8 @@ import (
 	"github.com/hashicorp/raft"
 	"github.com/pkg/errors"
 
-	"github.com/dapr/dapr/pkg/placement/hashing"
-	v1pb "github.com/dapr/dapr/pkg/proto/placement/v1"
+	"github.com/liuxd6825/dapr/pkg/placement/hashing"
+	v1pb "github.com/liuxd6825/dapr/pkg/proto/placement/v1"
 )
 
 // CommandType is the type of raft command in log entry.

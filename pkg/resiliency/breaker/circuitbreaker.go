@@ -19,7 +19,7 @@ import (
 
 	"github.com/sony/gobreaker"
 
-	"github.com/dapr/dapr/pkg/expr"
+	"github.com/liuxd6825/dapr/pkg/expr"
 	"github.com/dapr/kit/logger"
 )
 

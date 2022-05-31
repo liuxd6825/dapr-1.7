@@ -16,7 +16,7 @@ package pubsub
 import (
 	"fmt"
 
-	"github.com/dapr/dapr/pkg/messages"
+	"github.com/liuxd6825/dapr/pkg/messages"
 )
 
 // pubsub.NotFoundError is returned by the runtime when the pubsub does not exist.

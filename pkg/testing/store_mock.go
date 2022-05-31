@@ -10,7 +10,7 @@ package testing
 import (
 	context "context"
 
-	configuration "github.com/dapr/components-contrib/configuration"
+	configuration "github.com/liuxd6825/components-contrib/configuration"
 
 	mock "github.com/stretchr/testify/mock"
 )

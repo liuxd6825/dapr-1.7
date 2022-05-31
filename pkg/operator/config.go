@@ -7,8 +7,8 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
-	"github.com/dapr/dapr/pkg/apis/configuration/v1alpha1"
-	"github.com/dapr/dapr/pkg/credentials"
+	"github.com/liuxd6825/dapr/pkg/apis/configuration/v1alpha1"
+	"github.com/liuxd6825/dapr/pkg/credentials"
 )
 
 // Config returns an operator config options.

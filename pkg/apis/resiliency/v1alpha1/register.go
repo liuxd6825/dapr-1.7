@@ -18,7 +18,7 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 
-	"github.com/dapr/dapr/pkg/apis/resiliency"
+	"github.com/liuxd6825/dapr/pkg/apis/resiliency"
 )
 
 // SchemeGroupVersion is group version used to register these objects.

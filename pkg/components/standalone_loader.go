@@ -23,8 +23,8 @@ import (
 	"github.com/ghodss/yaml"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
-	components_v1alpha1 "github.com/dapr/dapr/pkg/apis/components/v1alpha1"
-	config "github.com/dapr/dapr/pkg/config/modes"
+	components_v1alpha1 "github.com/liuxd6825/dapr/pkg/apis/components/v1alpha1"
+	config "github.com/liuxd6825/dapr/pkg/config/modes"
 )
 
 const (

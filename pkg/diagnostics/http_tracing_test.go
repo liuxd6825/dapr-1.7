@@ -25,8 +25,8 @@ import (
 	"github.com/valyala/fasthttp"
 	"go.opencensus.io/trace"
 
-	"github.com/dapr/dapr/pkg/config"
-	diag_utils "github.com/dapr/dapr/pkg/diagnostics/utils"
+	"github.com/liuxd6825/dapr/pkg/config"
+	diag_utils "github.com/liuxd6825/dapr/pkg/diagnostics/utils"
 )
 
 func TestSpanContextFromRequest(t *testing.T) {

@@ -37,12 +37,12 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	v1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 
-	componentsapi "github.com/dapr/dapr/pkg/apis/components/v1alpha1"
-	configurationapi "github.com/dapr/dapr/pkg/apis/configuration/v1alpha1"
-	resiliencyapi "github.com/dapr/dapr/pkg/apis/resiliency/v1alpha1"
-	subscriptionsapi_v2alpha1 "github.com/dapr/dapr/pkg/apis/subscriptions/v2alpha1"
-	dapr_credentials "github.com/dapr/dapr/pkg/credentials"
-	operatorv1pb "github.com/dapr/dapr/pkg/proto/operator/v1"
+	componentsapi "github.com/liuxd6825/dapr/pkg/apis/components/v1alpha1"
+	configurationapi "github.com/liuxd6825/dapr/pkg/apis/configuration/v1alpha1"
+	resiliencyapi "github.com/liuxd6825/dapr/pkg/apis/resiliency/v1alpha1"
+	subscriptionsapi_v2alpha1 "github.com/liuxd6825/dapr/pkg/apis/subscriptions/v2alpha1"
+	dapr_credentials "github.com/liuxd6825/dapr/pkg/credentials"
+	operatorv1pb "github.com/liuxd6825/dapr/pkg/proto/operator/v1"
 )
 
 const serverPort = 6500

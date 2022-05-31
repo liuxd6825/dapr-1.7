@@ -20,7 +20,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc"
 
-	"github.com/dapr/dapr/pkg/config"
+	"github.com/liuxd6825/dapr/pkg/config"
 )
 
 func TestSetAPIEndpointsMiddlewareUnary(t *testing.T) {

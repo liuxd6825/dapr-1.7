@@ -14,8 +14,8 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/dapr/dapr/pkg/sentry/certs"
-	"github.com/dapr/dapr/pkg/sentry/identity"
+	"github.com/liuxd6825/dapr/pkg/sentry/certs"
+	"github.com/liuxd6825/dapr/pkg/sentry/identity"
 )
 
 const (

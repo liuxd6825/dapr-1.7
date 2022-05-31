@@ -29,12 +29,12 @@ import (
 	"k8s.io/apimachinery/pkg/util/intstr"
 	"k8s.io/client-go/kubernetes"
 
-	scheme "github.com/dapr/dapr/pkg/client/clientset/versioned"
-	"github.com/dapr/dapr/pkg/credentials"
-	auth "github.com/dapr/dapr/pkg/runtime/security"
-	"github.com/dapr/dapr/pkg/sentry/certs"
-	"github.com/dapr/dapr/pkg/validation"
-	"github.com/dapr/dapr/utils"
+	scheme "github.com/liuxd6825/dapr/pkg/client/clientset/versioned"
+	"github.com/liuxd6825/dapr/pkg/credentials"
+	auth "github.com/liuxd6825/dapr/pkg/runtime/security"
+	"github.com/liuxd6825/dapr/pkg/sentry/certs"
+	"github.com/liuxd6825/dapr/pkg/validation"
+	"github.com/liuxd6825/dapr/utils"
 )
 
 const (

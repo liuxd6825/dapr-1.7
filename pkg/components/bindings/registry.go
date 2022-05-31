@@ -18,9 +18,9 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/dapr/components-contrib/bindings"
+	"github.com/liuxd6825/components-contrib/bindings"
 
-	"github.com/dapr/dapr/pkg/components"
+	"github.com/liuxd6825/dapr/pkg/components"
 )
 
 type (

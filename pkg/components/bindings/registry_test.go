@@ -20,9 +20,9 @@ import (
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
 
-	b "github.com/dapr/components-contrib/bindings"
+	b "github.com/liuxd6825/components-contrib/bindings"
 
-	"github.com/dapr/dapr/pkg/components/bindings"
+	"github.com/liuxd6825/dapr/pkg/components/bindings"
 )
 
 type (

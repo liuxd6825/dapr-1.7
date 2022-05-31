@@ -5,7 +5,7 @@ import (
 
 	"sigs.k8s.io/controller-runtime/pkg/conversion"
 
-	"github.com/dapr/dapr/pkg/apis/subscriptions/v1alpha1"
+	"github.com/liuxd6825/dapr/pkg/apis/subscriptions/v1alpha1"
 )
 
 // +kubebuilder:docs-gen:collapse=Imports

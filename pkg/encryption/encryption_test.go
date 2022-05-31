@@ -18,8 +18,8 @@ import (
 	"encoding/hex"
 	"testing"
 
-	"github.com/dapr/components-contrib/secretstores"
-	"github.com/dapr/dapr/pkg/apis/components/v1alpha1"
+	"github.com/liuxd6825/components-contrib/secretstores"
+	"github.com/liuxd6825/dapr/pkg/apis/components/v1alpha1"
 
 	"github.com/stretchr/testify/assert"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"

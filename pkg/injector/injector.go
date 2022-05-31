@@ -30,9 +30,9 @@ import (
 
 	"github.com/dapr/kit/logger"
 
-	scheme "github.com/dapr/dapr/pkg/client/clientset/versioned"
-	"github.com/dapr/dapr/pkg/injector/monitoring"
-	"github.com/dapr/dapr/utils"
+	scheme "github.com/liuxd6825/dapr/pkg/client/clientset/versioned"
+	"github.com/liuxd6825/dapr/pkg/injector/monitoring"
+	"github.com/liuxd6825/dapr/utils"
 )
 
 const (

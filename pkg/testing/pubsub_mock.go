@@ -5,7 +5,7 @@ import (
 
 	mock "github.com/stretchr/testify/mock"
 
-	"github.com/dapr/components-contrib/pubsub"
+	"github.com/liuxd6825/components-contrib/pubsub"
 )
 
 // MockPubSub is a mock pub-sub component object.

@@ -27,9 +27,9 @@ import (
 	"github.com/cenkalti/backoff/v4"
 	"go.uber.org/ratelimit"
 
-	"github.com/dapr/dapr/tests/e2e/utils"
-	kube "github.com/dapr/dapr/tests/platforms/kubernetes"
-	"github.com/dapr/dapr/tests/runner"
+	"github.com/liuxd6825/dapr/tests/e2e/utils"
+	kube "github.com/liuxd6825/dapr/tests/platforms/kubernetes"
+	"github.com/liuxd6825/dapr/tests/runner"
 	"github.com/stretchr/testify/require"
 )
 

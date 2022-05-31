@@ -7,7 +7,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
 
-	v1 "github.com/dapr/dapr/pkg/messaging/v1"
+	v1 "github.com/liuxd6825/dapr/pkg/messaging/v1"
 )
 
 func setAPIAuthenticationMiddlewareUnary(apiToken, authHeader string) grpc.UnaryServerInterceptor {

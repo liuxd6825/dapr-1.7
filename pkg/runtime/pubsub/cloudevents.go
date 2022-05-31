@@ -16,8 +16,8 @@ package pubsub
 import (
 	"github.com/google/uuid"
 
-	contrib_contenttype "github.com/dapr/components-contrib/contenttype"
-	contrib_pubsub "github.com/dapr/components-contrib/pubsub"
+	contrib_contenttype "github.com/liuxd6825/components-contrib/contenttype"
+	contrib_pubsub "github.com/liuxd6825/components-contrib/pubsub"
 )
 
 // CloudEvent is a request object to create a Dapr compliant cloudevent.
