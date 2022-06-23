@@ -18,8 +18,8 @@
 - 设置环境变量 \
   $ export DAPR_REGISTRY=192.168.64.12 \
   $ export DAPR_TAG=dev \
-  $ export  TARGET_OS=linux \
-  $ export  TARGET_ARCH=arm64 
+  $ export TARGET_OS=linux \
+  $ export TARGET_ARCH=arm64 
 
 
 - 编译二进制文件 \

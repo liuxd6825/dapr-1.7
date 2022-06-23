@@ -194,6 +194,47 @@ func (a *api) DeleteEvent(ctx context.Context, request *runtimev1pb.DeleteEventR
 	return &runtimev1pb.DeleteEventResponse{}, nil
 }
 
+func (a *api) GetRelations(ctx context.Context, request *runtimev1pb.GetRelationsRequest) (*runtimev1pb.GetRelationsResponse, error) {
+	in := &eventstorage.GetRelationsRequest{
+		TenantId:      request.TenantId,
+		AggregateType: request.AggregateType,
+		Filter:        request.Filter,
+		Sort:          request.Sort,
+		PageNum:       request.PageNum,
+		PageSize:      request.PageSize,
+	}
+	out, err := a.eventStorage.GetRelations(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	var relations []*runtimev1pb.RelationDto
+	if out != nil && len(out.Data) > 0 {
+		for _, item := range out.Data {
+			dto := runtimev1pb.RelationDto{
+				Id:          item.Id,
+				TenantId:    item.TenantId,
+				AggregateId: item.AggregateId,
+				IsDeleted:   item.IsDeleted,
+				TableName:   item.TableName,
+				Items:       item.Items,
+			}
+			relations = append(relations, &dto)
+		}
+	}
+	resp := &runtimev1pb.GetRelationsResponse{
+		TotalRows:  out.TotalRows,
+		TotalPages: out.TotalPages,
+		Filter:     out.Filter,
+		Sort:       out.Sort,
+		PageNum:    out.PageNum,
+		PageSize:   out.PageSize,
+		Data:       relations,
+		IsFound:    out.IsFound,
+		Error:      out.Error,
+	}
+	return resp, nil
+}
+
 func newEvents(eventDtoList []*runtimev1pb.EventDto) (*[]eventstorage.EventDto, error) {
 	var events []eventstorage.EventDto
 	if eventDtoList == nil {
@@ -225,8 +266,10 @@ func newEvent(e *runtimev1pb.EventDto) (*eventstorage.EventDto, error) {
 		EventType:    e.EventType,
 		EventVersion: e.EventVersion,
 		PubsubName:   e.PubsubName,
+		EventTime:    e.EventTime.AsTime(),
 		Topic:        e.Topic,
 		Metadata:     *metadata,
+		Relations:    e.Relations,
 	}
 	return event, nil
 }

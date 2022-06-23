@@ -123,6 +123,7 @@ type API interface {
 	WriteAppLog(context.Context, *runtimev1pb.WriteAppLogRequest) (*runtimev1pb.WriteAppLogResponse, error)
 	UpdateAppLog(context.Context, *runtimev1pb.UpdateAppLogRequest) (*runtimev1pb.UpdateAppLogResponse, error)
 	GetAppLogById(context.Context, *runtimev1pb.GetAppLogByIdRequest) (*runtimev1pb.GetAppLogByIdResponse, error)
+	GetRelations(context.Context, *runtimev1pb.GetRelationsRequest) (*runtimev1pb.GetRelationsResponse, error)
 }
 
 type api struct {
@@ -163,7 +164,7 @@ func NewAPI(
 	pubsubAdapter runtime_pubsub.Adapter,
 
 	eventStorage eventstorage.EventStorage, // eventSourcing liuxd
-	appLogger applog.Logger,                // logger liuxd
+	appLogger applog.Logger, // logger liuxd
 
 	directMessaging messaging.DirectMessaging,
 	actor actors.Actors,

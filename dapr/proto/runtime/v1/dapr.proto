@@ -138,6 +138,9 @@ service Dapr {
 
   // GetAppLogById 按id获取应用日志
   rpc GetAppLogById(GetAppLogByIdRequest)returns(GetAppLogByIdResponse){}
+
+  // GetRelations 获取聚合关系
+  rpc GetRelations(GetRelationsRequest)returns(GetRelationsResponse){}
 }
 
 

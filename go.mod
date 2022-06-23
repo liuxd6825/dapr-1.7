@@ -1,6 +1,6 @@
 module github.com/liuxd6825/dapr
 
-go 1.17
+go 1.18
 
 require (
 	contrib.go.opencensus.io/exporter/prometheus v0.4.0
@@ -241,6 +241,7 @@ require (
 	github.com/open-policy-agent/opa v0.23.2 // indirect
 	github.com/opentracing/opentracing-go v1.2.0 // indirect
 	github.com/oracle/oci-go-sdk/v54 v54.0.0 // indirect
+	github.com/orcaman/concurrent-map v1.0.0 // indirect
 	github.com/patrickmn/go-cache v2.1.0+incompatible // indirect
 	github.com/peterbourgon/diskv v2.0.1+incompatible // indirect
 	github.com/pierrec/lz4 v2.0.5+incompatible // indirect
@@ -337,4 +338,4 @@ replace (
 
 replace github.com/eclipse/paho.mqtt.golang => github.com/shivamkm07/paho.mqtt.golang v1.3.6-0.20220106130409-e28a1db639f8
 
-replace github.com/liuxd6825/components-contrib v1.7.1-1.0-alpha => gitee.com/liuxd6825/components-contrib v1.7.1-1.0-alpha
+replace github.com/liuxd6825/components-contrib => ../components-contrib
