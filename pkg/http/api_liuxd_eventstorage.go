@@ -71,6 +71,14 @@ func (a *api) constructEventSourcingEndpoints() []Endpoint {
 }*/
 
 func (a *api) getRelations(ctx *fasthttp.RequestCtx) {
+	defer func() {
+		if e := recover(); e != nil {
+			if err, ok := e.(error); ok {
+				setResponseData(ctx, nil, err)
+			}
+		}
+	}()
+	
 	tenantId, ok, _ := getUserValue(ctx, "tenantId")
 	if !ok {
 		setResponseData(ctx, nil, errors.New("/tenants/{tenantId}"))
@@ -114,6 +122,13 @@ func (a *api) saveSnapshot(ctx *fasthttp.RequestCtx) {
 }
 
 func (a *api) getEventById(ctx *fasthttp.RequestCtx) {
+	defer func() {
+		if e := recover(); e != nil {
+			if err, ok := e.(error); ok {
+				setResponseData(ctx, nil, err)
+			}
+		}
+	}()
 	if !a.check(ctx) {
 		return
 	}
@@ -129,6 +144,13 @@ func (a *api) getEventById(ctx *fasthttp.RequestCtx) {
 }
 
 func (a *api) applyEvents(ctx *fasthttp.RequestCtx) {
+	defer func() {
+		if e := recover(); e != nil {
+			if err, ok := e.(error); ok {
+				setResponseData(ctx, nil, err)
+			}
+		}
+	}()
 	if !a.check(ctx) {
 		return
 	}
@@ -144,6 +166,14 @@ func (a *api) applyEvents(ctx *fasthttp.RequestCtx) {
 }
 
 func (a *api) createEvent(ctx *fasthttp.RequestCtx) {
+	defer func() {
+		if e := recover(); e != nil {
+			if err, ok := e.(error); ok {
+				setResponseData(ctx, nil, err)
+			}
+		}
+	}()
+
 	if !a.check(ctx) {
 		return
 	}
