@@ -555,7 +555,7 @@ type DaprServer interface {
 	GetAppLogById(context.Context, *GetAppLogByIdRequest) (*GetAppLogByIdResponse, error)
 	// GetRelations 获取聚合关系
 	GetRelations(context.Context, *GetRelationsRequest) (*GetRelationsResponse, error)
-
+	mustEmbedUnimplementedDaprServer()
 }
 
 // UnimplementedDaprServer must be embedded to have forward compatible implementations.

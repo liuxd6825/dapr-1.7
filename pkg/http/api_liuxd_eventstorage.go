@@ -6,6 +6,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
 	"net/http"
+	"strconv"
 )
 
 type ResponseError struct {
@@ -46,6 +47,12 @@ func (a *api) constructEventSourcingEndpoints() []Endpoint {
 			Version: apiVersionV1,
 			Handler: a.saveSnapshot,
 		},
+		{
+			Methods: []string{fasthttp.MethodGet},
+			Route:   "event-storage/relations/tenants/{tenantId}/types/{aggregateType}",
+			Version: apiVersionV1,
+			Handler: a.getRelations,
+		},
 	}
 }
 
@@ -63,6 +70,43 @@ func (a *api) constructEventSourcingEndpoints() []Endpoint {
 	setResponseData(ctx, respData, err)
 }*/
 
+func (a *api) getRelations(ctx *fasthttp.RequestCtx) {
+	defer func() {
+		if e := recover(); e != nil {
+			if err, ok := e.(error); ok {
+				setResponseData(ctx, nil, err)
+			}
+		}
+	}()
+	
+	tenantId, ok, _ := getUserValue(ctx, "tenantId")
+	if !ok {
+		setResponseData(ctx, nil, errors.New("/tenants/{tenantId}"))
+		return
+	}
+	aggregateType, ok, _ := getUserValue(ctx, "aggregateType")
+	if !ok {
+		setResponseData(ctx, nil, errors.New("/types/{aggregateType}"))
+		return
+	}
+
+	filter, _, _ := getQueryArgsString(ctx, "filter", "")
+	sort, _, _ := getQueryArgsString(ctx, "sort", "")
+	pageNum, _, _ := getQueryArgsUint(ctx, "pageNum", 0)
+	pageSize, _, _ := getQueryArgsUint(ctx, "pageSize", 20)
+
+	query := &eventstorage.GetRelationsRequest{
+		TenantId:      tenantId,
+		Filter:        filter,
+		AggregateType: aggregateType,
+		Sort:          sort,
+		PageNum:       pageNum,
+		PageSize:      pageSize,
+	}
+	respData, err := a.eventStorage.GetRelations(ctx, query)
+	setResponseData(ctx, respData, err)
+}
+
 func (a *api) saveSnapshot(ctx *fasthttp.RequestCtx) {
 	if !a.check(ctx) {
 		return
@@ -78,6 +122,13 @@ func (a *api) saveSnapshot(ctx *fasthttp.RequestCtx) {
 }
 
 func (a *api) getEventById(ctx *fasthttp.RequestCtx) {
+	defer func() {
+		if e := recover(); e != nil {
+			if err, ok := e.(error); ok {
+				setResponseData(ctx, nil, err)
+			}
+		}
+	}()
 	if !a.check(ctx) {
 		return
 	}
@@ -93,6 +144,13 @@ func (a *api) getEventById(ctx *fasthttp.RequestCtx) {
 }
 
 func (a *api) applyEvents(ctx *fasthttp.RequestCtx) {
+	defer func() {
+		if e := recover(); e != nil {
+			if err, ok := e.(error); ok {
+				setResponseData(ctx, nil, err)
+			}
+		}
+	}()
 	if !a.check(ctx) {
 		return
 	}
@@ -108,6 +166,14 @@ func (a *api) applyEvents(ctx *fasthttp.RequestCtx) {
 }
 
 func (a *api) createEvent(ctx *fasthttp.RequestCtx) {
+	defer func() {
+		if e := recover(); e != nil {
+			if err, ok := e.(error); ok {
+				setResponseData(ctx, nil, err)
+			}
+		}
+	}()
+
 	if !a.check(ctx) {
 		return
 	}
@@ -148,4 +214,42 @@ func setResponseData(ctx *fasthttp.RequestCtx, data interface{}, err error) {
 func getJsonBytes(data interface{}) []byte {
 	bytes, _ := json.Marshal(data)
 	return bytes
+}
+
+func getUserValue(ctx *fasthttp.RequestCtx, name string) (string, bool, error) {
+	var res string
+	isFound := false
+	value := ctx.UserValue(name)
+	if value != nil {
+		res = value.(string)
+		isFound = true
+	}
+	return res, isFound, nil
+}
+
+func getQueryArgsString(ctx *fasthttp.RequestCtx, name string, defValue string) (string, bool, error) {
+	var res string
+	queryArgs := ctx.QueryArgs()
+	isFound := queryArgs.Has(name)
+	if isFound {
+		value := queryArgs.Peek(name)
+		res = string(value)
+		isFound = true
+	} else {
+		res = defValue
+	}
+	return res, isFound, nil
+}
+
+func getQueryArgsUint(ctx *fasthttp.RequestCtx, name string, defValue uint64) (uint64, bool, error) {
+	var res uint64
+	s, isFound, err := getQueryArgsString(ctx, name, "")
+	if err != nil {
+		return 0, false, err
+	} else if !isFound {
+		res = defValue
+	} else {
+		res, err = strconv.ParseUint(s, 10, 64)
+	}
+	return res, isFound, nil
 }

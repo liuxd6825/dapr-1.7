@@ -99,16 +99,18 @@ message DeleteEventResponse{
 
 }
 
-
 message EventDto {
   string event_id=1;
   string command_id=2;
   string event_data=3;   // json format
   string event_type=4;
   string event_version=5;
-  string pubsub_name=6;
-  string topic=7;
-  string metadata=8;  // json format
+  google.protobuf.Timestamp  event_time=6;
+  string pubsub_name=7;
+  string topic=8;
+  string metadata=9;  // json format
+  map<string, string> relations=10; // aggregate relations
+
 }
 
 message WriteEventLogRequest{
@@ -228,4 +230,36 @@ message GetAppLogByIdResponse {
   bool status =8;
   string  message =9;
 }
+
+message GetRelationsRequest {
+  string tenantId = 1;
+  string aggregate_type = 2;
+  string filter = 3;
+  string sort = 4;
+  uint64 pageNum = 5;
+  uint64 pageSize = 6;
+}
+
+
+message GetRelationsResponse {
+  repeated RelationDto data = 1;
+  uint64 total_rows = 2;
+  uint64 total_pages = 3;
+  uint64 page_num = 4;
+  uint64 page_size =5;
+  string filter = 6;
+  string sort =7;
+  string error = 8;
+  bool is_found = 9;
+}
+
+message RelationDto {
+  string id = 1;
+  string tenant_id= 2;
+  string table_name =3;
+  string aggregate_id = 4;
+  bool is_deleted = 5;
+  map<string, string> items=6;
+}
+
 
