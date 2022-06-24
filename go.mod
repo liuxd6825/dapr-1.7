@@ -2,6 +2,10 @@ module github.com/liuxd6825/dapr
 
 go 1.18
 
+require github.com/cenkalti/backoff v2.2.1+incompatible
+
+require github.com/liuxd6825/components-contrib v1.7.1-1.0-alpha2
+
 require (
 	contrib.go.opencensus.io/exporter/prometheus v0.4.0
 	contrib.go.opencensus.io/exporter/zipkin v0.1.1
@@ -61,10 +65,6 @@ require (
 	k8s.io/metrics v0.20.0
 	sigs.k8s.io/controller-runtime v0.11.0
 )
-
-require github.com/cenkalti/backoff v2.2.1+incompatible
-
-require github.com/liuxd6825/components-contrib v1.7.1-1.0-alpha2
 
 require (
 	cloud.google.com/go v0.86.0 // indirect
