@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/liuxd6825/components-contrib/liuxd/eventstorage"
 	runtimev1pb "github.com/liuxd6825/dapr/pkg/proto/runtime/v1"
+	"github.com/pkg/errors"
 	"k8s.io/apimachinery/pkg/util/json"
 )
 
@@ -194,7 +195,23 @@ func (a *api) DeleteEvent(ctx context.Context, request *runtimev1pb.DeleteEventR
 	return &runtimev1pb.DeleteEventResponse{}, nil
 }
 
-func (a *api) GetRelations(ctx context.Context, request *runtimev1pb.GetRelationsRequest) (*runtimev1pb.GetRelationsResponse, error) {
+func (a *api) GetRelations(ctx context.Context, request *runtimev1pb.GetRelationsRequest) (res *runtimev1pb.GetRelationsResponse, resErr error) {
+	defer func() {
+		if e := recover(); e != nil {
+			if err, ok := e.(error); ok {
+				resErr = err
+			}
+		}
+	}()
+
+	if len(request.TenantId) == 0 {
+		return nil, errors.New("grpc.GetRelations(request) error: request.TenantId is nil")
+	}
+
+	if len(request.AggregateType) == 0 {
+		return nil, errors.New("grpc.GetRelations(request) error: request.AggregateType is nil")
+	}
+
 	in := &eventstorage.GetRelationsRequest{
 		TenantId:      request.TenantId,
 		AggregateType: request.AggregateType,
