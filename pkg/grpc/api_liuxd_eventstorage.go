@@ -17,7 +17,19 @@ import (
 // @return *runtimev1pb.LoadEventResponse
 // @return error
 //
-func (a *api) LoadEvents(ctx context.Context, request *runtimev1pb.LoadEventRequest) (*runtimev1pb.LoadEventResponse, error) {
+func (a *api) LoadEvents(ctx context.Context, request *runtimev1pb.LoadEventRequest) (resp *runtimev1pb.LoadEventResponse, respErr error) {
+	defer func() {
+		if e := recover(); e != nil {
+			if err, ok := e.(error); ok {
+				respErr = err
+			}
+		}
+	}()
+
+	if err := a.isEventStorageComponent(); err != nil {
+		return nil, err
+	}
+
 	in := &eventstorage.LoadEventRequest{
 		TenantId:    request.GetTenantId(),
 		AggregateId: request.GetAggregateId(),
@@ -28,7 +40,7 @@ func (a *api) LoadEvents(ctx context.Context, request *runtimev1pb.LoadEventRequ
 		return nil, err
 	}
 
-	resp := runtimev1pb.LoadEventResponse{
+	resp = &runtimev1pb.LoadEventResponse{
 		TenantId:    out.TenantId,
 		AggregateId: out.AggregateId,
 		Snapshot:    nil,
@@ -72,7 +84,7 @@ func (a *api) LoadEvents(ctx context.Context, request *runtimev1pb.LoadEventRequ
 	}
 	resp.Events = events
 
-	return &resp, nil
+	return resp, nil
 }
 
 //
@@ -84,7 +96,18 @@ func (a *api) LoadEvents(ctx context.Context, request *runtimev1pb.LoadEventRequ
 // @return *runtimev1pb.SaveSnapshotResponse
 // @return error
 //
-func (a *api) SaveSnapshot(ctx context.Context, request *runtimev1pb.SaveSnapshotRequest) (*runtimev1pb.SaveSnapshotResponse, error) {
+func (a *api) SaveSnapshot(ctx context.Context, request *runtimev1pb.SaveSnapshotRequest) (resp *runtimev1pb.SaveSnapshotResponse, respErr error) {
+	defer func() {
+		if e := recover(); e != nil {
+			if err, ok := e.(error); ok {
+				respErr = err
+			}
+		}
+	}()
+
+	if err := a.isEventStorageComponent(); err != nil {
+		return nil, err
+	}
 
 	aggregateData, err := newMapInterface(request.AggregateData)
 	if err != nil {
@@ -109,8 +132,8 @@ func (a *api) SaveSnapshot(ctx context.Context, request *runtimev1pb.SaveSnapsho
 	if err != nil {
 		return nil, err
 	}
-	resp := runtimev1pb.SaveSnapshotResponse{}
-	return &resp, nil
+	resp = &runtimev1pb.SaveSnapshotResponse{}
+	return resp, nil
 }
 
 //
@@ -122,7 +145,19 @@ func (a *api) SaveSnapshot(ctx context.Context, request *runtimev1pb.SaveSnapsho
 // @return *runtimev1pb.ApplyEventsResponse
 // @return error
 //
-func (a *api) ApplyEvent(ctx context.Context, request *runtimev1pb.ApplyEventRequest) (*runtimev1pb.ApplyEventResponse, error) {
+func (a *api) ApplyEvent(ctx context.Context, request *runtimev1pb.ApplyEventRequest) (resp *runtimev1pb.ApplyEventResponse, respErr error) {
+	defer func() {
+		if e := recover(); e != nil {
+			if err, ok := e.(error); ok {
+				respErr = err
+			}
+		}
+	}()
+
+	if err := a.isEventStorageComponent(); err != nil {
+		return nil, err
+	}
+
 	events, err := newEvents(request.Events)
 	if err != nil {
 		return nil, err
@@ -150,7 +185,19 @@ func (a *api) ApplyEvent(ctx context.Context, request *runtimev1pb.ApplyEventReq
 // @return *runtimev1pb.CreateEventResponse
 // @return error
 //
-func (a *api) CreateEvent(ctx context.Context, request *runtimev1pb.CreateEventRequest) (*runtimev1pb.CreateEventResponse, error) {
+func (a *api) CreateEvent(ctx context.Context, request *runtimev1pb.CreateEventRequest) (resp *runtimev1pb.CreateEventResponse, respErr error) {
+	defer func() {
+		if e := recover(); e != nil {
+			if err, ok := e.(error); ok {
+				respErr = err
+			}
+		}
+	}()
+
+	if err := a.isEventStorageComponent(); err != nil {
+		return nil, err
+	}
+
 	events, err := newEvents(request.Events)
 	if err != nil {
 		return nil, err
@@ -177,7 +224,19 @@ func (a *api) CreateEvent(ctx context.Context, request *runtimev1pb.CreateEventR
 // @return *runtimev1pb.DeleteEventResponse
 // @return error
 //
-func (a *api) DeleteEvent(ctx context.Context, request *runtimev1pb.DeleteEventRequest) (*runtimev1pb.DeleteEventResponse, error) {
+func (a *api) DeleteEvent(ctx context.Context, request *runtimev1pb.DeleteEventRequest) (resp *runtimev1pb.DeleteEventResponse, respErr error) {
+	defer func() {
+		if e := recover(); e != nil {
+			if err, ok := e.(error); ok {
+				respErr = err
+			}
+		}
+	}()
+
+	if err := a.isEventStorageComponent(); err != nil {
+		return nil, err
+	}
+
 	event, err := newEvent(request.Event)
 	if err != nil {
 		return nil, err
@@ -195,11 +254,11 @@ func (a *api) DeleteEvent(ctx context.Context, request *runtimev1pb.DeleteEventR
 	return &runtimev1pb.DeleteEventResponse{}, nil
 }
 
-func (a *api) GetRelations(ctx context.Context, request *runtimev1pb.GetRelationsRequest) (res *runtimev1pb.GetRelationsResponse, resErr error) {
+func (a *api) GetRelations(ctx context.Context, request *runtimev1pb.GetRelationsRequest) (resp *runtimev1pb.GetRelationsResponse, respErr error) {
 	defer func() {
 		if e := recover(); e != nil {
 			if err, ok := e.(error); ok {
-				resErr = err
+				respErr = err
 			}
 		}
 	}()
@@ -238,7 +297,7 @@ func (a *api) GetRelations(ctx context.Context, request *runtimev1pb.GetRelation
 			relations = append(relations, &dto)
 		}
 	}
-	resp := &runtimev1pb.GetRelationsResponse{
+	resp = &runtimev1pb.GetRelationsResponse{
 		TotalRows:  out.TotalRows,
 		TotalPages: out.TotalPages,
 		Filter:     out.Filter,
@@ -321,4 +380,11 @@ func mapAsStr(data map[string]interface{}) (*string, error) {
 
 func (a *api) mustEmbedUnimplementedDaprServer() {
 
+}
+
+func (a *api) isEventStorageComponent() error {
+	if a.eventStorage == nil {
+		return errors.New("EventStorage component not initialized, please check the configuration file。")
+	}
+	return nil
 }
