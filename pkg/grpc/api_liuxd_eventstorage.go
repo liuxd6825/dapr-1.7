@@ -26,7 +26,7 @@ func (a *api) LoadEvents(ctx context.Context, request *runtimev1pb.LoadEventRequ
 		}
 	}()
 
-	if err := a.isEventStorageComponent(); err != nil {
+	if err := a.checkEventStorageComponent(); err != nil {
 		return nil, err
 	}
 
@@ -105,7 +105,7 @@ func (a *api) SaveSnapshot(ctx context.Context, request *runtimev1pb.SaveSnapsho
 		}
 	}()
 
-	if err := a.isEventStorageComponent(); err != nil {
+	if err := a.checkEventStorageComponent(); err != nil {
 		return nil, err
 	}
 
@@ -154,7 +154,7 @@ func (a *api) ApplyEvent(ctx context.Context, request *runtimev1pb.ApplyEventReq
 		}
 	}()
 
-	if err := a.isEventStorageComponent(); err != nil {
+	if err := a.checkEventStorageComponent(); err != nil {
 		return nil, err
 	}
 
@@ -194,7 +194,7 @@ func (a *api) CreateEvent(ctx context.Context, request *runtimev1pb.CreateEventR
 		}
 	}()
 
-	if err := a.isEventStorageComponent(); err != nil {
+	if err := a.checkEventStorageComponent(); err != nil {
 		return nil, err
 	}
 
@@ -233,7 +233,7 @@ func (a *api) DeleteEvent(ctx context.Context, request *runtimev1pb.DeleteEventR
 		}
 	}()
 
-	if err := a.isEventStorageComponent(); err != nil {
+	if err := a.checkEventStorageComponent(); err != nil {
 		return nil, err
 	}
 
@@ -323,7 +323,7 @@ func (a *api) mustEmbedUnimplementedDaprServer() {
 
 }
 
-func (a *api) isEventStorageComponent() error {
+func (a *api) checkEventStorageComponent() error {
 	if a.eventStorage == nil {
 		return errors.New("EventStorage component not initialized, please check the configuration file。")
 	}
