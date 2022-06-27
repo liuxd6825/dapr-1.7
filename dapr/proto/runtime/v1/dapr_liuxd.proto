@@ -26,6 +26,7 @@ option go_package="github.com/liuxd6825/dapr/pkg/proto/runtime/v1;runtime";
 message LoadEventRequest {
   string tenantId=1;
   string  aggregate_id=2;
+  string  aggregate_type=3;
 }
 
 message LoadEventResponse{
@@ -46,8 +47,9 @@ message LoadEventResponse{
 
   string tenant_id=1;
   string aggregate_id=2;
-  SnapshotDto snapshot=3;
-  repeated EventDto events=4;
+  string aggregate_type=3;
+  SnapshotDto snapshot=4;
+  repeated EventDto events=5;
 }
 
 

@@ -2,11 +2,24 @@ package grpc
 
 import (
 	"context"
+	"fmt"
 	"github.com/liuxd6825/components-contrib/liuxd/eventstorage"
 	runtimev1pb "github.com/liuxd6825/dapr/pkg/proto/runtime/v1"
 	"github.com/pkg/errors"
 	"k8s.io/apimachinery/pkg/util/json"
 )
+
+type GetTenantId interface {
+	GetTenantId() string
+}
+
+type GetAggregateId interface {
+	GetAggregateId() string
+}
+
+type GetAggregateType interface {
+	GetAggregateType() string
+}
 
 //
 // LoadEvents
@@ -30,9 +43,14 @@ func (a *api) LoadEvents(ctx context.Context, request *runtimev1pb.LoadEventRequ
 		return nil, err
 	}
 
+	if err := a.checkEventStorageComponent(); err != nil {
+		return nil, err
+	}
+
 	in := &eventstorage.LoadEventRequest{
-		TenantId:    request.GetTenantId(),
-		AggregateId: request.GetAggregateId(),
+		TenantId:      request.GetTenantId(),
+		AggregateId:   request.GetAggregateId(),
+		AggregateType: request.GetAggregateType(),
 	}
 
 	out, err := a.eventStorage.LoadEvent(ctx, in)
@@ -41,10 +59,11 @@ func (a *api) LoadEvents(ctx context.Context, request *runtimev1pb.LoadEventRequ
 	}
 
 	resp = &runtimev1pb.LoadEventResponse{
-		TenantId:    out.TenantId,
-		AggregateId: out.AggregateId,
-		Snapshot:    nil,
-		Events:      nil,
+		TenantId:      out.TenantId,
+		AggregateId:   out.AggregateId,
+		AggregateType: out.AggregateType,
+		Snapshot:      nil,
+		Events:        nil,
 	}
 
 	if out.Snapshot != nil {
@@ -109,6 +128,10 @@ func (a *api) SaveSnapshot(ctx context.Context, request *runtimev1pb.SaveSnapsho
 		return nil, err
 	}
 
+	if err := a.checkRequest("SaveSnapshot", request); err != nil {
+		return nil, err
+	}
+
 	aggregateData, err := newMapInterface(request.AggregateData)
 	if err != nil {
 		return nil, err
@@ -158,6 +181,10 @@ func (a *api) ApplyEvent(ctx context.Context, request *runtimev1pb.ApplyEventReq
 		return nil, err
 	}
 
+	if err := a.checkRequest("ApplyEvent", request); err != nil {
+		return nil, err
+	}
+
 	events, err := newEvents(request.Events)
 	if err != nil {
 		return nil, err
@@ -195,6 +222,10 @@ func (a *api) CreateEvent(ctx context.Context, request *runtimev1pb.CreateEventR
 	}()
 
 	if err := a.checkEventStorageComponent(); err != nil {
+		return nil, err
+	}
+
+	if err := a.checkRequest("CreateEvent", request); err != nil {
 		return nil, err
 	}
 
@@ -237,6 +268,10 @@ func (a *api) DeleteEvent(ctx context.Context, request *runtimev1pb.DeleteEventR
 		return nil, err
 	}
 
+	if err := a.checkRequest("DeleteEvent", request); err != nil {
+		return nil, err
+	}
+
 	event, err := newEvent(request.Event)
 	if err != nil {
 		return nil, err
@@ -263,12 +298,12 @@ func (a *api) GetRelations(ctx context.Context, request *runtimev1pb.GetRelation
 		}
 	}()
 
-	if len(request.TenantId) == 0 {
-		return nil, errors.New("grpc.GetRelations(request) error: request.TenantId is nil")
+	if err := a.checkEventStorageComponent(); err != nil {
+		return nil, err
 	}
 
-	if len(request.AggregateType) == 0 {
-		return nil, errors.New("grpc.GetRelations(request) error: request.AggregateType is nil")
+	if err := a.checkRequest("GetRelations", request); err != nil {
+		return nil, err
 	}
 
 	in := &eventstorage.GetRelationsRequest{
@@ -385,6 +420,27 @@ func (a *api) mustEmbedUnimplementedDaprServer() {
 func (a *api) checkEventStorageComponent() error {
 	if a.eventStorage == nil {
 		return errors.New("EventStorage component not initialized, please check the configuration file。")
+	}
+	return nil
+}
+
+func (a *api) checkRequest(methodName string, request interface{}) error {
+	if i, ok := request.(GetTenantId); ok {
+		if len(i.GetTenantId()) == 0 {
+			return fmt.Errorf("grpc.%s(request) error: request.TenantId is nil", methodName)
+		}
+	}
+
+	if i, ok := request.(GetAggregateId); ok {
+		if len(i.GetAggregateId()) == 0 {
+			return fmt.Errorf("grpc.%s(request) error: request.AggregateId is nil", methodName)
+		}
+	}
+
+	if i, ok := request.(GetAggregateType); ok {
+		if len(i.GetAggregateType()) == 0 {
+			return fmt.Errorf("grpc.%s(request) error: request.AggregateType is nil", methodName)
+		}
 	}
 	return nil
 }

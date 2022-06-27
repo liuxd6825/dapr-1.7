@@ -19,7 +19,7 @@ func (a *api) constructEventSourcingEndpoints() []Endpoint {
 	return []Endpoint{
 		{
 			Methods: []string{fasthttp.MethodGet},
-			Route:   "event-storage/events/{tenantId}/{id}",
+			Route:   "event-storage/events/tenants/{tenantId}/aggregate-types/{aggregateType}/aggregate-id/{aggregateId}",
 			Version: apiVersionV1,
 			Handler: a.getEventById,
 		},
@@ -49,7 +49,7 @@ func (a *api) constructEventSourcingEndpoints() []Endpoint {
 		},
 		{
 			Methods: []string{fasthttp.MethodGet},
-			Route:   "event-storage/relations/tenants/{tenantId}/types/{aggregateType}",
+			Route:   "event-storage/relations/tenants/{tenantId}/aggregate-types/{aggregateType}",
 			Version: apiVersionV1,
 			Handler: a.getRelations,
 		},
@@ -78,7 +78,7 @@ func (a *api) getRelations(ctx *fasthttp.RequestCtx) {
 			}
 		}
 	}()
-	
+
 	tenantId, ok, _ := getUserValue(ctx, "tenantId")
 	if !ok {
 		setResponseData(ctx, nil, errors.New("/tenants/{tenantId}"))
@@ -86,7 +86,7 @@ func (a *api) getRelations(ctx *fasthttp.RequestCtx) {
 	}
 	aggregateType, ok, _ := getUserValue(ctx, "aggregateType")
 	if !ok {
-		setResponseData(ctx, nil, errors.New("/types/{aggregateType}"))
+		setResponseData(ctx, nil, errors.New("/aggregate-types/{aggregateType}"))
 		return
 	}
 
@@ -132,11 +132,29 @@ func (a *api) getEventById(ctx *fasthttp.RequestCtx) {
 	if !a.check(ctx) {
 		return
 	}
-	tenantId := ctx.UserValue("tenantId").(string)
-	id := ctx.UserValue("id").(string)
+
+	tenantId, ok, _ := getUserValue(ctx, "tenantId")
+	if !ok {
+		setResponseData(ctx, nil, errors.New("/tenants/{tenantId}"))
+		return
+	}
+
+	aggregateId, ok, _ := getUserValue(ctx, "aggregateId")
+	if !ok {
+		setResponseData(ctx, nil, errors.New("/aggregate-id/{aggregateId}"))
+		return
+	}
+
+	aggregateType, ok, _ := getUserValue(ctx, "aggregateType")
+	if !ok {
+		setResponseData(ctx, nil, errors.New("/aggregate-types/{aggregateType}"))
+		return
+	}
+
 	data := eventstorage.LoadEventRequest{
-		TenantId:    tenantId,
-		AggregateId: id,
+		TenantId:      tenantId,
+		AggregateType: aggregateType,
+		AggregateId:   aggregateId,
 	}
 
 	respData, err := a.eventStorage.LoadEvent(ctx, &data)
