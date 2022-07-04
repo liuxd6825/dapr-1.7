@@ -76,7 +76,7 @@ message ApplyEventRequest{
 }
 
 message ApplyEventResponse{
-
+  bool is_duplicate_event=1;
 }
 
 message CreateEventRequest{
@@ -87,7 +87,7 @@ message CreateEventRequest{
 }
 
 message CreateEventResponse{
-
+  bool is_duplicate_event=1;
 }
 
 message DeleteEventRequest{
@@ -98,7 +98,7 @@ message DeleteEventRequest{
 }
 
 message DeleteEventResponse{
-
+  bool is_duplicate_event=1;
 }
 
 message EventDto {

@@ -196,11 +196,11 @@ func (a *api) ApplyEvent(ctx context.Context, request *runtimev1pb.ApplyEventReq
 		Events:        events,
 	}
 
-	_, err = a.eventStorage.ApplyEvent(ctx, in)
+	out, err := a.eventStorage.ApplyEvent(ctx, in)
 	if err != nil {
 		return nil, err
 	}
-	return &runtimev1pb.ApplyEventResponse{}, nil
+	return &runtimev1pb.ApplyEventResponse{IsDuplicateEvent: out.IsDuplicateEvent}, nil
 }
 
 //
@@ -239,11 +239,11 @@ func (a *api) CreateEvent(ctx context.Context, request *runtimev1pb.CreateEventR
 		AggregateType: request.AggregateType,
 		Events:        events,
 	}
-	_, err = a.eventStorage.CreateEvent(ctx, in)
+	out, err := a.eventStorage.CreateEvent(ctx, in)
 	if err != nil {
 		return nil, err
 	}
-	return &runtimev1pb.CreateEventResponse{}, nil
+	return &runtimev1pb.CreateEventResponse{IsDuplicateEvent: out.IsDuplicateEvent}, nil
 }
 
 //
@@ -282,11 +282,11 @@ func (a *api) DeleteEvent(ctx context.Context, request *runtimev1pb.DeleteEventR
 		AggregateType: request.AggregateType,
 		Event:         event,
 	}
-	_, err = a.eventStorage.DeleteEvent(ctx, in)
+	out, err := a.eventStorage.DeleteEvent(ctx, in)
 	if err != nil {
 		return nil, err
 	}
-	return &runtimev1pb.DeleteEventResponse{}, nil
+	return &runtimev1pb.DeleteEventResponse{IsDuplicateEvent: out.IsDuplicateEvent}, nil
 }
 
 func (a *api) GetRelations(ctx context.Context, request *runtimev1pb.GetRelationsRequest) (resp *runtimev1pb.GetRelationsResponse, respErr error) {
