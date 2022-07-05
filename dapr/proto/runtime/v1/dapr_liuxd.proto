@@ -30,6 +30,7 @@ message LoadEventRequest {
 }
 
 message LoadEventResponse{
+
   message SnapshotDto {
     string aggregate_data=1;     // json format
     string aggregate_revision=2;
@@ -45,11 +46,13 @@ message LoadEventResponse{
     uint64 sequence_number=5;
   }
 
-  string tenant_id=1;
-  string aggregate_id=2;
-  string aggregate_type=3;
-  SnapshotDto snapshot=4;
-  repeated EventDto events=5;
+  ResponseHeaders headers = 1;
+  string tenant_id=4;
+  string aggregate_id=5;
+  string aggregate_type=6;
+  SnapshotDto snapshot=7;
+  repeated EventDto events=8;
+
 }
 
 
@@ -64,9 +67,8 @@ message SaveSnapshotRequest{
 }
 
 message SaveSnapshotResponse{
-
+  ResponseHeaders headers = 1;
 }
-
 
 message ApplyEventRequest{
   string tenant_id=1;
@@ -76,7 +78,7 @@ message ApplyEventRequest{
 }
 
 message ApplyEventResponse{
-  bool is_duplicate_event=1;
+  ResponseHeaders headers = 1;
 }
 
 message CreateEventRequest{
@@ -87,7 +89,7 @@ message CreateEventRequest{
 }
 
 message CreateEventResponse{
-  bool is_duplicate_event=1;
+  ResponseHeaders headers = 1;
 }
 
 message DeleteEventRequest{
@@ -98,7 +100,19 @@ message DeleteEventRequest{
 }
 
 message DeleteEventResponse{
-  bool is_duplicate_event=1;
+  ResponseHeaders headers = 1;
+}
+
+message ResponseHeaders {
+  ResponseStatus status=1;
+  string message=2;
+  map<string, string> values=3;
+}
+
+enum ResponseStatus {
+  SUCCESS = 0;  // 执行成功
+  ERROR = 1;    // 执行错误
+  EVENT_DUPLICATE = 2; // 事件已经存在，被重复执行，
 }
 
 message EventDto {
@@ -116,24 +130,27 @@ message EventDto {
 }
 
 message WriteEventLogRequest{
-  string tenant_id=1;
-  string id=2;
-  string app_id=3;
-  
-  string class=4;
-  string func=5;
-  
-  string level=6;
-  google.protobuf.Timestamp  time=7;
-  bool status=8;
-  string message=9;
 
-  string pub_app_id=10;
-  string event_id=11;
-  string command_id=12;
+  string tenant_id=2;
+  string id=3;
+  string app_id=4;
+  
+  string class=5;
+  string func=6;
+  
+  string level=7;
+  google.protobuf.Timestamp  time=8;
+  bool status=9;
+  string message=10;
+
+  string pub_app_id=11;
+  string event_id=12;
+  string command_id=13;
+
 }
 
 message WriteEventLogResponse{
+  ResponseHeaders headers = 1;
 }
 
 message UpdateEventLogRequest {
@@ -152,7 +169,10 @@ message UpdateEventLogRequest {
 }
 
 message UpdateEventLogResponse {
+  ResponseHeaders headers = 1;
 }
+
+
 
 // GetLogByCommandId
 
@@ -179,8 +199,8 @@ message GetEventLogByCommandIdResponse {
     string event_id=11;
     string command_id=12;
   }
-
-  repeated EventLogDto data=1;
+  ResponseHeaders headers = 1;
+  repeated EventLogDto data = 2;
 }
 
 //
@@ -197,6 +217,7 @@ message WriteAppLogRequest {
 }
 
 message WriteAppLogResponse {
+  ResponseHeaders headers = 1;
 }
 
 message UpdateAppLogRequest {
@@ -212,6 +233,7 @@ message UpdateAppLogRequest {
 }
 
 message UpdateAppLogResponse {
+  ResponseHeaders headers = 1;
 }
 
 // GetLogByCommandId
@@ -222,15 +244,16 @@ message GetAppLogByIdRequest {
 }
 
 message GetAppLogByIdResponse {
-  string tenant_id=1;
-  string id=2;
-  string app_id =3;
-  string class =4;
-  string func =5;
-  string level =6;
-  google.protobuf.Timestamp time =7;
-  bool status =8;
-  string  message =9;
+  ResponseHeaders headers = 1;
+  string tenant_id=2;
+  string id=3;
+  string app_id =4;
+  string class =5;
+  string func =6;
+  string level =7;
+  google.protobuf.Timestamp time =8;
+  bool status =9;
+  string  message =10;
 }
 
 message GetRelationsRequest {
@@ -244,15 +267,16 @@ message GetRelationsRequest {
 
 
 message GetRelationsResponse {
-  repeated RelationDto data = 1;
-  uint64 total_rows = 2;
-  uint64 total_pages = 3;
-  uint64 page_num = 4;
-  uint64 page_size =5;
-  string filter = 6;
-  string sort =7;
-  string error = 8;
-  bool is_found = 9;
+  ResponseHeaders headers = 1;
+  repeated RelationDto data = 2;
+  uint64 total_rows = 3;
+  uint64 total_pages = 4;
+  uint64 page_num = 5;
+  uint64 page_size =6;
+  string filter = 7;
+  string sort =8;
+  string error = 9;
+  bool is_found = 10;
 }
 
 message RelationDto {

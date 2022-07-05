@@ -7,6 +7,7 @@ import (
 	runtimev1pb "github.com/liuxd6825/dapr/pkg/proto/runtime/v1"
 	"github.com/pkg/errors"
 	"k8s.io/apimachinery/pkg/util/json"
+	"time"
 )
 
 type GetTenantId interface {
@@ -39,71 +40,80 @@ func (a *api) LoadEvents(ctx context.Context, request *runtimev1pb.LoadEventRequ
 		}
 	}()
 
-	if err := a.checkEventStorageComponent(); err != nil {
-		return nil, err
-	}
+	_, err := a.do(func() (any, error) {
+		if err := a.checkEventStorageComponent(); err != nil {
+			return nil, err
+		}
 
-	if err := a.checkEventStorageComponent(); err != nil {
-		return nil, err
-	}
+		if err := a.checkEventStorageComponent(); err != nil {
+			return nil, err
+		}
 
-	in := &eventstorage.LoadEventRequest{
-		TenantId:      request.GetTenantId(),
-		AggregateId:   request.GetAggregateId(),
-		AggregateType: request.GetAggregateType(),
-	}
+		in := &eventstorage.LoadEventRequest{
+			TenantId:      request.GetTenantId(),
+			AggregateId:   request.GetAggregateId(),
+			AggregateType: request.GetAggregateType(),
+		}
 
-	out, err := a.eventStorage.LoadEvent(ctx, in)
-	if err != nil {
-		return nil, err
-	}
-
-	resp = &runtimev1pb.LoadEventResponse{
-		TenantId:      out.TenantId,
-		AggregateId:   out.AggregateId,
-		AggregateType: out.AggregateType,
-		Snapshot:      nil,
-		Events:        nil,
-	}
-
-	if out.Snapshot != nil {
-		outAggData, err := mapAsStr(out.Snapshot.AggregateData)
+		out, err := a.eventStorage.LoadEvent(ctx, in)
 		if err != nil {
 			return nil, err
 		}
 
-		metadata, err := json.Marshal(out.Snapshot.Metadata)
-		if err != nil {
-			return nil, err
+		resp = &runtimev1pb.LoadEventResponse{
+			TenantId:      out.TenantId,
+			AggregateId:   out.AggregateId,
+			AggregateType: out.AggregateType,
+			Snapshot:      nil,
+			Events:        nil,
 		}
-		snapshot := &runtimev1pb.LoadEventResponse_SnapshotDto{
-			AggregateData:  *outAggData,
-			SequenceNumber: out.Snapshot.SequenceNumber,
-			Metadata:       string(metadata),
-		}
-		resp.Snapshot = snapshot
-	}
 
-	events := make([]*runtimev1pb.LoadEventResponse_EventDto, 0)
-	if out.Events != nil {
-		for _, item := range *out.Events {
-			eventData, err := mapAsStr(item.EventData)
+		if out.Snapshot != nil {
+			outAggData, err := mapAsStr(out.Snapshot.AggregateData)
 			if err != nil {
 				return nil, err
 			}
-			event := &runtimev1pb.LoadEventResponse_EventDto{
-				EventId:        item.EventId,
-				EventType:      item.EventType,
-				EventData:      *eventData,
-				EventVersion:   item.EventVersion,
-				SequenceNumber: item.SequenceNumber,
-			}
-			events = append(events, event)
-		}
-	}
-	resp.Events = events
 
-	return resp, nil
+			metadata, err := json.Marshal(out.Snapshot.Metadata)
+			if err != nil {
+				return nil, err
+			}
+			snapshot := &runtimev1pb.LoadEventResponse_SnapshotDto{
+				AggregateData:  *outAggData,
+				SequenceNumber: out.Snapshot.SequenceNumber,
+				Metadata:       string(metadata),
+			}
+			resp.Snapshot = snapshot
+		}
+
+		events := make([]*runtimev1pb.LoadEventResponse_EventDto, 0)
+		if out.Events != nil {
+			for _, item := range *out.Events {
+				eventData, err := mapAsStr(item.EventData)
+				if err != nil {
+					return nil, err
+				}
+				event := &runtimev1pb.LoadEventResponse_EventDto{
+					EventId:        item.EventId,
+					EventType:      item.EventType,
+					EventData:      *eventData,
+					EventVersion:   item.EventVersion,
+					SequenceNumber: item.SequenceNumber,
+				}
+				events = append(events, event)
+			}
+		}
+		resp.Events = events
+		return resp, nil
+	})
+
+	headers := NewResponseHeaders(runtimev1pb.ResponseStatus_SUCCESS, err, nil)
+	headers.Values["Date"] = time.Now().String()
+	if resp != nil && resp.Headers == nil {
+		resp.Headers = headers
+		return resp, err
+	}
+	return &runtimev1pb.LoadEventResponse{Headers: headers}, err
 }
 
 //
@@ -124,39 +134,48 @@ func (a *api) SaveSnapshot(ctx context.Context, request *runtimev1pb.SaveSnapsho
 		}
 	}()
 
-	if err := a.checkEventStorageComponent(); err != nil {
-		return nil, err
-	}
+	_, err := a.do(func() (any, error) {
+		if err := a.checkEventStorageComponent(); err != nil {
+			return nil, err
+		}
 
-	if err := a.checkRequest("SaveSnapshot", request); err != nil {
-		return nil, err
-	}
+		if err := a.checkRequest("SaveSnapshot", request); err != nil {
+			return nil, err
+		}
 
-	aggregateData, err := newMapInterface(request.AggregateData)
-	if err != nil {
-		return nil, err
-	}
+		aggregateData, err := newMapInterface(request.AggregateData)
+		if err != nil {
+			return nil, err
+		}
 
-	metadata, err := newMapString(request.Metadata)
-	if err != nil {
-		return nil, err
-	}
+		metadata, err := newMapString(request.Metadata)
+		if err != nil {
+			return nil, err
+		}
 
-	in := &eventstorage.SaveSnapshotRequest{
-		TenantId:         request.GetTenantId(),
-		AggregateId:      request.GetAggregateId(),
-		AggregateType:    request.GetAggregateType(),
-		AggregateData:    *aggregateData,
-		AggregateVersion: request.GetAggregateVersion(),
-		SequenceNumber:   request.GetSequenceNumber(),
-		Metadata:         *metadata,
+		in := &eventstorage.SaveSnapshotRequest{
+			TenantId:         request.GetTenantId(),
+			AggregateId:      request.GetAggregateId(),
+			AggregateType:    request.GetAggregateType(),
+			AggregateData:    *aggregateData,
+			AggregateVersion: request.GetAggregateVersion(),
+			SequenceNumber:   request.GetSequenceNumber(),
+			Metadata:         *metadata,
+		}
+		_, err = a.eventStorage.SaveSnapshot(ctx, in)
+		if err != nil {
+			return nil, err
+		}
+		resp = &runtimev1pb.SaveSnapshotResponse{}
+		return resp, err
+	})
+	headers := NewResponseHeaders(runtimev1pb.ResponseStatus_SUCCESS, err, nil)
+	headers.Values["Date"] = time.Now().String()
+	if resp != nil && resp.Headers == nil {
+		resp.Headers = headers
+		return resp, err
 	}
-	_, err = a.eventStorage.SaveSnapshot(ctx, in)
-	if err != nil {
-		return nil, err
-	}
-	resp = &runtimev1pb.SaveSnapshotResponse{}
-	return resp, nil
+	return &runtimev1pb.SaveSnapshotResponse{Headers: headers}, err
 }
 
 //
@@ -177,30 +196,37 @@ func (a *api) ApplyEvent(ctx context.Context, request *runtimev1pb.ApplyEventReq
 		}
 	}()
 
-	if err := a.checkEventStorageComponent(); err != nil {
-		return nil, err
-	}
+	out, err := a.do(func() (any, error) {
+		if err := a.checkEventStorageComponent(); err != nil {
+			return nil, err
+		}
 
-	if err := a.checkRequest("ApplyEvent", request); err != nil {
-		return nil, err
-	}
+		if err := a.checkRequest("ApplyEvent", request); err != nil {
+			return nil, err
+		}
 
-	events, err := newEvents(request.Events)
-	if err != nil {
-		return nil, err
-	}
-	in := &eventstorage.ApplyEventsRequest{
-		TenantId:      request.TenantId,
-		AggregateId:   request.AggregateId,
-		AggregateType: request.AggregateType,
-		Events:        events,
-	}
+		events, err := newEvents(request.Events)
+		if err != nil {
+			return nil, err
+		}
+		in := &eventstorage.ApplyEventsRequest{
+			TenantId:      request.TenantId,
+			AggregateId:   request.AggregateId,
+			AggregateType: request.AggregateType,
+			Events:        events,
+		}
 
-	out, err := a.eventStorage.ApplyEvent(ctx, in)
-	if err != nil {
-		return nil, err
+		out, err := a.eventStorage.ApplyEvent(ctx, in)
+		return out, err
+	})
+
+	headers := NewResponseHeaders(runtimev1pb.ResponseStatus_SUCCESS, err, nil)
+	if out != nil {
+		res := out.(*eventstorage.ApplyEventsResponse)
+		headers = a.newResponseHeaders(res.Headers)
 	}
-	return &runtimev1pb.ApplyEventResponse{IsDuplicateEvent: out.IsDuplicateEvent}, nil
+	headers.Values["Date"] = time.Now().String()
+	return &runtimev1pb.ApplyEventResponse{Headers: headers}, err
 }
 
 //
@@ -221,29 +247,45 @@ func (a *api) CreateEvent(ctx context.Context, request *runtimev1pb.CreateEventR
 		}
 	}()
 
-	if err := a.checkEventStorageComponent(); err != nil {
-		return nil, err
-	}
+	out, err := a.do(func() (any, error) {
+		if err := a.checkEventStorageComponent(); err != nil {
+			return nil, err
+		}
 
-	if err := a.checkRequest("CreateEvent", request); err != nil {
-		return nil, err
-	}
+		if err := a.checkRequest("CreateEvent", request); err != nil {
+			return nil, err
+		}
 
-	events, err := newEvents(request.Events)
-	if err != nil {
-		return nil, err
+		events, err := newEvents(request.Events)
+		if err != nil {
+			return nil, err
+		}
+		in := &eventstorage.CreateEventRequest{
+			TenantId:      request.TenantId,
+			AggregateId:   request.AggregateId,
+			AggregateType: request.AggregateType,
+			Events:        events,
+		}
+		out, err := a.eventStorage.CreateEvent(ctx, in)
+		return out, err
+	})
+
+	headers := NewResponseHeaders(runtimev1pb.ResponseStatus_SUCCESS, err, nil)
+	if out != nil {
+		res := out.(*eventstorage.CreateEventResponse)
+		headers = a.newResponseHeaders(res.Headers)
 	}
-	in := &eventstorage.CreateEventRequest{
-		TenantId:      request.TenantId,
-		AggregateId:   request.AggregateId,
-		AggregateType: request.AggregateType,
-		Events:        events,
+	headers.Values["Date"] = time.Now().String()
+	return &runtimev1pb.CreateEventResponse{Headers: headers}, err
+}
+
+func (a *api) newResponseHeaders(out *eventstorage.ResponseHeaders) *runtimev1pb.ResponseHeaders {
+	headers := &runtimev1pb.ResponseHeaders{
+		Status:  runtimev1pb.ResponseStatus(out.Status),
+		Message: out.Message,
+		Values:  out.Values,
 	}
-	out, err := a.eventStorage.CreateEvent(ctx, in)
-	if err != nil {
-		return nil, err
-	}
-	return &runtimev1pb.CreateEventResponse{IsDuplicateEvent: out.IsDuplicateEvent}, nil
+	return headers
 }
 
 //
@@ -264,29 +306,34 @@ func (a *api) DeleteEvent(ctx context.Context, request *runtimev1pb.DeleteEventR
 		}
 	}()
 
-	if err := a.checkEventStorageComponent(); err != nil {
-		return nil, err
-	}
+	out, err := a.do(func() (any, error) {
+		if err := a.checkEventStorageComponent(); err != nil {
+			return nil, err
+		}
 
-	if err := a.checkRequest("DeleteEvent", request); err != nil {
-		return nil, err
-	}
+		if err := a.checkRequest("DeleteEvent", request); err != nil {
+			return nil, err
+		}
 
-	event, err := newEvent(request.Event)
-	if err != nil {
-		return nil, err
+		event, err := newEvent(request.Event)
+		if err != nil {
+			return nil, err
+		}
+		in := &eventstorage.DeleteEventRequest{
+			TenantId:      request.TenantId,
+			AggregateId:   request.AggregateId,
+			AggregateType: request.AggregateType,
+			Event:         event,
+		}
+		return a.eventStorage.DeleteEvent(ctx, in)
+	})
+	headers := NewResponseHeaders(runtimev1pb.ResponseStatus_SUCCESS, err, nil)
+	if out != nil {
+		res, _ := out.(*eventstorage.DeleteEventResponse)
+		headers = a.newResponseHeaders(res.Headers)
 	}
-	in := &eventstorage.DeleteEventRequest{
-		TenantId:      request.TenantId,
-		AggregateId:   request.AggregateId,
-		AggregateType: request.AggregateType,
-		Event:         event,
-	}
-	out, err := a.eventStorage.DeleteEvent(ctx, in)
-	if err != nil {
-		return nil, err
-	}
-	return &runtimev1pb.DeleteEventResponse{IsDuplicateEvent: out.IsDuplicateEvent}, nil
+	headers.Values["Date"] = time.Now().String()
+	return &runtimev1pb.DeleteEventResponse{Headers: headers}, err
 }
 
 func (a *api) GetRelations(ctx context.Context, request *runtimev1pb.GetRelationsRequest) (resp *runtimev1pb.GetRelationsResponse, respErr error) {
@@ -298,52 +345,57 @@ func (a *api) GetRelations(ctx context.Context, request *runtimev1pb.GetRelation
 		}
 	}()
 
-	if err := a.checkEventStorageComponent(); err != nil {
-		return nil, err
-	}
-
-	if err := a.checkRequest("GetRelations", request); err != nil {
-		return nil, err
-	}
-
-	in := &eventstorage.GetRelationsRequest{
-		TenantId:      request.TenantId,
-		AggregateType: request.AggregateType,
-		Filter:        request.Filter,
-		Sort:          request.Sort,
-		PageNum:       request.PageNum,
-		PageSize:      request.PageSize,
-	}
-	out, err := a.eventStorage.GetRelations(ctx, in)
-	if err != nil {
-		return nil, err
-	}
-	var relations []*runtimev1pb.RelationDto
-	if out != nil && len(out.Data) > 0 {
-		for _, item := range out.Data {
-			dto := runtimev1pb.RelationDto{
-				Id:          item.Id,
-				TenantId:    item.TenantId,
-				AggregateId: item.AggregateId,
-				IsDeleted:   item.IsDeleted,
-				TableName:   item.TableName,
-				Items:       item.Items,
-			}
-			relations = append(relations, &dto)
+	_, err := a.do(func() (any, error) {
+		if err := a.checkEventStorageComponent(); err != nil {
+			return nil, err
 		}
+		if err := a.checkRequest("GetRelations", request); err != nil {
+			return nil, err
+		}
+		in := &eventstorage.GetRelationsRequest{
+			TenantId:      request.TenantId,
+			AggregateType: request.AggregateType,
+			Filter:        request.Filter,
+			Sort:          request.Sort,
+			PageNum:       request.PageNum,
+			PageSize:      request.PageSize,
+		}
+		out, err := a.eventStorage.GetRelations(ctx, in)
+		if err != nil {
+			return nil, err
+		}
+		var relations []*runtimev1pb.RelationDto
+		if out != nil && len(out.Data) > 0 {
+			for _, item := range out.Data {
+				dto := runtimev1pb.RelationDto{
+					Id:          item.Id,
+					TenantId:    item.TenantId,
+					AggregateId: item.AggregateId,
+					IsDeleted:   item.IsDeleted,
+					TableName:   item.TableName,
+					Items:       item.Items,
+				}
+				relations = append(relations, &dto)
+			}
+		}
+		resp = &runtimev1pb.GetRelationsResponse{
+			TotalRows:  out.TotalRows,
+			TotalPages: out.TotalPages,
+			Filter:     out.Filter,
+			Sort:       out.Sort,
+			PageNum:    out.PageNum,
+			PageSize:   out.PageSize,
+			Data:       relations,
+			IsFound:    out.IsFound,
+			Error:      out.Error,
+		}
+		return resp, nil
+	})
+	if resp == nil {
+		resp = &runtimev1pb.GetRelationsResponse{Headers: NewResponseHeaders(runtimev1pb.ResponseStatus_SUCCESS, err, nil)}
 	}
-	resp = &runtimev1pb.GetRelationsResponse{
-		TotalRows:  out.TotalRows,
-		TotalPages: out.TotalPages,
-		Filter:     out.Filter,
-		Sort:       out.Sort,
-		PageNum:    out.PageNum,
-		PageSize:   out.PageSize,
-		Data:       relations,
-		IsFound:    out.IsFound,
-		Error:      out.Error,
-	}
-	return resp, nil
+	resp.Headers.Values["Date"] = time.Now().String()
+	return resp, err
 }
 
 func newEvents(eventDtoList []*runtimev1pb.EventDto) (*[]eventstorage.EventDto, error) {
@@ -443,4 +495,47 @@ func (a *api) checkRequest(methodName string, request interface{}) error {
 		}
 	}
 	return nil
+}
+
+func (a *api) do(fun func() (any, error)) (any, error) {
+	return fun()
+}
+
+func NewResponseHeaders(status runtimev1pb.ResponseStatus, err error, values map[string]string) *runtimev1pb.ResponseHeaders {
+	if values == nil {
+		values = make(map[string]string)
+	}
+	if err != nil {
+		return NewResponseHeadersError(err, values)
+	}
+	resp := &runtimev1pb.ResponseHeaders{
+		Status:  status,
+		Message: "Success",
+		Values:  values,
+	}
+	return resp
+}
+
+func NewResponseHeadersError(err error, values map[string]string) *runtimev1pb.ResponseHeaders {
+	if values == nil {
+		values = make(map[string]string)
+	}
+	resp := &runtimev1pb.ResponseHeaders{
+		Status:  runtimev1pb.ResponseStatus_ERROR,
+		Message: err.Error(),
+		Values:  values,
+	}
+	return resp
+}
+
+func NewResponseHeadersSuccess(values map[string]string) *runtimev1pb.ResponseHeaders {
+	if values == nil {
+		values = make(map[string]string)
+	}
+	resp := &runtimev1pb.ResponseHeaders{
+		Status:  runtimev1pb.ResponseStatus_SUCCESS,
+		Message: "Success",
+		Values:  values,
+	}
+	return resp
 }
