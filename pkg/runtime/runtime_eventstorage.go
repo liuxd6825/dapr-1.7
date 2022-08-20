@@ -2,10 +2,13 @@ package runtime
 
 import (
 	"github.com/liuxd6825/components-contrib/liuxd/common"
+	"github.com/liuxd6825/components-contrib/liuxd/eventstorage"
+	"github.com/liuxd6825/components-contrib/liuxd/eventstorage/es_mongo"
 	components_v1alpha1 "github.com/liuxd6825/dapr/pkg/apis/components/v1alpha1"
 	es "github.com/liuxd6825/dapr/pkg/components/liuxd/eventstorage"
 	diag "github.com/liuxd6825/dapr/pkg/diagnostics"
 	pubsub_adapter "github.com/liuxd6825/dapr/pkg/runtime/pubsub"
+	"github.com/pkg/errors"
 	"strings"
 )
 
@@ -16,7 +19,7 @@ func WithEventStorage(eventsourdings ...es.EventStorage) Option {
 }
 
 func (a *DaprRuntime) initEventStorage(c components_v1alpha1.Component) error {
-	es, err := a.eventStorageRegistry.Create(c.Spec.Type, c.Spec.Version)
+	eventStorage, err := a.eventStorageRegistry.Create(c.Spec.Type, c.Spec.Version)
 	if err != nil {
 		log.Warnf("error creating pub sub %s (%s/%s): %s", &c.ObjectMeta.Name, c.Spec.Type, c.Spec.Version, err)
 		diag.DefaultMonitoring.ComponentInitFailed(c.Spec.Type, "creation")
@@ -34,17 +37,29 @@ func (a *DaprRuntime) initEventStorage(c components_v1alpha1.Component) error {
 		return a.getPublishAdapter()
 	}
 
-	err = es.Init(common.Metadata{
-		Properties: properties,
-	}, getAdapter)
-
-	a.eventStorage = es
+	var opts *eventstorage.Options
+	switch c.Spec.Type {
+	case es_mongo.ComponentSpecType:
+		opts, err = es_mongo.NewOptions(eventStorage.GetLogger(), common.Metadata{Properties: properties}, getAdapter)
+	default:
+		err = errors.Errorf("%v 不支持的配置类型", c.Spec.Type)
+	}
 
 	if err != nil {
 		log.Warnf("error initializing pub sub %s/%s: %s", c.Spec.Type, c.Spec.Version, err)
 		diag.DefaultMonitoring.ComponentInitFailed(c.Spec.Type, "init")
 		return err
 	}
+	if err = eventStorage.Init(opts); err != nil {
+		return err
+	}
+
+	if err != nil {
+		log.Warnf("error initializing pub sub %s/%s: %s", c.Spec.Type, c.Spec.Version, err)
+		diag.DefaultMonitoring.ComponentInitFailed(c.Spec.Type, "init")
+		return err
+	}
+	a.eventStorage = eventStorage
 
 	diag.DefaultMonitoring.ComponentInitialized(c.Spec.Type)
 	return nil

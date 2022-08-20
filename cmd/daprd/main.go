@@ -15,6 +15,7 @@ package main
 
 import (
 	"github.com/liuxd6825/components-contrib/liuxd/applog"
+	eventstorage_mongo "github.com/liuxd6825/components-contrib/liuxd/eventstorage/api"
 	applog_loader "github.com/liuxd6825/dapr/pkg/components/liuxd/applogger"
 	"os"
 	"os/signal"
@@ -24,8 +25,8 @@ import (
 	"github.com/valyala/fasthttp"
 	"go.uber.org/automaxprocs/maxprocs"
 
-	"github.com/liuxd6825/dapr/pkg/runtime"
 	"github.com/dapr/kit/logger"
+	"github.com/liuxd6825/dapr/pkg/runtime"
 
 	// Included components in compiled daprd.
 
@@ -159,7 +160,6 @@ import (
 
 	applog_mongo "github.com/liuxd6825/components-contrib/liuxd/applog/mongo"
 	eventstorage "github.com/liuxd6825/components-contrib/liuxd/eventstorage"
-	eventstorage_mongo "github.com/liuxd6825/components-contrib/liuxd/eventstorage/es_mongo"
 	eventstorage_loader "github.com/liuxd6825/dapr/pkg/components/liuxd/eventstorage"
 )
 
@@ -181,7 +181,7 @@ func main() {
 		runtime.WithEventStorage(
 			// lxd 注册mongodb事件溯源组件
 			eventstorage_loader.New("mongodb", func() eventstorage.EventStorage {
-				return eventstorage_mongo.NewMongoEventSourcing(logContrib)
+				return eventstorage_mongo.NewEventStorage(logContrib)
 			}),
 		),
 		runtime.WithApplog(
