@@ -3,7 +3,7 @@ package grpc
 import (
 	"context"
 	"fmt"
-	"github.com/liuxd6825/components-contrib/liuxd/eventstorage"
+	"github.com/liuxd6825/components-contrib/liuxd/eventstorage/dto"
 	runtimev1pb "github.com/liuxd6825/dapr/pkg/proto/runtime/v1"
 	"github.com/pkg/errors"
 	"k8s.io/apimachinery/pkg/util/json"
@@ -49,7 +49,7 @@ func (a *api) LoadEvents(ctx context.Context, request *runtimev1pb.LoadEventRequ
 			return nil, err
 		}
 
-		in := &eventstorage.LoadEventRequest{
+		in := &dto.LoadEventRequest{
 			TenantId:      request.GetTenantId(),
 			AggregateId:   request.GetAggregateId(),
 			AggregateType: request.GetAggregateType(),
@@ -153,7 +153,7 @@ func (a *api) SaveSnapshot(ctx context.Context, request *runtimev1pb.SaveSnapsho
 			return nil, err
 		}
 
-		in := &eventstorage.SaveSnapshotRequest{
+		in := &dto.SaveSnapshotRequest{
 			TenantId:         request.GetTenantId(),
 			AggregateId:      request.GetAggregateId(),
 			AggregateType:    request.GetAggregateType(),
@@ -209,7 +209,7 @@ func (a *api) ApplyEvent(ctx context.Context, request *runtimev1pb.ApplyEventReq
 		if err != nil {
 			return nil, err
 		}
-		in := &eventstorage.ApplyEventsRequest{
+		in := &dto.ApplyEventsRequest{
 			TenantId:      request.TenantId,
 			AggregateId:   request.AggregateId,
 			AggregateType: request.AggregateType,
@@ -222,7 +222,7 @@ func (a *api) ApplyEvent(ctx context.Context, request *runtimev1pb.ApplyEventReq
 
 	headers := NewResponseHeaders(runtimev1pb.ResponseStatus_SUCCESS, err, nil)
 	if out != nil {
-		res := out.(*eventstorage.ApplyEventsResponse)
+		res := out.(*dto.ApplyEventsResponse)
 		headers = a.newResponseHeaders(res.Headers)
 	}
 	headers.Values["Date"] = time.Now().String()
@@ -260,7 +260,7 @@ func (a *api) CreateEvent(ctx context.Context, request *runtimev1pb.CreateEventR
 		if err != nil {
 			return nil, err
 		}
-		in := &eventstorage.CreateEventRequest{
+		in := &dto.CreateEventRequest{
 			TenantId:      request.TenantId,
 			AggregateId:   request.AggregateId,
 			AggregateType: request.AggregateType,
@@ -272,14 +272,14 @@ func (a *api) CreateEvent(ctx context.Context, request *runtimev1pb.CreateEventR
 
 	headers := NewResponseHeaders(runtimev1pb.ResponseStatus_SUCCESS, err, nil)
 	if out != nil {
-		res := out.(*eventstorage.CreateEventResponse)
+		res := out.(*dto.CreateEventResponse)
 		headers = a.newResponseHeaders(res.Headers)
 	}
 	headers.Values["Date"] = time.Now().String()
 	return &runtimev1pb.CreateEventResponse{Headers: headers}, err
 }
 
-func (a *api) newResponseHeaders(out *eventstorage.ResponseHeaders) *runtimev1pb.ResponseHeaders {
+func (a *api) newResponseHeaders(out *dto.ResponseHeaders) *runtimev1pb.ResponseHeaders {
 	headers := &runtimev1pb.ResponseHeaders{
 		Status:  runtimev1pb.ResponseStatus(out.Status),
 		Message: out.Message,
@@ -319,7 +319,7 @@ func (a *api) DeleteEvent(ctx context.Context, request *runtimev1pb.DeleteEventR
 		if err != nil {
 			return nil, err
 		}
-		in := &eventstorage.DeleteEventRequest{
+		in := &dto.DeleteEventRequest{
 			TenantId:      request.TenantId,
 			AggregateId:   request.AggregateId,
 			AggregateType: request.AggregateType,
@@ -329,7 +329,7 @@ func (a *api) DeleteEvent(ctx context.Context, request *runtimev1pb.DeleteEventR
 	})
 	headers := NewResponseHeaders(runtimev1pb.ResponseStatus_SUCCESS, err, nil)
 	if out != nil {
-		res, _ := out.(*eventstorage.DeleteEventResponse)
+		res, _ := out.(*dto.DeleteEventResponse)
 		headers = a.newResponseHeaders(res.Headers)
 	}
 	headers.Values["Date"] = time.Now().String()
@@ -352,7 +352,7 @@ func (a *api) GetRelations(ctx context.Context, request *runtimev1pb.GetRelation
 		if err := a.checkRequest("GetRelations", request); err != nil {
 			return nil, err
 		}
-		in := &eventstorage.GetRelationsRequest{
+		in := &dto.FindRelationsRequest{
 			TenantId:      request.TenantId,
 			AggregateType: request.AggregateType,
 			Filter:        request.Filter,
@@ -360,7 +360,7 @@ func (a *api) GetRelations(ctx context.Context, request *runtimev1pb.GetRelation
 			PageNum:       request.PageNum,
 			PageSize:      request.PageSize,
 		}
-		out, err := a.eventStorage.GetRelations(ctx, in)
+		out, err := a.eventStorage.FindRelations(ctx, in)
 		if err != nil {
 			return nil, err
 		}
@@ -398,22 +398,22 @@ func (a *api) GetRelations(ctx context.Context, request *runtimev1pb.GetRelation
 	return resp, err
 }
 
-func newEvents(eventDtoList []*runtimev1pb.EventDto) (*[]eventstorage.EventDto, error) {
-	var events []eventstorage.EventDto
+func newEvents(eventDtoList []*runtimev1pb.EventDto) ([]*dto.EventDto, error) {
+	var events []*dto.EventDto
 	if eventDtoList == nil {
-		return &events, nil
+		return events, nil
 	}
 	for _, e := range eventDtoList {
 		event, err := newEvent(e)
 		if err != nil {
 			return nil, err
 		}
-		events = append(events, *event)
+		events = append(events, event)
 	}
-	return &events, nil
+	return events, nil
 }
 
-func newEvent(e *runtimev1pb.EventDto) (*eventstorage.EventDto, error) {
+func newEvent(e *runtimev1pb.EventDto) (*dto.EventDto, error) {
 	eventData, err := newMapInterface(e.EventData)
 	if err != nil {
 		return nil, err
@@ -422,7 +422,7 @@ func newEvent(e *runtimev1pb.EventDto) (*eventstorage.EventDto, error) {
 	if err != nil {
 		return nil, err
 	}
-	event := &eventstorage.EventDto{
+	event := &dto.EventDto{
 		EventId:      e.EventId,
 		CommandId:    e.CommandId,
 		EventData:    *eventData,

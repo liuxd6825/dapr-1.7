@@ -2,7 +2,7 @@ package http
 
 import (
 	"encoding/json"
-	"github.com/liuxd6825/components-contrib/liuxd/eventstorage"
+	"github.com/liuxd6825/components-contrib/liuxd/eventstorage/dto"
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
 	"net/http"
@@ -95,7 +95,7 @@ func (a *api) getRelations(ctx *fasthttp.RequestCtx) {
 	pageNum, _, _ := getQueryArgsUint(ctx, "pageNum", 0)
 	pageSize, _, _ := getQueryArgsUint(ctx, "pageSize", 20)
 
-	query := &eventstorage.GetRelationsRequest{
+	query := &dto.FindRelationsRequest{
 		TenantId:      tenantId,
 		Filter:        filter,
 		AggregateType: aggregateType,
@@ -103,7 +103,7 @@ func (a *api) getRelations(ctx *fasthttp.RequestCtx) {
 		PageNum:       pageNum,
 		PageSize:      pageSize,
 	}
-	respData, err := a.eventStorage.GetRelations(ctx, query)
+	respData, err := a.eventStorage.FindRelations(ctx, query)
 	setResponseData(ctx, respData, err)
 }
 
@@ -111,7 +111,7 @@ func (a *api) saveSnapshot(ctx *fasthttp.RequestCtx) {
 	if !a.check(ctx) {
 		return
 	}
-	data := eventstorage.SaveSnapshotRequest{}
+	data := dto.SaveSnapshotRequest{}
 	err := json.Unmarshal(ctx.PostBody(), &data)
 	if err != nil {
 		setResponseData(ctx, nil, err)
@@ -151,7 +151,7 @@ func (a *api) getEventById(ctx *fasthttp.RequestCtx) {
 		return
 	}
 
-	data := eventstorage.LoadEventRequest{
+	data := dto.LoadEventRequest{
 		TenantId:      tenantId,
 		AggregateType: aggregateType,
 		AggregateId:   aggregateId,
@@ -172,7 +172,7 @@ func (a *api) applyEvents(ctx *fasthttp.RequestCtx) {
 	if !a.check(ctx) {
 		return
 	}
-	data := eventstorage.ApplyEventsRequest{}
+	data := dto.ApplyEventsRequest{}
 	err := json.Unmarshal(ctx.PostBody(), &data)
 	if err != nil {
 		setResponseData(ctx, nil, err)
@@ -195,7 +195,7 @@ func (a *api) createEvent(ctx *fasthttp.RequestCtx) {
 	if !a.check(ctx) {
 		return
 	}
-	data := eventstorage.CreateEventRequest{}
+	data := dto.CreateEventRequest{}
 	err := json.Unmarshal(ctx.PostBody(), &data)
 	if err != nil {
 		setResponseData(ctx, nil, err)

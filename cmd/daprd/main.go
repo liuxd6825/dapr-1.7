@@ -15,7 +15,7 @@ package main
 
 import (
 	"github.com/liuxd6825/components-contrib/liuxd/applog"
-	eventstorage_mongo "github.com/liuxd6825/components-contrib/liuxd/eventstorage/api"
+	eventstorage_api "github.com/liuxd6825/components-contrib/liuxd/eventstorage/api"
 	applog_loader "github.com/liuxd6825/dapr/pkg/components/liuxd/applogger"
 	"os"
 	"os/signal"
@@ -181,7 +181,10 @@ func main() {
 		runtime.WithEventStorage(
 			// lxd 注册mongodb事件溯源组件
 			eventstorage_loader.New("mongodb", func() eventstorage.EventStorage {
-				return eventstorage_mongo.NewEventStorage(logContrib)
+				return eventstorage_api.NewEventStorage(logContrib)
+			}),
+			eventstorage_loader.New("mysql", func() eventstorage.EventStorage {
+				return eventstorage_api.NewEventStorage(logContrib)
 			}),
 		),
 		runtime.WithApplog(

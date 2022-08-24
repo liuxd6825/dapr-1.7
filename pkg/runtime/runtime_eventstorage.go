@@ -3,7 +3,8 @@ package runtime
 import (
 	"github.com/liuxd6825/components-contrib/liuxd/common"
 	"github.com/liuxd6825/components-contrib/liuxd/eventstorage"
-	"github.com/liuxd6825/components-contrib/liuxd/eventstorage/es_mongo"
+	"github.com/liuxd6825/components-contrib/liuxd/eventstorage/impl/gorm_impl"
+	"github.com/liuxd6825/components-contrib/liuxd/eventstorage/impl/mongo_impl"
 	components_v1alpha1 "github.com/liuxd6825/dapr/pkg/apis/components/v1alpha1"
 	es "github.com/liuxd6825/dapr/pkg/components/liuxd/eventstorage"
 	diag "github.com/liuxd6825/dapr/pkg/diagnostics"
@@ -39,8 +40,10 @@ func (a *DaprRuntime) initEventStorage(c components_v1alpha1.Component) error {
 
 	var opts *eventstorage.Options
 	switch c.Spec.Type {
-	case es_mongo.ComponentSpecType:
-		opts, err = es_mongo.NewOptions(eventStorage.GetLogger(), common.Metadata{Properties: properties}, getAdapter)
+	case mongo_impl.ComponentSpecMongo:
+		opts, err = mongo_impl.NewMongoOptions(eventStorage.GetLogger(), common.Metadata{Properties: properties}, getAdapter)
+	case gorm_impl.ComponentSpecMySql:
+		opts, err = gorm_impl.NewMySqlOptions(eventStorage.GetLogger(), common.Metadata{Properties: properties}, getAdapter)
 	default:
 		err = errors.Errorf("%v 不支持的配置类型", c.Spec.Type)
 	}
