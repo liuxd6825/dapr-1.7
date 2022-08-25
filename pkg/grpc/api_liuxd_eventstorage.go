@@ -336,11 +336,91 @@ func (a *api) DeleteEvent(ctx context.Context, request *runtimev1pb.DeleteEventR
 	return &runtimev1pb.DeleteEventResponse{Headers: headers}, err
 }
 
+func (a *api) GetEvents(ctx context.Context, request *runtimev1pb.GetEventsRequest) (resp *runtimev1pb.GetEventsResponse, respErr error) {
+	defer func() {
+		if e := recover(); e != nil {
+			if err, ok := e.(error); ok {
+				respErr = err
+			} else {
+				respErr = errors.Errorf("%v", e)
+			}
+		}
+	}()
+
+	_, err := a.do(func() (any, error) {
+		if err := a.checkEventStorageComponent(); err != nil {
+			return nil, err
+		}
+		if err := a.checkRequest("GetEvents", request); err != nil {
+			return nil, err
+		}
+
+		in := &dto.FindEventsRequest{
+			TenantId:      request.GetTenantId(),
+			AggregateType: request.GetAggregateType(),
+			Filter:        request.GetFilter(),
+			Sort:          request.GetSort(),
+			PageNum:       request.GetPageNum(),
+			PageSize:      request.GetPageSize(),
+		}
+
+		out, err := a.eventStorage.FindEvents(ctx, in)
+		if err != nil {
+			return nil, err
+		}
+
+		var events []*runtimev1pb.GetEventsItemDto
+
+		if out != nil && len(out.Data) > 0 {
+			for _, item := range out.Data {
+				eventData, err := json.Marshal(item.EventData)
+				if err != nil {
+					return nil, err
+				}
+				metadata, err := json.Marshal(item.Metadata)
+				if err != nil {
+					return nil, err
+				}
+				event := &runtimev1pb.GetEventsItemDto{
+					EventId:      item.EventId,
+					EventType:    item.EventType,
+					EventData:    string(eventData),
+					EventVersion: item.EventVersion,
+					Metadata:     string(metadata),
+					PubsubName:   item.PubsubName,
+					Topic:        item.Topic,
+					CommandId:    item.CommandId,
+				}
+				events = append(events, event)
+			}
+		}
+
+		resp = &runtimev1pb.GetEventsResponse{
+			TotalRows:  out.TotalRows,
+			TotalPages: out.TotalPages,
+			Filter:     out.Filter,
+			Sort:       out.Sort,
+			PageNum:    out.PageNum,
+			PageSize:   out.PageSize,
+			Data:       events,
+			IsFound:    out.IsFound,
+			Error:      out.Error,
+			Headers:    NewResponseHeadersSuccess(nil),
+		}
+		return resp, nil
+	})
+
+	return resp, err
+
+}
+
 func (a *api) GetRelations(ctx context.Context, request *runtimev1pb.GetRelationsRequest) (resp *runtimev1pb.GetRelationsResponse, respErr error) {
 	defer func() {
 		if e := recover(); e != nil {
 			if err, ok := e.(error); ok {
 				respErr = err
+			} else {
+				respErr = errors.Errorf("%v", e)
 			}
 		}
 	}()
@@ -365,6 +445,7 @@ func (a *api) GetRelations(ctx context.Context, request *runtimev1pb.GetRelation
 			return nil, err
 		}
 		var relations []*runtimev1pb.RelationDto
+		relations = []*runtimev1pb.RelationDto{}
 		if out != nil && len(out.Data) > 0 {
 			for _, item := range out.Data {
 				relDto := runtimev1pb.RelationDto{
@@ -395,7 +476,8 @@ func (a *api) GetRelations(ctx context.Context, request *runtimev1pb.GetRelation
 	if resp == nil {
 		resp = &runtimev1pb.GetRelationsResponse{Headers: NewResponseHeaders(runtimev1pb.ResponseStatus_SUCCESS, err, nil)}
 	}
-	resp.Headers.Values["Date"] = time.Now().String()
+	resp.Headers = NewResponseHeaders(runtimev1pb.ResponseStatus_SUCCESS, err, nil)
+
 	return resp, err
 }
 
@@ -509,12 +591,13 @@ func NewResponseHeaders(status runtimev1pb.ResponseStatus, err error, values map
 	if err != nil {
 		return NewResponseHeadersError(err, values)
 	}
-	resp := &runtimev1pb.ResponseHeaders{
+	headers := &runtimev1pb.ResponseHeaders{
 		Status:  status,
 		Message: "Success",
 		Values:  values,
 	}
-	return resp
+	headers.Values["Date"] = time.Now().String()
+	return headers
 }
 
 func NewResponseHeadersError(err error, values map[string]string) *runtimev1pb.ResponseHeaders {

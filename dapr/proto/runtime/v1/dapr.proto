@@ -141,6 +141,9 @@ service Dapr {
 
   // GetRelations 获取聚合关系
   rpc GetRelations(GetRelationsRequest)returns(GetRelationsResponse){}
+
+  // GetRelations 获取聚合关系
+  rpc GetEvents(GetEventsRequest)returns(GetEventsResponse){}
 }
 
 

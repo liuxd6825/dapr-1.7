@@ -124,6 +124,7 @@ type API interface {
 	UpdateAppLog(context.Context, *runtimev1pb.UpdateAppLogRequest) (*runtimev1pb.UpdateAppLogResponse, error)
 	GetAppLogById(context.Context, *runtimev1pb.GetAppLogByIdRequest) (*runtimev1pb.GetAppLogByIdResponse, error)
 	GetRelations(context.Context, *runtimev1pb.GetRelationsRequest) (*runtimev1pb.GetRelationsResponse, error)
+	GetEvents(context.Context, *runtimev1pb.GetEventsRequest) (*runtimev1pb.GetEventsResponse, error)
 }
 
 type api struct {

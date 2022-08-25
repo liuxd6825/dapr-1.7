@@ -22,7 +22,23 @@ option java_outer_classname="DaprProtos";
 option java_package="io.dapr.v1";
 option go_package="github.com/liuxd6825/dapr/pkg/proto/runtime/v1;runtime";
 
+
+message ResponseHeaders {
+  ResponseStatus status=1;
+  string message=2;
+  map<string, string> values=3;
+}
+
+enum ResponseStatus {
+  SUCCESS = 0;  // 执行成功
+  ERROR = 1;    // 执行错误
+  EVENT_DUPLICATE = 2; // 事件已经存在，被重复执行，
+}
+
 ////////////////////
+
+// LoadEvent
+
 message LoadEventRequest {
   string tenantId=1;
   string  aggregate_id=2;
@@ -55,6 +71,7 @@ message LoadEventResponse{
 
 }
 
+// SaveSnapshot
 
 message SaveSnapshotRequest{
   string tenant_id=1;
@@ -70,6 +87,8 @@ message SaveSnapshotResponse{
   ResponseHeaders headers = 1;
 }
 
+// ApplyEvent
+
 message ApplyEventRequest{
   string tenant_id=1;
   string aggregate_id=2;
@@ -80,6 +99,8 @@ message ApplyEventRequest{
 message ApplyEventResponse{
   ResponseHeaders headers = 1;
 }
+
+// CreateEvent
 
 message CreateEventRequest{
   string tenant_id=1;
@@ -92,6 +113,8 @@ message CreateEventResponse{
   ResponseHeaders headers = 1;
 }
 
+// DeleteEvent
+
 message DeleteEventRequest{
   string tenant_id=1;
   string aggregate_id=2;
@@ -101,18 +124,6 @@ message DeleteEventRequest{
 
 message DeleteEventResponse{
   ResponseHeaders headers = 1;
-}
-
-message ResponseHeaders {
-  ResponseStatus status=1;
-  string message=2;
-  map<string, string> values=3;
-}
-
-enum ResponseStatus {
-  SUCCESS = 0;  // 执行成功
-  ERROR = 1;    // 执行错误
-  EVENT_DUPLICATE = 2; // 事件已经存在，被重复执行，
 }
 
 message EventDto {
@@ -126,18 +137,92 @@ message EventDto {
   string topic=8;
   string metadata=9;  // json format
   map<string, string> relations=10; // aggregate relations
-
 }
+
+// GetRelations
+
+message GetRelationsRequest {
+  string tenantId = 1;
+  string aggregate_type = 2;
+  string filter = 3;
+  string sort = 4;
+  uint64 pageNum = 5;
+  uint64 pageSize = 6;
+}
+
+message GetRelationsResponse {
+  ResponseHeaders headers = 1;
+  repeated RelationDto data = 2;
+  uint64 total_rows = 3;
+  uint64 total_pages = 4;
+  uint64 page_num = 5;
+  uint64 page_size =6;
+  string filter = 7;
+  string sort =8;
+  string error = 9;
+  bool is_found = 10;
+}
+
+message RelationDto {
+  string id = 1;
+  string tenant_id= 2;
+  string table_name =3;
+  string aggregate_id = 4;
+  string aggregate_type =5;
+  bool is_deleted = 6;
+  string rel_name =7 ;  // 关系名
+  string rel_value = 8; // 关系值
+}
+
+// GetEvents
+
+message GetEventsRequest {
+  string tenant_id = 1;
+  string aggregate_type = 2;
+  string filter = 3;
+  string sort = 4;
+  uint64 page_num = 5;
+  uint64 page_size = 6;
+  bool is_total_rows = 7;
+}
+
+message GetEventsResponse {
+  ResponseHeaders headers = 1;
+  repeated GetEventsItemDto data = 2;
+  uint64 total_rows = 3;
+  uint64 total_pages = 4;
+  uint64 page_num = 5;
+  uint64 page_size =6;
+  string filter = 7;
+  string sort =8;
+  string error = 9;
+  bool is_found = 10;
+}
+
+message GetEventsItemDto {
+  string event_id=1;
+  string command_id=2;
+  string event_data=3;   // json format
+  string event_type=4;
+  string event_version=5;
+  google.protobuf.Timestamp  event_time=6;
+  string pubsub_name=7;
+  string topic=8;
+  string metadata=9;  // json format
+}
+
+
+// Application Log
 
 message WriteEventLogRequest{
 
   string tenant_id=2;
   string id=3;
   string app_id=4;
-  
+
   string class=5;
   string func=6;
-  
+
   string level=7;
   google.protobuf.Timestamp  time=8;
   bool status=9;
@@ -255,39 +340,3 @@ message GetAppLogByIdResponse {
   bool status =9;
   string  message =10;
 }
-
-message GetRelationsRequest {
-  string tenantId = 1;
-  string aggregate_type = 2;
-  string filter = 3;
-  string sort = 4;
-  uint64 pageNum = 5;
-  uint64 pageSize = 6;
-}
-
-
-message GetRelationsResponse {
-  ResponseHeaders headers = 1;
-  repeated RelationDto data = 2;
-  uint64 total_rows = 3;
-  uint64 total_pages = 4;
-  uint64 page_num = 5;
-  uint64 page_size =6;
-  string filter = 7;
-  string sort =8;
-  string error = 9;
-  bool is_found = 10;
-}
-
-message RelationDto {
-  string id = 1;
-  string tenant_id= 2;
-  string table_name =3;
-  string aggregate_id = 4;
-  string aggregate_type =5;
-  bool is_deleted = 6;
-  string rel_name =7 ;  // 关系名
-  string rel_value = 8; // 关系值
-}
-
-

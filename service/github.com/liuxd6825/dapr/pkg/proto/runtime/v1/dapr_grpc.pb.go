@@ -100,6 +100,8 @@ type DaprClient interface {
 	GetAppLogById(ctx context.Context, in *GetAppLogByIdRequest, opts ...grpc.CallOption) (*GetAppLogByIdResponse, error)
 	// GetRelations 获取聚合关系
 	GetRelations(ctx context.Context, in *GetRelationsRequest, opts ...grpc.CallOption) (*GetRelationsResponse, error)
+	// GetRelations 获取聚合关系
+	GetEvents(ctx context.Context, in *GetEventsRequest, opts ...grpc.CallOption) (*GetEventsResponse, error)
 }
 
 type daprClient struct {
@@ -475,6 +477,15 @@ func (c *daprClient) GetRelations(ctx context.Context, in *GetRelationsRequest, 
 	return out, nil
 }
 
+func (c *daprClient) GetEvents(ctx context.Context, in *GetEventsRequest, opts ...grpc.CallOption) (*GetEventsResponse, error) {
+	out := new(GetEventsResponse)
+	err := c.cc.Invoke(ctx, "/dapr.proto.runtime.v1.Dapr/GetEvents", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // DaprServer is the server API for Dapr service.
 // All implementations must embed UnimplementedDaprServer
 // for forward compatibility
@@ -555,6 +566,8 @@ type DaprServer interface {
 	GetAppLogById(context.Context, *GetAppLogByIdRequest) (*GetAppLogByIdResponse, error)
 	// GetRelations 获取聚合关系
 	GetRelations(context.Context, *GetRelationsRequest) (*GetRelationsResponse, error)
+	// GetRelations 获取聚合关系
+	GetEvents(context.Context, *GetEventsRequest) (*GetEventsResponse, error)
 	mustEmbedUnimplementedDaprServer()
 }
 
@@ -675,6 +688,9 @@ func (UnimplementedDaprServer) GetAppLogById(context.Context, *GetAppLogByIdRequ
 }
 func (UnimplementedDaprServer) GetRelations(context.Context, *GetRelationsRequest) (*GetRelationsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetRelations not implemented")
+}
+func (UnimplementedDaprServer) GetEvents(context.Context, *GetEventsRequest) (*GetEventsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetEvents not implemented")
 }
 func (UnimplementedDaprServer) mustEmbedUnimplementedDaprServer() {}
 
@@ -1376,6 +1392,24 @@ func _Dapr_GetRelations_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Dapr_GetEvents_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetEventsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DaprServer).GetEvents(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/dapr.proto.runtime.v1.Dapr/GetEvents",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DaprServer).GetEvents(ctx, req.(*GetEventsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Dapr_ServiceDesc is the grpc.ServiceDesc for Dapr service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1530,6 +1564,10 @@ var Dapr_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetRelations",
 			Handler:    _Dapr_GetRelations_Handler,
+		},
+		{
+			MethodName: "GetEvents",
+			Handler:    _Dapr_GetEvents_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
