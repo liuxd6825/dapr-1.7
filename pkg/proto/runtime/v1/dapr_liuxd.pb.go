@@ -2095,12 +2095,14 @@ type RelationDto struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id          string            `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	TenantId    string            `protobuf:"bytes,2,opt,name=tenant_id,json=tenantId,proto3" json:"tenant_id,omitempty"`
-	TableName   string            `protobuf:"bytes,3,opt,name=table_name,json=tableName,proto3" json:"table_name,omitempty"`
-	AggregateId string            `protobuf:"bytes,4,opt,name=aggregate_id,json=aggregateId,proto3" json:"aggregate_id,omitempty"`
-	IsDeleted   bool              `protobuf:"varint,5,opt,name=is_deleted,json=isDeleted,proto3" json:"is_deleted,omitempty"`
-	Items       map[string]string `protobuf:"bytes,6,rep,name=items,proto3" json:"items,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
+	Id            string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	TenantId      string `protobuf:"bytes,2,opt,name=tenant_id,json=tenantId,proto3" json:"tenant_id,omitempty"`
+	TableName     string `protobuf:"bytes,3,opt,name=table_name,json=tableName,proto3" json:"table_name,omitempty"`
+	AggregateId   string `protobuf:"bytes,4,opt,name=aggregate_id,json=aggregateId,proto3" json:"aggregate_id,omitempty"`
+	AggregateType string `protobuf:"bytes,5,opt,name=aggregate_type,json=aggregateType,proto3" json:"aggregate_type,omitempty"`
+	IsDeleted     bool   `protobuf:"varint,6,opt,name=is_deleted,json=isDeleted,proto3" json:"is_deleted,omitempty"`
+	RelName       string `protobuf:"bytes,7,opt,name=rel_name,json=relName,proto3" json:"rel_name,omitempty"`    // 关系名
+	RelValue      string `protobuf:"bytes,8,opt,name=rel_value,json=relValue,proto3" json:"rel_value,omitempty"` // 关系值
 }
 
 func (x *RelationDto) Reset() {
@@ -2163,6 +2165,13 @@ func (x *RelationDto) GetAggregateId() string {
 	return ""
 }
 
+func (x *RelationDto) GetAggregateType() string {
+	if x != nil {
+		return x.AggregateType
+	}
+	return ""
+}
+
 func (x *RelationDto) GetIsDeleted() bool {
 	if x != nil {
 		return x.IsDeleted
@@ -2170,11 +2179,18 @@ func (x *RelationDto) GetIsDeleted() bool {
 	return false
 }
 
-func (x *RelationDto) GetItems() map[string]string {
+func (x *RelationDto) GetRelName() string {
 	if x != nil {
-		return x.Items
+		return x.RelName
 	}
-	return nil
+	return ""
+}
+
+func (x *RelationDto) GetRelValue() string {
+	if x != nil {
+		return x.RelValue
+	}
+	return ""
 }
 
 type LoadEventResponse_SnapshotDto struct {
@@ -2835,7 +2851,7 @@ var file_dapr_proto_runtime_v1_dapr_liuxd_proto_rawDesc = []byte{
 	0x28, 0x09, 0x52, 0x04, 0x73, 0x6f, 0x72, 0x74, 0x12, 0x14, 0x0a, 0x05, 0x65, 0x72, 0x72, 0x6f,
 	0x72, 0x18, 0x09, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x65, 0x72, 0x72, 0x6f, 0x72, 0x12, 0x19,
 	0x0a, 0x08, 0x69, 0x73, 0x5f, 0x66, 0x6f, 0x75, 0x6e, 0x64, 0x18, 0x0a, 0x20, 0x01, 0x28, 0x08,
-	0x52, 0x07, 0x69, 0x73, 0x46, 0x6f, 0x75, 0x6e, 0x64, 0x22, 0x9a, 0x02, 0x0a, 0x0b, 0x52, 0x65,
+	0x52, 0x07, 0x69, 0x73, 0x46, 0x6f, 0x75, 0x6e, 0x64, 0x22, 0xfa, 0x01, 0x0a, 0x0b, 0x52, 0x65,
 	0x6c, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x44, 0x74, 0x6f, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18,
 	0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x12, 0x1b, 0x0a, 0x09, 0x74, 0x65, 0x6e,
 	0x61, 0x6e, 0x74, 0x5f, 0x69, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x74, 0x65,
@@ -2843,17 +2859,15 @@ var file_dapr_proto_runtime_v1_dapr_liuxd_proto_rawDesc = []byte{
 	0x6e, 0x61, 0x6d, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x09, 0x74, 0x61, 0x62, 0x6c,
 	0x65, 0x4e, 0x61, 0x6d, 0x65, 0x12, 0x21, 0x0a, 0x0c, 0x61, 0x67, 0x67, 0x72, 0x65, 0x67, 0x61,
 	0x74, 0x65, 0x5f, 0x69, 0x64, 0x18, 0x04, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0b, 0x61, 0x67, 0x67,
-	0x72, 0x65, 0x67, 0x61, 0x74, 0x65, 0x49, 0x64, 0x12, 0x1d, 0x0a, 0x0a, 0x69, 0x73, 0x5f, 0x64,
-	0x65, 0x6c, 0x65, 0x74, 0x65, 0x64, 0x18, 0x05, 0x20, 0x01, 0x28, 0x08, 0x52, 0x09, 0x69, 0x73,
-	0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x64, 0x12, 0x43, 0x0a, 0x05, 0x69, 0x74, 0x65, 0x6d, 0x73,
-	0x18, 0x06, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x2d, 0x2e, 0x64, 0x61, 0x70, 0x72, 0x2e, 0x70, 0x72,
-	0x6f, 0x74, 0x6f, 0x2e, 0x72, 0x75, 0x6e, 0x74, 0x69, 0x6d, 0x65, 0x2e, 0x76, 0x31, 0x2e, 0x52,
-	0x65, 0x6c, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x44, 0x74, 0x6f, 0x2e, 0x49, 0x74, 0x65, 0x6d, 0x73,
-	0x45, 0x6e, 0x74, 0x72, 0x79, 0x52, 0x05, 0x69, 0x74, 0x65, 0x6d, 0x73, 0x1a, 0x38, 0x0a, 0x0a,
-	0x49, 0x74, 0x65, 0x6d, 0x73, 0x45, 0x6e, 0x74, 0x72, 0x79, 0x12, 0x10, 0x0a, 0x03, 0x6b, 0x65,
-	0x79, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6b, 0x65, 0x79, 0x12, 0x14, 0x0a, 0x05,
-	0x76, 0x61, 0x6c, 0x75, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x76, 0x61, 0x6c,
-	0x75, 0x65, 0x3a, 0x02, 0x38, 0x01, 0x2a, 0x3d, 0x0a, 0x0e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e,
+	0x72, 0x65, 0x67, 0x61, 0x74, 0x65, 0x49, 0x64, 0x12, 0x25, 0x0a, 0x0e, 0x61, 0x67, 0x67, 0x72,
+	0x65, 0x67, 0x61, 0x74, 0x65, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x18, 0x05, 0x20, 0x01, 0x28, 0x09,
+	0x52, 0x0d, 0x61, 0x67, 0x67, 0x72, 0x65, 0x67, 0x61, 0x74, 0x65, 0x54, 0x79, 0x70, 0x65, 0x12,
+	0x1d, 0x0a, 0x0a, 0x69, 0x73, 0x5f, 0x64, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x64, 0x18, 0x06, 0x20,
+	0x01, 0x28, 0x08, 0x52, 0x09, 0x69, 0x73, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x64, 0x12, 0x19,
+	0x0a, 0x08, 0x72, 0x65, 0x6c, 0x5f, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x07, 0x20, 0x01, 0x28, 0x09,
+	0x52, 0x07, 0x72, 0x65, 0x6c, 0x4e, 0x61, 0x6d, 0x65, 0x12, 0x1b, 0x0a, 0x09, 0x72, 0x65, 0x6c,
+	0x5f, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x18, 0x08, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x72, 0x65,
+	0x6c, 0x56, 0x61, 0x6c, 0x75, 0x65, 0x2a, 0x3d, 0x0a, 0x0e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e,
 	0x73, 0x65, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x12, 0x0b, 0x0a, 0x07, 0x53, 0x55, 0x43, 0x43,
 	0x45, 0x53, 0x53, 0x10, 0x00, 0x12, 0x09, 0x0a, 0x05, 0x45, 0x52, 0x52, 0x4f, 0x52, 0x10, 0x01,
 	0x12, 0x13, 0x0a, 0x0f, 0x45, 0x56, 0x45, 0x4e, 0x54, 0x5f, 0x44, 0x55, 0x50, 0x4c, 0x49, 0x43,
@@ -2880,7 +2894,7 @@ func file_dapr_proto_runtime_v1_dapr_liuxd_proto_rawDescGZIP() []byte {
 }
 
 var file_dapr_proto_runtime_v1_dapr_liuxd_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_dapr_proto_runtime_v1_dapr_liuxd_proto_msgTypes = make([]protoimpl.MessageInfo, 33)
+var file_dapr_proto_runtime_v1_dapr_liuxd_proto_msgTypes = make([]protoimpl.MessageInfo, 32)
 var file_dapr_proto_runtime_v1_dapr_liuxd_proto_goTypes = []interface{}{
 	(ResponseStatus)(0),                                // 0: dapr.proto.runtime.v1.ResponseStatus
 	(*LoadEventRequest)(nil),                           // 1: dapr.proto.runtime.v1.LoadEventRequest
@@ -2915,8 +2929,7 @@ var file_dapr_proto_runtime_v1_dapr_liuxd_proto_goTypes = []interface{}{
 	nil,                                                // 30: dapr.proto.runtime.v1.ResponseHeaders.ValuesEntry
 	nil,                                                // 31: dapr.proto.runtime.v1.EventDto.RelationsEntry
 	(*GetEventLogByCommandIdResponse_EventLogDto)(nil), // 32: dapr.proto.runtime.v1.GetEventLogByCommandIdResponse.EventLogDto
-	nil,                           // 33: dapr.proto.runtime.v1.RelationDto.ItemsEntry
-	(*timestamppb.Timestamp)(nil), // 34: google.protobuf.Timestamp
+	(*timestamppb.Timestamp)(nil),                      // 33: google.protobuf.Timestamp
 }
 var file_dapr_proto_runtime_v1_dapr_liuxd_proto_depIdxs = []int32{
 	11, // 0: dapr.proto.runtime.v1.LoadEventResponse.headers:type_name -> dapr.proto.runtime.v1.ResponseHeaders
@@ -2931,29 +2944,28 @@ var file_dapr_proto_runtime_v1_dapr_liuxd_proto_depIdxs = []int32{
 	11, // 9: dapr.proto.runtime.v1.DeleteEventResponse.headers:type_name -> dapr.proto.runtime.v1.ResponseHeaders
 	0,  // 10: dapr.proto.runtime.v1.ResponseHeaders.status:type_name -> dapr.proto.runtime.v1.ResponseStatus
 	30, // 11: dapr.proto.runtime.v1.ResponseHeaders.values:type_name -> dapr.proto.runtime.v1.ResponseHeaders.ValuesEntry
-	34, // 12: dapr.proto.runtime.v1.EventDto.event_time:type_name -> google.protobuf.Timestamp
+	33, // 12: dapr.proto.runtime.v1.EventDto.event_time:type_name -> google.protobuf.Timestamp
 	31, // 13: dapr.proto.runtime.v1.EventDto.relations:type_name -> dapr.proto.runtime.v1.EventDto.RelationsEntry
-	34, // 14: dapr.proto.runtime.v1.WriteEventLogRequest.time:type_name -> google.protobuf.Timestamp
+	33, // 14: dapr.proto.runtime.v1.WriteEventLogRequest.time:type_name -> google.protobuf.Timestamp
 	11, // 15: dapr.proto.runtime.v1.WriteEventLogResponse.headers:type_name -> dapr.proto.runtime.v1.ResponseHeaders
-	34, // 16: dapr.proto.runtime.v1.UpdateEventLogRequest.time:type_name -> google.protobuf.Timestamp
+	33, // 16: dapr.proto.runtime.v1.UpdateEventLogRequest.time:type_name -> google.protobuf.Timestamp
 	11, // 17: dapr.proto.runtime.v1.UpdateEventLogResponse.headers:type_name -> dapr.proto.runtime.v1.ResponseHeaders
 	11, // 18: dapr.proto.runtime.v1.GetEventLogByCommandIdResponse.headers:type_name -> dapr.proto.runtime.v1.ResponseHeaders
 	32, // 19: dapr.proto.runtime.v1.GetEventLogByCommandIdResponse.data:type_name -> dapr.proto.runtime.v1.GetEventLogByCommandIdResponse.EventLogDto
-	34, // 20: dapr.proto.runtime.v1.WriteAppLogRequest.time:type_name -> google.protobuf.Timestamp
+	33, // 20: dapr.proto.runtime.v1.WriteAppLogRequest.time:type_name -> google.protobuf.Timestamp
 	11, // 21: dapr.proto.runtime.v1.WriteAppLogResponse.headers:type_name -> dapr.proto.runtime.v1.ResponseHeaders
-	34, // 22: dapr.proto.runtime.v1.UpdateAppLogRequest.time:type_name -> google.protobuf.Timestamp
+	33, // 22: dapr.proto.runtime.v1.UpdateAppLogRequest.time:type_name -> google.protobuf.Timestamp
 	11, // 23: dapr.proto.runtime.v1.UpdateAppLogResponse.headers:type_name -> dapr.proto.runtime.v1.ResponseHeaders
 	11, // 24: dapr.proto.runtime.v1.GetAppLogByIdResponse.headers:type_name -> dapr.proto.runtime.v1.ResponseHeaders
-	34, // 25: dapr.proto.runtime.v1.GetAppLogByIdResponse.time:type_name -> google.protobuf.Timestamp
+	33, // 25: dapr.proto.runtime.v1.GetAppLogByIdResponse.time:type_name -> google.protobuf.Timestamp
 	11, // 26: dapr.proto.runtime.v1.GetRelationsResponse.headers:type_name -> dapr.proto.runtime.v1.ResponseHeaders
 	27, // 27: dapr.proto.runtime.v1.GetRelationsResponse.data:type_name -> dapr.proto.runtime.v1.RelationDto
-	33, // 28: dapr.proto.runtime.v1.RelationDto.items:type_name -> dapr.proto.runtime.v1.RelationDto.ItemsEntry
-	34, // 29: dapr.proto.runtime.v1.GetEventLogByCommandIdResponse.EventLogDto.time:type_name -> google.protobuf.Timestamp
-	30, // [30:30] is the sub-list for method output_type
-	30, // [30:30] is the sub-list for method input_type
-	30, // [30:30] is the sub-list for extension type_name
-	30, // [30:30] is the sub-list for extension extendee
-	0,  // [0:30] is the sub-list for field type_name
+	33, // 28: dapr.proto.runtime.v1.GetEventLogByCommandIdResponse.EventLogDto.time:type_name -> google.protobuf.Timestamp
+	29, // [29:29] is the sub-list for method output_type
+	29, // [29:29] is the sub-list for method input_type
+	29, // [29:29] is the sub-list for extension type_name
+	29, // [29:29] is the sub-list for extension extendee
+	0,  // [0:29] is the sub-list for field type_name
 }
 
 func init() { file_dapr_proto_runtime_v1_dapr_liuxd_proto_init() }
@@ -3329,7 +3341,7 @@ func file_dapr_proto_runtime_v1_dapr_liuxd_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_dapr_proto_runtime_v1_dapr_liuxd_proto_rawDesc,
 			NumEnums:      1,
-			NumMessages:   33,
+			NumMessages:   32,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

@@ -284,8 +284,10 @@ message RelationDto {
   string tenant_id= 2;
   string table_name =3;
   string aggregate_id = 4;
-  bool is_deleted = 5;
-  map<string, string> items=6;
+  string aggregate_type =5;
+  bool is_deleted = 6;
+  string rel_name =7 ;  // 关系名
+  string rel_value = 8; // 关系值
 }
 
 

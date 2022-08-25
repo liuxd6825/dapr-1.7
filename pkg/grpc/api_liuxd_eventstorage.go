@@ -367,15 +367,16 @@ func (a *api) GetRelations(ctx context.Context, request *runtimev1pb.GetRelation
 		var relations []*runtimev1pb.RelationDto
 		if out != nil && len(out.Data) > 0 {
 			for _, item := range out.Data {
-				dto := runtimev1pb.RelationDto{
+				relDto := runtimev1pb.RelationDto{
 					Id:          item.Id,
 					TenantId:    item.TenantId,
 					AggregateId: item.AggregateId,
 					IsDeleted:   item.IsDeleted,
 					TableName:   item.TableName,
-					Items:       item.Items,
+					RelName:     item.RelName,
+					RelValue:    item.RelValue,
 				}
-				relations = append(relations, &dto)
+				relations = append(relations, &relDto)
 			}
 		}
 		resp = &runtimev1pb.GetRelationsResponse{
